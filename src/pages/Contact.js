@@ -1,10 +1,13 @@
 import React from "react";
+import Navbar from "../Components/navbar";
 
 const Contact = () => {
   return (
-    <div>
+    <>
+      <Navbar />
+
       <h1>Welcome to Contact</h1>
-    </div>
+    </>
   );
 };
 
