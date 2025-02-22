@@ -15,7 +15,7 @@ const Footer = () => {
         </div>
         
         <div className="copyright">
-          © 2025 Eco-fourism. Tous droits réservés.
+          © 2025 Eco-Tourism TN. Tous droits réservés.
         </div>
       </div>
     </footer>
