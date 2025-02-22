@@ -1,14 +1,14 @@
 import React from "react";
 import Navbar from "../Components/navbar";
 
-const Circuits = () => {
+const Randonée = () => {
   return (
     <>
       <Navbar />
 
-      <h1>Welcome to Circuits</h1>
+      <h1>Welcome to Randonée</h1>
     </>
   );
 };
 
-export default Circuits;
+export default Randonée;

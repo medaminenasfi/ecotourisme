@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import Accueil from "./pages/Accueil";
 import Artisan from "./pages/Artisan";
-import Circuits from "./pages/Circuits";
+import Randonée from "./pages/Randonée";
 import Contact from "./pages/Contact";
 import Reservation from "./pages/Reservation";
 
@@ -13,9 +13,11 @@ function App() {
     <Routes>
       <Route path="/" element={<Accueil/>} />
       <Route path="/Artisan" element={<Artisan/>} />
-      <Route path="/Circuits" element={<Circuits/>} />
+      <Route path="/Randonée" element={<Randonée/>} />
       <Route path="/Contact" element={<Contact/>} />
       <Route path="/Reservation" element={<Reservation/>} />
+
+
 
 
 

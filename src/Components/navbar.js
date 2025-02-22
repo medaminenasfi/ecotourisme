@@ -6,19 +6,20 @@ const Navbar = () => {
     <nav>
       <ul>
         <li>
-          <Link to="/">Circuit</Link>
+          <Link to="/">Accueil</Link>
         </li>
         <li>
-          <Link to="/about">Artisan</Link>
+          <Link to="/Randonée">Randonée</Link>
         </li>
         <li>
-          <Link to="/new-page">Circuits</Link>
+          <Link to="/Artisan">Artisan</Link>
+        </li>
+        
+        <li>
+          <Link to="/Reservation">Reservation</Link>
         </li>
         <li>
-          <Link to="/new-page">Reservation</Link>
-        </li>
-        <li>
-          <Link to="/new-page">Contact</Link>
+          <Link to="/Contact">Contact</Link>
         </li>
       </ul>
     </nav>
