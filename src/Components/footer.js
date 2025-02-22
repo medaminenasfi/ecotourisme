@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './footer.css';
-import Accueil from '../pages/Accueil';
 
 const Footer = () => {
   return (
@@ -16,7 +15,7 @@ const Footer = () => {
         </div>
         
         <div className="copyright">
-          © 2024 Eco-fourism. Tous droits réservés.
+          © 2025 Eco-fourism. Tous droits réservés.
         </div>
       </div>
     </footer>
