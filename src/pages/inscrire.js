@@ -1,15 +1,16 @@
 import React from "react";
 import Navbar from "../Components/navbar";
 
-const Reservation = () => {
+const Randonée = () => {
   return (
     <>
       <Navbar />
 
-      <h1>Welcome to Reservation</h1>
-      
+      <h1>Welcome to inscription</h1>
     </>
   );
 };
 
-export default Reservation;
+export default Randonée;
+  
+

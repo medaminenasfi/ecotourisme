@@ -1,255 +1,59 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap");
+.custom-navbar {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: rgba(255, 255, 255, 0.1); /* Transparent background */
+  backdrop-filter: blur(10px); /* Blur effect */
+  padding: 15px 0;
+}
 
-nav ul {
-  align-items: flex-start;
-  display: inline-flex;
-  gap: 55px;
-  position: relative;
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.navbar-nav {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
 }
-nav ul li {
-  align-items: center;
-  display: inline-flex;
-  flex: 0 0 auto;
-  gap: 10px;
-  justify-content: center;
-  position: relative;
+
+.nav-link {
+  color: white !important;
+  font-size: 18px;
+  font-weight: 500;
 }
-nav ul li a {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 500; /* For Medium weight */
-  color: #ffffff;
-  font-size: 24px;
-  letter-spacing: 0;
-  line-height: normal;
-  margin-top: -1px;
-  text-decoration: none;
-  width: fit-content;
-}
-nav ul li a:hover {
+
+.nav-link:hover {
   text-decoration: underline;
 }
-body {
-  background: url("../assest/Accueil.jpg");
-  min-height: 100vh;
-  background-size: cover;
-  background-position: center;
+
+.auth-buttons {
+  display: flex;
+  gap: 10px;
 }
 
-.frame-1 {
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: nowrap;
-  gap: 55px;
-  position: absolute;
-  width: 761px;
-  height: 36px;
-  top: 78px;
-  left: 162px;
+.auth-buttons .btn-outline-light {
+  border-color: white;
+  color: white;
 }
-.frame-2 {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: nowrap;
-  flex-shrink: 0;
-  gap: 10px;
-  position: relative;
-  width: 89px;
-  z-index: 1;
-}
-.accueil {
-  flex-shrink: 0;
-  flex-basis: auto;
-  position: relative;
-  height: 36px;
-  color: #ffffff;
-  font-family: Poppins, var(--default-font-family);
-  font-size: 24px;
-  font-weight: 500;
-  line-height: 36px;
-  text-align: left;
-  white-space: nowrap;
-  z-index: 2;
-}
-.frame-3 {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: nowrap;
-  flex-shrink: 0;
-  gap: 10px;
-  position: relative;
-  width: 124px;
-  z-index: 3;
-}
-.randonee {
-  flex-shrink: 0;
-  flex-basis: auto;
-  position: relative;
-  height: 36px;
-  color: #ffffff;
-  font-family: Poppins, var(--default-font-family);
-  font-size: 24px;
-  font-weight: 500;
-  line-height: 36px;
-  text-align: left;
-  white-space: nowrap;
-  z-index: 4;
-}
-.frame-4 {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: nowrap;
-  flex-shrink: 0;
-  gap: 10px;
-  position: relative;
-  width: 144px;
-  z-index: 5;
-}
-.reservation {
-  flex-shrink: 0;
-  flex-basis: auto;
-  position: relative;
-  height: 36px;
-  color: #ffffff;
-  font-family: Poppins, var(--default-font-family);
-  font-size: 24px;
-  font-weight: 500;
-  line-height: 36px;
-  text-align: left;
-  white-space: nowrap;
-  z-index: 6;
-}
-.frame-5 {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: nowrap;
-  flex-shrink: 0;
-  gap: 10px;
-  position: relative;
-  width: 86px;
-  z-index: 7;
-}
-.artisan {
-  flex-shrink: 0;
-  flex-basis: auto;
-  position: relative;
-  height: 36px;
-  color: #ffffff;
-  font-family: Poppins, var(--default-font-family);
-  font-size: 24px;
-  font-weight: 500;
-  line-height: 36px;
-  text-align: left;
-  white-space: nowrap;
-  z-index: 8;
-}
-.frame-6 {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: nowrap;
-  flex-shrink: 0;
-  gap: 10px;
-  position: relative;
-  width: 98px;
-  z-index: 9;
-}
-.contact {
-  flex-shrink: 0;
-  flex-basis: auto;
-  position: relative;
-  height: 36px;
-  color: #ffffff;
-  font-family: Poppins, var(--default-font-family);
-  font-size: 24px;
-  font-weight: 500;
-  line-height: 36px;
-  text-align: left;
-  white-space: nowrap;
-  z-index: 10;
-}
-.sign-in {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  position: absolute;
-  height: 22px;
-  top: 85px;
-  left: 1380px;
-  color: #000000;
-  font-family: Poppins, var(--default-font-family);
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 22px;
-  text-align: left;
-  text-transform: uppercase;
-  white-space: nowrap;
-  letter-spacing: 1.5px;
-  z-index: 12;
-  -webkit-text-stroke: 1px #030303;
-}
-.rectangle {
-  position: absolute;
-  width: 126px;
-  height: 45px;
-  top: 73px;
-  left: 1222px;
-  border: 1px solid #ffffff;
-  z-index: 15;
-  border-radius: 10px;} 
 
-  .cta {
-    position: relative;
-    margin: auto;
-    padding: 12px 18px;
-    transition: all 0.2s ease;
-    border: none;
-    background: none;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
+.auth-buttons .btn-outline-light:hover {
+  background-color: white;
+  color: black;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .navbar-nav {
+    flex-direction: column;
+    align-items: center;
   }
-  
-  .cta:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: block;
-    border-radius: 50px;
-    background: #b1dae7;
-    width: 45px;
-    height: 45px;
-    transition: all 0.3s ease;
-  }
-  
-  .cta span {
-    position: relative;
-    font-family: "Ubuntu", sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    color: #234567;
-  }
-  
-  .cta:hover:before {
+
+  .auth-buttons {
+    flex-direction: column;
+    text-align: center;
     width: 100%;
-    background: #b1dae7;
   }
-  
-  .cta:active {
-    transform: scale(0.95);
+
+  .auth-buttons .btn {
+    width: 100%;
   }
-  
-  .cta-container {
-    position: absolute;
-    top: 73px;
-    left: 1222px;
-    z-index: 15;
-  }
+}

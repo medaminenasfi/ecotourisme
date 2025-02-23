@@ -1,50 +1,56 @@
 import React from "react";
-import { Link } from "react-router-dom"; // For navigation
-import "./navbar.css";
+import { Link } from "react-router-dom";
+import "./navbar.css"; // Custom styles
 
 const Navbar = () => {
   return (
-    <div className="main-container">
-      <nav>
-        <ul className="frame-1">
-          <li className="frame-2">
-            <Link to="/" className="accueil">
-              Accueil
+    <nav className="custom-navbar navbar navbar-expand-lg">
+      <div className="container">
+        {/* Navbar Toggler */}
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarContent"
+          aria-controls="navbarContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+
+        {/* Navbar Content */}
+        <div className="collapse navbar-collapse" id="navbarContent">
+          <ul className="navbar-nav mx-auto">
+            <li className="nav-item">
+              <Link to="/" className="nav-link">Accueil</Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/Randonée" className="nav-link">Randonée</Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/Reservation" className="nav-link">Réservation</Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/Artisan" className="nav-link">Artisan</Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/Contact" className="nav-link">Contact</Link>
+            </li>
+          </ul>
+
+          {/* Authentication Buttons */}
+          <div className="auth-buttons">
+            <Link className="btn btn-outline-light me-2" to="/Seconnecter">
+              Se Connecter
             </Link>
-          </li>
-          <li className="frame-3">
-            <Link to="/Randonée" className="randonee">
-              Randonée
+            <Link className="btn btn-outline-light" to="/inscrire">
+              S'inscrire
             </Link>
-          </li>
-          <li className="frame-4">
-            <Link to="/Reservation" className="reservation">
-              Reservation
-            </Link>
-          </li>
-          <li className="frame-5">
-            <Link to="/Artisan" className="artisan">
-              Artisan
-            </Link>
-          </li>
-          <li className="frame-6">
-            <Link to="/Contact" className="contact">
-              Contact
-            </Link>
-          </li>
-        </ul>
-      </nav>
-      <div className="header-section">
-      <div className="cta-container">
-  <Link to="/signin" className="cta">
-    <span>Se Connecter</span>
-  </Link>
-</div>
-        <Link to="/signin" className="sign-in">
-          S'inscrire
-        </Link>
+          </div>
+        </div>
       </div>
-    </div>
+    </nav>
   );
 };
 
