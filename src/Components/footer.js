@@ -5,12 +5,12 @@ import "../Components/footer.css";
 
 const Footer = () => {
   return (
-    <footer className="bg-dark text-white py-4">
-      <div className="container d-flex justify-content-between align-items-center flex-wrap">
-        <div className="logo" style={{ fontFamily: "cursive", fontSize: "1.5rem" }}>
+    <footer className="footer bg-dark text-white py-4">
+      <div className="container d-flex flex-column flex-md-row justify-content-between align-items-center flex-wrap">
+        <div className="logo text-center text-md-start" style={{ fontFamily: "cursive", fontSize: "1.5rem" }}>
           <span>Ecotourism</span> <br /> <span>Tn</span>
         </div>
-        <div className="menu">
+        <div className="menu text-center text-md-start mt-3 mt-md-0">
           <h5>Ecotourisme TN</h5>
           <ul className="list-unstyled">
             <li className="nav-item"><Link to="/" className="nav-link text-white">Accueil</Link></li>
