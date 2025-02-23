@@ -7,6 +7,8 @@ import Reservation from "./pages/Reservation";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Seconnecter from "./pages/Seconnecter";
 import Inscrire from "./pages/inscrire"; // Correct the capitalization
+import Footer from "./Components/footer";
+import "./index.css";
 
 function App() {
   return (
@@ -19,6 +21,7 @@ function App() {
         <Route path="/Contact" element={<Contact />} />
         <Route path="/Seconnecter" element={<Seconnecter />} />
         <Route path="/inscrire" element={<Inscrire />} /> {/* Corrected here */}
+        <Footer/>
       </Routes>
     </>
   );

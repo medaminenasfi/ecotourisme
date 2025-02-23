@@ -1,3 +1,10 @@
+/* accueil.css */
+.page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
 
 /*  Navbar */
 .navbar {
@@ -28,3 +35,90 @@
   opacity: 0.8;
 }
 
+/* Contenu principal */
+.hero-section {
+  flex: 1;
+  padding: 8rem 2rem 4rem; /* Ajustement pour la navbar fixe */
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/*  Footer */
+.main-footer {
+  background-color: #222222;
+  color: white;
+  margin-top: auto;
+  padding: 3rem 2rem;
+  width: 100%;
+}
+
+.footer-links-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.footer-nav {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.footer-link {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #4CAF50;
+}
+
+.copyright-section {
+  text-align: center;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #444444;
+  color: #888888;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 1rem;
+  }
+  
+  .nav-links {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .hero-section {
+    padding: 6rem 1rem 2rem;
+  }
+  
+  .footer-nav {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .footer-links-container {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-link {
+    font-size: 0.9rem;
+  }
+  
+  .copyright-section {
+    font-size: 0.8rem;
+  }
+}
