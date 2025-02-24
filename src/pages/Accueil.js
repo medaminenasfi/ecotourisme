@@ -26,8 +26,7 @@ const Accueil = () => {
       la nature autrement</h1>
     </section>
     <section>
-      <h2>Explorer 
-      la nature autrement</h2>
+      <h2>SSSS 2</h2>
     </section>
 
 
