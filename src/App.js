@@ -12,7 +12,8 @@ import "./index.css";
 
 function App() {
   return (
-    <>
+    <div className="app-container">
+    <div className="content">
       <Routes>
         <Route path="/" element={<Accueil />} />
         <Route path="/Randonée" element={<Randonée />} />
@@ -20,10 +21,11 @@ function App() {
         <Route path="/Artisan" element={<Artisan />} />
         <Route path="/Contact" element={<Contact />} />
         <Route path="/Seconnecter" element={<Seconnecter />} />
-        <Route path="/inscrire" element={<Inscrire />} /> {/* Corrected here */}
-        <Footer/>
+        <Route path="/inscrire" element={<Inscrire />} />
       </Routes>
-    </>
+    </div>
+    <Footer />
+  </div>
   );
 }
 
