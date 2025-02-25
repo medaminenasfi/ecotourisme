@@ -31,6 +31,7 @@ const Accueil = () => {
         >
         
         <Container>
+          <center>
       <Row>
         <Col>
       sectionn 1 emptyyyy ///////////
@@ -84,7 +85,7 @@ const Accueil = () => {
     </div>
         </Col>
       </Row>
-
+      </center>
     </Container>
 
         
