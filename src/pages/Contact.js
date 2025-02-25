@@ -46,8 +46,48 @@ const Accueil = () => {
 <center>
           <Container>
       <Row>
-        <Col>1 of 2</Col>
-        <Col>2 of 2</Col>
+        <Col>
+        
+        <div className="contact-info">
+        <h2>Let’s Talk</h2>
+        <p>
+          Have some big idea or brand to develop and need help? Then reach out,
+          we’d love to hear about your project and provide help.
+        </p>
+        <div className="contact-email">
+          <h3>Email</h3> 
+          <p>beebs@gmail.com</p>
+        </div>
+      </div>
+        
+        
+        </Col>
+        <Col>
+        
+        
+        
+        <div className="contact-form">
+        <form>
+          <label>Name</label><br/>
+          <input type="text" placeholder="Enter your name" />  <br/>          
+          <label>Email</label><br/>
+          <input type="email" placeholder="Enter your email" /><br/>
+          
+          
+          
+          <label>Message</label>
+          <textarea placeholder="Write your message"></textarea><br/>
+          
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+        
+        
+        
+        
+        
+        
+        </Col>
       </Row>
           
     </Container> 
