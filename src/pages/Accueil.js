@@ -11,9 +11,6 @@ import myImage from "../assest/matmata.webp";
 import tozeur from "../assest/Tozeur.jpg";
 import tata from "../assest/tatouine.jpg";
 
-
-
-
 const Accueil = () => {
   console.log("Rendering Accueil page");
   return (
