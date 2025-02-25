@@ -9,6 +9,7 @@ import Seconnecter from "./pages/Seconnecter";
 import Inscrire from "./pages/inscrire"; // Correct the capitalization
 import Footer from "./Components/footer";
 import "./index.css";
+import Forgot from "./pages/forgot"
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
           <Route path="/Contact" element={<Contact />} />
           <Route path="/Seconnecter" element={<Seconnecter />} />
           <Route path="/inscrire" element={<Inscrire />} />
+          <Route path="/forgot" element={<Forgot />} />
+
         </Routes>
       </div>
       <Footer />

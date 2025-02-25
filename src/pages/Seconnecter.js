@@ -52,7 +52,7 @@ const Accueil = () => {
             <label>
               <input type="checkbox" /> Remember me
             </label>
-            <a href="/forgot-password" className="forgot-password">Forgot Password?</a><br/>
+            <a href="/forgot" className="forgot-password">Forgot Password?</a><br/>
           </div>
 
           <button type="submit" className="btn-pry">CONTINUE</button><br/>
@@ -68,7 +68,7 @@ const Accueil = () => {
 
         <div className="already-have-account">
           <span>New User? </span><br/>
-          <a href="/signup" className="sign-up-here">SIGN UP HERE</a><br/>
+          <a href="/inscrire" className="sign-up-here">SIGN UP HERE</a><br/>
         </div>
       </div>
     </div>
