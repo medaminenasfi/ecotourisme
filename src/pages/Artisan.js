@@ -1,10 +1,15 @@
 import React from "react";
 import Navbar from "../Components/navbar";
-import "./Artisan.css";
+import "./accueil.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Footer from "../Components/footer";
 import backgroundImage from "../assest/Accueil.jpg";
-
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import myImage from "../assest/matmata.webp";
+import tozeur from "../assest/Tozeur.jpg";
+import tata from "../assest/tatouine.jpg";
 
 
 
@@ -29,27 +34,98 @@ const Accueil = () => {
           <div className="overlay"></div>
           <div className="content text-center">
             <h1>
-            Votre Aventure Commence Ici
-            </h1>
+L'Artisanat Local            </h1>
             <p className="lead">
-            La nature ne fait rien en vain, et chaque paysage est une invitation à l'aventure
+            L'âme de notre Patrimoine
             </p>
           </div>
-        
+          
         </section>
+
+   <section className="bg-black text-white p-5 shadow-lg">
+   <h1 classname="hell">Carte des Artisans</h1>
+   /* Section pour carte */
+   </section>
+
+
+
+
+
+
+
         <section className="bg-black text-white p-5 shadow-lg">
-          <h1 classname="hell">Les meilleures destinations</h1>
+          <h1 classname="hell">Artisans Populaires</h1>
           <center>
             {" "}
             <p>
-              Partez à la découverte de paysages incroyables, des déserts aux
-              plages superbes.
+            L'artisan n'est pas simplement un créateur, il est un passeur de traditions et de savoir-faire.
             </p>{" "}
           </center>
 
-          
-        
-          
+          <center>
+            <Container>
+              <Row>
+                <Col>
+                  <img
+                    src={myImage}
+                    alt="Description of the image"
+                    style={{ width: "100%", height: "auto" }}
+                  />
+                </Col>
+                <Col>
+                  <h1> L'artisan du cuir</h1>
+                  <p>
+                  Spécialité : Fabrication de sacs, ceintures et portefeuilles en cuir artisanal.
+                  Description : Mohamed est un maître artisan du cuir, dont les créations sont inspirées des traditions tunisiennes, mais avec une touche moderne. Chaque pièce est fabriquée à la main avec des cuirs de haute qualité provenant de producteurs locaux.
+                  </p>
+                </Col>
+              </Row>
+            </Container>
+          </center>
+          <center>
+            <Container>
+              <Row>
+                <Col>
+                  <h1>Le potier traditionnel :</h1>
+                  <p>
+                  Nom : Rachida Zribi
+Spécialité : Pottery and ceramic art (pots, vases, plateaux décoratifs).
+Description : Rachida est une potière qui perpétue la tradition du potier tunisien en fabriquant des pièces décoratives et utilitaires en argile. Ses créations sont très populaires grâce à leur design original et leur connexion avec les racines culturelles de la région.
+Pourquoi elle est populaire : Sa maîtrise du tour de potier et de la peinture sur céramique lui a permis de s'imposer comme l'une des figures emblématiques de l'artisanat de la région.
+                  </p>
+                </Col>
+                <Col>
+                  <img
+                    src={tozeur}
+                    alt="Description of the image"
+                    style={{ width: "100%", height: "auto" }}
+                  />
+                </Col>
+              </Row>
+            </Container>
+          </center>
+          <center>
+            <Container>
+              <Row>
+                <Col>
+                  <img
+                    src={tata}
+                    alt="Description of the image"
+                    style={{ width: "100%", height: "auto" }}
+                  />
+                </Col>
+                <Col>
+                  <h1>Le tisserand berbère</h1>
+                  <p>
+                  Nom : Ahmed Ben Kacem
+Spécialité : Tissage de tapis et textiles traditionnels berbères.
+Description : Ahmed est un tisserand berbère spécialisé dans la création de tapis et textiles traditionnels à partir de laine naturelle. Il travaille selon des techniques ancestrales transmises par ses ancêtres.
+Pourquoi il est populaire : Ses tapis et couvertures sont connus pour leurs motifs uniques et leur qualité exceptionnelle, représentant fièrement la culture berbère dans chaque fil.
+                  </p>
+                </Col>
+              </Row>
+            </Container>
+          </center>
         </section>
         <section className="bg-black text-white p-5 shadow-lg">
           <center>
