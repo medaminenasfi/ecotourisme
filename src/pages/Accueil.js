@@ -78,7 +78,15 @@ const Accueil = () => {
                 </Col>
                 <Col>
                   <h1>Matmata, gabes.</h1>
-                  <p>fdgdfgsdgsd</p>
+                  <p>
+                    Située au sud de la Tunisie, Matmata est une destination
+                    unique connue pour ses habitations troglodytiques creusées
+                    dans la roche, offrant une immersion authentique dans la
+                    culture berbère. Ce village pittoresque, célèbre pour avoir
+                    servi de décor à des films comme Star Wars, attire les
+                    visiteurs en quête de paysages atypiques et d’expériences
+                    écotouristiques enrichissantes.
+                  </p>
                 </Col>
               </Row>
             </Container>
@@ -88,7 +96,15 @@ const Accueil = () => {
               <Row>
                 <Col>
                   <h1>Tozeur, Tunisia</h1>
-                  <p>rdgdrrrrrrrrh</p>
+                  <p>
+                    Située à l’ouest de la Tunisie, aux portes du désert du
+                    Sahara, Tozeur est une ville emblématique pour les amateurs
+                    d’écotourisme et d’aventures. Connue pour son immense
+                    palmeraie, son architecture traditionnelle en briques ocre
+                    et ses paysages désertiques époustouflants, Tozeur offre une
+                    immersion authentique dans la nature et la culture locale,
+                    tout en favorisant un tourisme durable.
+                  </p>
                 </Col>
                 <Col>
                   <img
@@ -111,11 +127,34 @@ const Accueil = () => {
                   />
                 </Col>
                 <Col>
-                <h1>tataouin</h1>
-                  <p>Your description text goes here.</p>
+                  <h1>tataouin</h1>
+                  <p>
+                    Nichée au sud-est de la Tunisie, Tataouine est une terre de
+                    contrastes où le désert rencontre des paysages montagneux
+                    spectaculaires et un patrimoine culturel riche. Réputée pour
+                    ses ksours (greniers fortifiés) et ses villages berbères
+                    perchés, Tataouine est une destination idéale pour les
+                    amateurs d’écotourisme et d’aventure, offrant une immersion
+                    authentique dans la nature et les traditions locales.
+                  </p>
                 </Col>
               </Row>
             </Container>
+          </center>
+        </section>
+        <section className="bg-black text-white p-5 shadow-lg">
+          <center>
+            <section className="image-section d-flex justify-content-center align-items-center">
+              <div className="main-container">
+                <div className="mask-group" />
+                <span className="explore-tunisia">
+                  Explorez
+                  <br />
+                  la Tunisie autrement
+                </span>
+                <div className="frame-1" />
+              </div>{" "}
+            </section>
           </center>
         </section>
       </main>
