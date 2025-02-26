@@ -7,9 +7,9 @@ import backgroundImage from "../assest/Accueil.jpg";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import myImage from "../assest/matmata.webp";
+import Sidi from "../assest/sidi.jpg";
 import tozeur from "../assest/Tozeur.jpg";
-import tata from "../assest/tatouine.jpg";
+import Oriental from "../assest/oriental.jpg";
 import { Link } from "react-router-dom";
 
 
@@ -64,7 +64,7 @@ const Accueil = () => {
               <Row>
                 <Col>
                   <img
-                    src={myImage}
+                    src={tozeur}
                     alt="Description of the image"
                     style={{ width: "100%", height: "auto" ,borderRadius: "50px",
                       objectFit: "cover",}}
@@ -109,7 +109,7 @@ const Accueil = () => {
                 </Col>
                 <Col>
                   <img
-                    src={tozeur}
+                    src={Sidi}
                     alt="Description of the image"
                     style={{ width: "100%", height: "auto"  ,borderRadius: "50px",
                       objectFit: "cover",}}
@@ -123,7 +123,7 @@ const Accueil = () => {
               <Row>
                 <Col>
                   <img
-                    src={tata}
+                    src={Oriental}
                     alt="Description of the image"
                     style={{ width: "100%", height: "auto" , borderRadius: "50px",
                       objectFit: "cover", }}
