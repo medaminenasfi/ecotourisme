@@ -49,10 +49,10 @@ const Accueil = () => {
                     </div>
                     <form className="form" onSubmit={handleSubmit}>
                       <label>Your Name</label> <br />
-                      <input type="text" placeholder="Johnson Doe" required /><br />
+                      <input type="text" placeholder="nom" required /><br />
 
                       <label>Tel</label><br />
-                      <input type="tel" placeholder="264589449" required /><br />
+                      <input type="tel" placeholder="+216264589449" required /><br />
 
                       <Stack spacing={1.5} sx={{ minWidth: 300 }}>
                         <label htmlFor="birthday">Birthday</label>
@@ -71,16 +71,23 @@ const Accueil = () => {
                       </Stack>
 
                       <label>Gender</label><br />
-                      <input type="text" placeholder="Male/Female" required /><br />
+<select required>
+  <option value="male">Male</option>
+  <option value="female">Female</option>
+</select><br />
+
 
                       <label>Email</label><br />
-                      <input type="email" placeholder="johnsondoe@nomail.com" required /><br />
+                      <input type="email" placeholder="enter votre mail" required /><br />
 
                       <label>Password</label><br />
                       <input type="password" placeholder="***************" required /><br />
 
                       <label>Type</label><br />
-                      <input type="text" placeholder="Fourniseur/client" required /><br />
+<select required>
+  <option value="fournisseur">Fournisseur</option>
+  <option value="client">Client</option>
+</select><br /><br /><br />
 
                       <button type="submit" className="btn-pry">GET STARTED</button><br />
                     </form>
