@@ -290,3 +290,15 @@ button {
     height: 300px; /* Adjust height */
   }
 }
+.hell {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.bg-black {
+  background-color: #000;
+}
+
+.shadow-lg {
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
