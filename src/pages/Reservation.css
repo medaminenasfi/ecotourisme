@@ -296,9 +296,38 @@ button {
 }
 
 .bg-black {
-  background-color: #000;
+  background-color: #000000;
 }
 
 .shadow-lg {
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 4px 10px rgba(56, 50, 50, 0.2);
+}
+
+/* Fix background color of the calendar container */
+.MuiPickersBasePicker-root {
+  background-color: #863535 !important; /* Light gray background */
+  color: black !important; /* Black text */
+}
+
+/* Fix selected date color */
+/* Fix selected date text color */
+.Mui-selected {
+  background-color: #1976d2 !important; /* Blue background */
+  color: rgb(109, 60, 60) !important; /* Ensures text is white */
+}
+
+/* Fix today's date appearance */
+.MuiPickersDay-today {
+  border: 1px solid #1976d2 !important; /* Blue border */
+  color: black !important;
+}
+
+/* Override default text color to black */
+.MuiPickersDay-root {
+  color: black !important;
+}
+
+/* Adjust hover effect */
+.MuiPickersDay-root:hover {
+  background-color: rgba(25, 118, 210, 0.3) !important;
 }

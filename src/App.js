@@ -14,6 +14,7 @@ import Forgot from "./pages/forgot"
 function App() {
   return (
     <div className="app-container">
+
       <div className="content">
         <Routes>
           <Route path="/" element={<Accueil />} />

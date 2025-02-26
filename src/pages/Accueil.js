@@ -176,7 +176,8 @@ const Accueil = () => {
                   <br />
                   la Tunisie autrement
                 </span>
-                <Link to="/Randonée" className="frame-1"></Link>
+                <Link to="/Randonée" className="frame-1"           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                ></Link>
               </div>
             </section>
           </center>

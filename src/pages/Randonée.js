@@ -155,7 +155,8 @@ const Accueil = () => {
       <br />
       Réservation
     </span>
-    <Link to="/Reservation" className="frame-1"></Link>
+    <Link to="/Reservation" className="frame-1"           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+    ></Link>
   </div>
 </section>
           </center>

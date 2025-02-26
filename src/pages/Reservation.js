@@ -11,6 +11,26 @@ import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
 import { Box } from "@mui/material";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { ThemeProvider, createTheme } from "@mui/material";
+
+const theme = createTheme({
+  components: {
+    MuiPickersDay: {
+      styleOverrides: {
+        root: {
+          color: "black !important",
+        },
+        today: {
+          border: "1px solid #1976d2 !important",
+        },
+        selected: {
+          backgroundColor: "#1976d2 !important",
+          color: "white !important",
+        },
+      },
+    },
+  },
+});
 const Accueil = () => {
   console.log("Rendering Accueil page");
   return (
@@ -38,34 +58,86 @@ const Accueil = () => {
           </div>
         </section>
         <section className="bg-black   text-white p-5 shadow-lg">
-          <h1 classname="hell">Les meilleures destinations</h1>
+          <h1 classname="hell">Effectuer une réservation</h1>
           <center>
             <p>
-              Partez à la découverte de paysages incroyables, des déserts aux
-              plages superbes.
-            </p>{" "}
+            éservez votre place et partez pour un voyage inoubliable. Que vous cherchiez une retraite paisible ou une randonnée aventureuse, nous avons l'expérience parfaite pour vous !
+            </p>{" "} <br/><br/>
           </center>
           <Container>
-      <Row>
-        <Col>1 of 2</Col>
-        <Col>
-        <center>
-        <Box display="flex" justifyContent="center" mt={3}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <StaticDatePicker orientation="landscape" />
-            </LocalizationProvider>
-          </Box>
-          </center>
-        
-        
-        </Col>
-      </Row>
-    
-    </Container>
+            <Row>
+              <Col>
+              <center>
+                <label>Full Name</label>
+                <br />
+                <input
+                  type="Full Name"
+                  placeholder="Full Name"
+                  required
+                />
+                <br />
+                <label>Email</label>
+                <br />
+                <input
+                  type="email"
+                  placeholder="johnsondoe@nomail.com"
+                  required
+                />
+                <br />
+                
+                <br />
+                <label>Phone Number</label>
+                <br />
+                <input
+                  type="Phone Number"
+                  placeholder="+216 22 222 222"
+                  required
+                />
+                <br />
+                <label>Number of Participants</label>
+                <br />
+                <input
+  type="number"
+  placeholder="0"
+  required
+  min="1" 
+  step="1" 
+/>
 
+<br />
+<label for="specialRequests">Demandes spéciales</label>
+<br />
+<textarea
+  id="specialRequests"
+  placeholder="Enter your special requests or description"
+  required
+></textarea>
+<br />
+<button type="submit">soumettre</button>
 
-          
-
+                <br />
+                </center>
+              </Col>
+              <Col>
+                <center>
+                  <section
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginTop: "24px",
+                      backgroundColor: "white",
+                      padding: "16px",
+                      borderRadius: "8px",
+                    }}
+                  >
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <StaticDatePicker orientation="landscape" />
+                    </LocalizationProvider>
+                  </section>
+                </center>
+              </Col>
+            </Row>
+          </Container>
         </section>
         <section className="bg-black text-white p-5 shadow-lg">
           <center>
