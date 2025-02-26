@@ -7,9 +7,9 @@ import backgroundImage from "../assest/Accueil.jpg";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import myImage from "../assest/matmata.webp";
-import tozeur from "../assest/Tozeur.jpg";
-import tata from "../assest/tatouine.jpg";
+import Cuir from "../assest/Cuir.webp";
+import Potier  from "../assest/potier.jpg";
+import Tisserand from "../assest/tisserand.jpg";
 
 
 
@@ -29,6 +29,7 @@ const Accueil = () => {
             backgroundRepeat: "no-repeat",
             height: "100vh",
             width: "100%",
+            
           }}
         >
           <div className="overlay"></div>
@@ -54,12 +55,12 @@ L'Artisanat Local            </h1>
 
 
         <section className="bg-black text-white p-5 shadow-lg">
-          <h1 classname="hell">Artisans Populaires</h1>
+          <h1 classname="hell">Artisans Populaires</h1> <br/>
           <center>
             {" "}
             <p>
             L'artisan n'est pas simplement un créateur, il est un passeur de traditions et de savoir-faire.
-            </p>{" "}
+            </p>{" "}<br/><br/>
           </center>
 
           <center>
@@ -67,13 +68,15 @@ L'Artisanat Local            </h1>
               <Row>
                 <Col>
                   <img
-                    src={myImage}
+                    src={Cuir}
                     alt="Description of the image"
-                    style={{ width: "100%", height: "auto" }}
+                    style={{ width: "100%", height: "auto" ,
+                      borderRadius: "50px",
+                      objectFit: "cover",}}
                   />
                 </Col>
                 <Col>
-                  <h1> L'artisan du cuir</h1>
+                  <h1> L'artisan du cuir</h1><br/><br/> 
                   <p>
                   Spécialité : Fabrication de sacs, ceintures et portefeuilles en cuir artisanal.
                   Description : Mohamed est un maître artisan du cuir, dont les créations sont inspirées des traditions tunisiennes, mais avec une touche moderne. Chaque pièce est fabriquée à la main avec des cuirs de haute qualité provenant de producteurs locaux.
@@ -81,12 +84,12 @@ L'Artisanat Local            </h1>
                 </Col>
               </Row>
             </Container>
-          </center>
+          </center><br/><br/>
           <center>
             <Container>
               <Row>
-                <Col>
-                  <h1>Le potier traditionnel :</h1>
+                <Col><br/><br/>
+                  <h1>Le potier traditionnel :</h1><br/><br/>
                   <p>
                   Nom : Rachida Zribi
 Spécialité : Pottery and ceramic art (pots, vases, plateaux décoratifs).
@@ -96,26 +99,30 @@ Pourquoi elle est populaire : Sa maîtrise du tour de potier et de la peinture s
                 </Col>
                 <Col>
                   <img
-                    src={tozeur}
+                    src={Potier }
                     alt="Description of the image"
-                    style={{ width: "100%", height: "auto" }}
+                    style={{ width: "100%", height: "auto" ,
+                      borderRadius: "50px",
+                      objectFit: "cover", }}
                   />
                 </Col>
               </Row>
             </Container>
-          </center>
+          </center><br/><br/>
           <center>
             <Container>
               <Row>
                 <Col>
                   <img
-                    src={tata}
+                    src={Tisserand }
                     alt="Description of the image"
-                    style={{ width: "100%", height: "auto" }}
+                    style={{ width: "100%", height: "auto",
+                      borderRadius: "50px",
+                      objectFit: "cover", }}
                   />
                 </Col>
-                <Col>
-                  <h1>Le tisserand berbère</h1>
+                <Col><br/><br/><br/>
+                  <h1>Le tisserand berbère</h1><br/><br/>
                   <p>
                   Nom : Ahmed Ben Kacem
 Spécialité : Tissage de tapis et textiles traditionnels berbères.
