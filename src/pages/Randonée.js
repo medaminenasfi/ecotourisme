@@ -10,6 +10,8 @@ import Col from "react-bootstrap/Col";
 import myImage from "../assest/matmata.webp";
 import tozeur from "../assest/Tozeur.jpg";
 import tata from "../assest/tatouine.jpg";
+import { Link } from "react-router-dom";
+
 
 const Accueil = () => {
   console.log("Rendering Accueil page");
@@ -48,13 +50,13 @@ const Accueil = () => {
         </section>
 
         <section className="bg-black text-white p-5 shadow-lg">
-          <h1 classname="hell">Circuits Célèbres à Ne Pas Manquer</h1>
+          <h1 classname="hell">Circuits Célèbres à Ne Pas Manquer</h1> <br/>
           <center>
             {" "}
             <p>
               Découvrez les itinéraires les plus emblématiques de la région,
               entre désert et patrimoine historique.
-            </p>{" "}
+            </p>{" "}<br/>
           </center>
 
           <center>
@@ -64,11 +66,12 @@ const Accueil = () => {
                   <img
                     src={myImage}
                     alt="Description of the image"
-                    style={{ width: "100%", height: "auto" }}
+                    style={{ width: "100%", height: "auto" ,borderRadius: "50px",
+                      objectFit: "cover",}}
                   />
                 </Col>
-                <Col>
-                  <h1>Circuit de l’Oasis de Tozeur</h1>
+                <Col><br/><br/>
+                  <h1>Circuit de l’Oasis de Tozeur</h1><br/>  
                   <p>
                     e circuit traverse les oasis de Tozeur, l’une des régions
                     les plus vertes du sud tunisien, où les visiteurs découvrent
@@ -87,12 +90,12 @@ const Accueil = () => {
                 </Col>
               </Row>
             </Container>
-          </center>
+          </center><br/><br/><br/>
           <center>
             <Container>
               <Row>
-                <Col>
-                  <h1>Circuit de la Médina de Tunis et Sidi Bou Saïd</h1>
+                <Col><br/>
+                  <h1>Circuit de la Médina de Tunis et Sidi Bou Saïd</h1><br/>
                   <p>
                     Ce circuit culturel explore les rues pittoresques de la
                     médina de Tunis et les charmantes ruelles de Sidi Bou Saïd,
@@ -108,12 +111,13 @@ const Accueil = () => {
                   <img
                     src={tozeur}
                     alt="Description of the image"
-                    style={{ width: "100%", height: "auto" }}
+                    style={{ width: "100%", height: "auto"  ,borderRadius: "50px",
+                      objectFit: "cover",}}
                   />
                 </Col>
               </Row>
             </Container>
-          </center>
+          </center><br/><br/><br/>
           <center>
             <Container>
               <Row>
@@ -121,11 +125,12 @@ const Accueil = () => {
                   <img
                     src={tata}
                     alt="Description of the image"
-                    style={{ width: "100%", height: "auto" }}
+                    style={{ width: "100%", height: "auto" , borderRadius: "50px",
+                      objectFit: "cover", }}
                   />
                 </Col>
                 <Col>
-                  <h1>Circuit du Grand Erg Oriental</h1>
+                  <h1>Circuit du Grand Erg Oriental</h1><br/>
                   <p>
                     Ce circuit emmène les visiteurs à travers le désert du
                     Sahara, dans les dunes dorées du Grand Erg Oriental, à la
@@ -142,17 +147,17 @@ const Accueil = () => {
         </section>
         <section className="bg-black text-white p-5 shadow-lg">
           <center>
-            <section className="image-section d-flex justify-content-center align-items-center">
-              <div className="main-container">
-                <div className="mask-group" />
-                <span className="explore-tunisia">
-                  Explorez
-                  <br />
-                  Reservation ..{" "}
-                </span>
-                <div className="frame-1" />
-              </div>{" "}
-            </section>
+          <section className="image-section d-flex justify-content-center align-items-center">
+  <div className="main-container">
+    <div className="mask-group"></div>
+    <span className="explore-tunisia">
+      Explorez
+      <br />
+      Réservation
+    </span>
+    <Link to="/Reservation" className="frame-1"></Link>
+  </div>
+</section>
           </center>
         </section>
       </main>
