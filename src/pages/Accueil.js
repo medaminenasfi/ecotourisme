@@ -10,6 +10,8 @@ import Col from "react-bootstrap/Col";
 import myImage from "../assest/matmata.webp";
 import tozeur from "../assest/Tozeur.jpg";
 import tata from "../assest/tatouine.jpg";
+import { Link } from "react-router-dom";
+import Randonée from "../pages/Randonée";
 
 const Accueil = () => {
   console.log("Rendering Accueil page");
@@ -55,14 +57,15 @@ const Accueil = () => {
         </section>
         <section className="bg-black text-white p-5 shadow-lg">
           <h1 classname="hell">Les meilleures destinations</h1>
+          <br />
           <center>
             {" "}
             <p>
               Partez à la découverte de paysages incroyables, des déserts aux
               plages superbes.
             </p>{" "}
+            <br />
           </center>
-
           <center>
             <Container>
               <Row>
@@ -70,11 +73,18 @@ const Accueil = () => {
                   <img
                     src={myImage}
                     alt="Description of the image"
-                    style={{ width: "100%", height: "auto" }}
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      borderRadius: "50px",
+                      objectFit: "cover",
+                    }}
                   />
                 </Col>
                 <Col>
+                  <br /> <br /> <br />
                   <h1>Matmata, gabes.</h1>
+                  <br /> <br />
                   <p>
                     Située au sud de la Tunisie, Matmata est une destination
                     unique connue pour ses habitations troglodytiques creusées
@@ -88,11 +98,14 @@ const Accueil = () => {
               </Row>
             </Container>
           </center>
+          <br /> <br />
           <center>
             <Container>
               <Row>
                 <Col>
+                  <br /> <br /> <br />
                   <h1>Tozeur, Tunisia</h1>
+                  <br /> <br />
                   <p>
                     Située à l’ouest de la Tunisie, aux portes du désert du
                     Sahara, Tozeur est une ville emblématique pour les amateurs
@@ -107,12 +120,18 @@ const Accueil = () => {
                   <img
                     src={tozeur}
                     alt="Description of the image"
-                    style={{ width: "100%", height: "auto" }}
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      borderRadius: "50px",
+                      objectFit: "cover",
+                    }}
                   />
                 </Col>
               </Row>
             </Container>
           </center>
+          <br /> <br /> <br />
           <center>
             <Container>
               <Row>
@@ -120,11 +139,18 @@ const Accueil = () => {
                   <img
                     src={tata}
                     alt="Description of the image"
-                    style={{ width: "100%", height: "auto" }}
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      borderRadius: "50px",
+                      objectFit: "cover",
+                    }}
                   />
                 </Col>
                 <Col>
+                  <br /> <br />
                   <h1>tataouin</h1>
+                  <br /> <br />
                   <p>
                     Nichée au sud-est de la Tunisie, Tataouine est une terre de
                     contrastes où le désert rencontre des paysages montagneux
@@ -149,8 +175,8 @@ const Accueil = () => {
                   <br />
                   la Tunisie autrement
                 </span>
-                <div className="frame-1" />
-              </div>{" "}
+                <Link to="/Randonée" className="frame-1"></Link>
+              </div>
             </section>
           </center>
         </section>

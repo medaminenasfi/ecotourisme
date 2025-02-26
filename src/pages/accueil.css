@@ -222,7 +222,7 @@ button {
   width: 1264px;
   margin: 0 auto;
     padding: 0 15px; /* Add padding for responsiveness */
-
+    border-radius: 60px;
 }
 .mask-group {
   flex-shrink: 0;
@@ -270,6 +270,7 @@ button {
     no-repeat center;
   background-size: cover;
   z-index: 2;
+  
 }
 @media (max-width: 480px) {
   .explore-tunisia {
