@@ -11,9 +11,10 @@ import Sidi from "../assest/sidi.jpg";
 import tozeur from "../assest/Tozeur.jpg";
 import Oriental from "../assest/oriental.jpg";
 import { Link } from "react-router-dom";
-
-
+import CircuitMap from "../Components/CircuitMap";
 const Accueil = () => {
+  const position1 = [36.806389, 10.181667]; // Example coordinates for the first map
+
   console.log("Rendering Accueil page");
   return (
     <>
@@ -41,24 +42,23 @@ const Accueil = () => {
         </section>
         <section className="bg-black text-white p-5 shadow-lg">
           <h1 classname="hell">Explorer Nos Circuits en Carte</h1>
-          <h1>jyyfufuyk
-</h1>
-<h1>kugmighm</h1>
-<h2>oihiomimgh</h2>
-<h3>Carte </h3>
+          <h1>jyyfufuyk</h1>
+          <h1>kugmighm</h1>
+          <h2>oihiomimgh</h2>
+          <CircuitMap center={position1} />
 
         </section>
 
         <section className="bg-black text-white p-5 shadow-lg">
-          <h1 classname="hell">Circuits Célèbres à Ne Pas Manquer</h1> <br/>
+          <h1 classname="hell">Circuits Célèbres à Ne Pas Manquer</h1> <br />
           <center>
             {" "}
             <p>
               Découvrez les itinéraires les plus emblématiques de la région,
               entre désert et patrimoine historique.
-            </p>{" "}<br/>
+            </p>{" "}
+            <br />
           </center>
-
           <center>
             <Container>
               <Row>
@@ -66,12 +66,19 @@ const Accueil = () => {
                   <img
                     src={tozeur}
                     alt="Description of the image"
-                    style={{ width: "100%", height: "auto" ,borderRadius: "50px",
-                      objectFit: "cover",}}
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      borderRadius: "50px",
+                      objectFit: "cover",
+                    }}
                   />
                 </Col>
-                <Col><br/><br/>
-                  <h1>Circuit de l’Oasis de Tozeur</h1><br/>  
+                <Col>
+                  <br />
+                  <br />
+                  <h1>Circuit de l’Oasis de Tozeur</h1>
+                  <br />
                   <p>
                     e circuit traverse les oasis de Tozeur, l’une des régions
                     les plus vertes du sud tunisien, où les visiteurs découvrent
@@ -90,12 +97,17 @@ const Accueil = () => {
                 </Col>
               </Row>
             </Container>
-          </center><br/><br/><br/>
+          </center>
+          <br />
+          <br />
+          <br />
           <center>
             <Container>
               <Row>
-                <Col><br/>
-                  <h1>Circuit de la Médina de Tunis et Sidi Bou Saïd</h1><br/>
+                <Col>
+                  <br />
+                  <h1>Circuit de la Médina de Tunis et Sidi Bou Saïd</h1>
+                  <br />
                   <p>
                     Ce circuit culturel explore les rues pittoresques de la
                     médina de Tunis et les charmantes ruelles de Sidi Bou Saïd,
@@ -111,13 +123,20 @@ const Accueil = () => {
                   <img
                     src={Sidi}
                     alt="Description of the image"
-                    style={{ width: "100%", height: "auto"  ,borderRadius: "50px",
-                      objectFit: "cover",}}
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      borderRadius: "50px",
+                      objectFit: "cover",
+                    }}
                   />
                 </Col>
               </Row>
             </Container>
-          </center><br/><br/><br/>
+          </center>
+          <br />
+          <br />
+          <br />
           <center>
             <Container>
               <Row>
@@ -125,12 +144,17 @@ const Accueil = () => {
                   <img
                     src={Oriental}
                     alt="Description of the image"
-                    style={{ width: "100%", height: "auto" , borderRadius: "50px",
-                      objectFit: "cover", }}
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      borderRadius: "50px",
+                      objectFit: "cover",
+                    }}
                   />
                 </Col>
                 <Col>
-                  <h1>Circuit du Grand Erg Oriental</h1><br/>
+                  <h1>Circuit du Grand Erg Oriental</h1>
+                  <br />
                   <p>
                     Ce circuit emmène les visiteurs à travers le désert du
                     Sahara, dans les dunes dorées du Grand Erg Oriental, à la
@@ -147,18 +171,23 @@ const Accueil = () => {
         </section>
         <section className="bg-black text-white p-5 shadow-lg">
           <center>
-          <section className="image-section d-flex justify-content-center align-items-center">
-  <div className="main-container">
-    <div className="mask-group"></div>
-    <span className="explore-tunisia">
-      Explorez
-      <br />
-      Réservation
-    </span>
-    <Link to="/Reservation" className="frame-1"           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-    ></Link>
-  </div>
-</section>
+            <section className="image-section d-flex justify-content-center align-items-center">
+              <div className="main-container">
+                <div className="mask-group"></div>
+                <span className="explore-tunisia">
+                  Explorez
+                  <br />
+                  Réservation
+                </span>
+                <Link
+                  to="/Reservation"
+                  className="frame-1"
+                  onClick={() =>
+                    window.scrollTo({ top: 0, behavior: "smooth" })
+                  }
+                ></Link>
+              </div>
+            </section>
           </center>
         </section>
       </main>
