@@ -55,7 +55,7 @@ const Accueil = () => {
             {" "}
             <p>
               Découvrez les itinéraires les plus emblématiques de la région,
-              entre désert et patrimoine historique.
+              entre désert et patrimoine historique..
             </p>{" "}
             <br />
           </center>
