@@ -91,7 +91,7 @@ const Accueil = () => {
                     <br />
                     Tamerza, avec ses cascades naturelles
                     <br />
-                    Ksar Ouled Soltane, un ksar typique
+                    Ksar Ouled Soltane, un ksar typique.
                     <br />
                   </p>
                 </Col>
