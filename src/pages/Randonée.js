@@ -93,7 +93,7 @@ const Accueil = () => {
                     <br />
                     Ksar Ouled Soltane, un ksar typique.
                     <br />
-                  </p>  
+                  </p>   
                 </Col>
               </Row>
             </Container>

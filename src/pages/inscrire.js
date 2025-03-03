@@ -102,7 +102,7 @@ const Accueil = () => {
 
                     <div className="account-login">
                       <span>Already have an account? </span>
-                      <a href="/login" className="login-here">LOGIN HERE</a>
+                      <a href="/Seconnecter" className="login-here">LOGIN HERE</a>
                     </div>
                   </div>
                 </Col>

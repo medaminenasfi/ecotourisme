@@ -69,13 +69,13 @@ const Accueil = () => {
         <div className="contact-form">
         <form>
           <label>Name</label><br/>
-          <input type="text" placeholder="Enter your name" />  <br/>          
+          <input type="text" placeholder="Enter your name" />  <br/> <br/>         
           <label>Email</label><br/>
           <input type="email" placeholder="Enter your email" /><br/>
           
+          <br/><br/>
           
-          
-          <label>Message</label>
+          <label>Message</label><br/><br/>
           <textarea placeholder="Write your message"></textarea><br/>
           
           <button type="submit">Submit</button>
