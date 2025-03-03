@@ -8,10 +8,9 @@ import Container from "react-bootstrap/Container";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
-import { Box } from "@mui/material";
+import { Box, ThemeProvider, createTheme } from "@mui/material";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { ThemeProvider, createTheme } from "@mui/material";
 
 const theme = createTheme({
   components: {
@@ -31,6 +30,7 @@ const theme = createTheme({
     },
   },
 });
+
 const Accueil = () => {
   console.log("Rendering Accueil page");
   return (
@@ -57,65 +57,40 @@ const Accueil = () => {
             </p>
           </div>
         </section>
-        <section className="bg-black   text-white p-5 shadow-lg">
-          <h1 classname="hell">Effectuer une réservation</h1>
+        <section className="bg-black text-white p-5 shadow-lg">
+          <h1 className="hell">Effectuer une réservation</h1>
           <center>
             <p>
-            éservez votre place et partez pour un voyage inoubliable. Que vous cherchiez une retraite paisible ou une randonnée aventureuse, nous avons l'expérience parfaite pour vous !
-            </p>{" "} <br/><br/>
+              Réservez votre place et partez pour un voyage inoubliable. Que vous cherchiez une retraite paisible ou une randonnée aventureuse, nous avons l'expérience parfaite pour vous !
+            </p>
+            <br /><br />
           </center>
           <Container>
             <Row>
               <Col>
-              <center>
-                <label>Full Name</label>
-                <br />
-                <input
-                  type="Full Name"
-                  placeholder="Full Name"
-                  required
-                />
-                <br />
-                <label>Email</label>
-                <br />
-                <input
-                  type="email"
-                  placeholder="johnsondoe@nomail.com"
-                  required
-                />
-                <br />
-                
-                <br />
-                <label>Phone Number</label>
-                <br />
-                <input
-                  type="Phone Number"
-                  placeholder="+216 22 222 222"
-                  required
-                />
-                <br />
-                <label>Number of Participants</label>
-                <br />
-                <input
-  type="number"
-  placeholder="0"
-  required
-  min="1" 
-  step="1" 
-/>
-
-<br />
-<label for="specialRequests">Demandes spéciales</label>
-<br />
-<textarea
-  id="specialRequests"
-  placeholder="Enter your special requests or description"
-  required
-></textarea>
-<br />
-<button type="submit">soumettre</button>
-
-                <br />
+                <center>
+                  <label>Full Name</label>
+                  <br />
+                  <input type="text" placeholder="Full Name" required />
+                  <br />
+                  <label>Email</label>
+                  <br />
+                  <input type="email" placeholder="johnsondoe@nomail.com" required />
+                  <br />
+                  <label>Phone Number</label>
+                  <br />
+                  <input type="tel" placeholder="+216 22 222 222" required />
+                  <br />
+                  <label>Number of Participants</label>
+                  <br />
+                  <input type="number" placeholder="0" required min="1" step="1" />
+                  <br />
+                  <label htmlFor="specialRequests">Demandes spéciales</label>
+                  <br />
+                  <textarea id="specialRequests" placeholder="Enter your special requests or description" required></textarea>
+                  <br />
+                  <button type="submit">Soumettre</button>
+                  <br />
                 </center>
               </Col>
               <Col>
@@ -130,9 +105,11 @@ const Accueil = () => {
                       borderRadius: "8px",
                     }}
                   >
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <StaticDatePicker orientation="landscape" />
-                    </LocalizationProvider>
+                    <ThemeProvider theme={theme}>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <StaticDatePicker orientation="landscape" />
+                      </LocalizationProvider>
+                    </ThemeProvider>
                   </section>
                 </center>
               </Col>
@@ -150,7 +127,7 @@ const Accueil = () => {
                   la Tunisie autrement
                 </span>
                 <div className="frame-1" />
-              </div>{" "}
+              </div>
             </section>
           </center>
         </section>
