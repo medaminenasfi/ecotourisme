@@ -6,15 +6,14 @@ import Contact from "./pages/Contact";
 import Reservation from "./pages/Reservation";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Seconnecter from "./pages/Seconnecter";
-import Inscrire from "./pages/inscrire"; // Correct the capitalization
+import Inscrire from "./pages/inscrire";
 import Footer from "./Components/footer";
 import "./index.css";
-import Forgot from "./pages/forgot"
+import Forgot from "./pages/forgot";
 
 function App() {
   return (
     <div className="app-container">
-
       <div className="content">
         <Routes>
           <Route path="/" element={<Accueil />} />
@@ -25,7 +24,6 @@ function App() {
           <Route path="/Seconnecter" element={<Seconnecter />} />
           <Route path="/inscrire" element={<Inscrire />} />
           <Route path="/forgot" element={<Forgot />} />
-
         </Routes>
       </div>
       <Footer />
