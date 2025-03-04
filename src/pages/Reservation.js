@@ -61,9 +61,12 @@ const Accueil = () => {
           <h1 className="hell">Effectuer une réservation</h1>
           <center>
             <p>
-              Réservez votre place et partez pour un voyage inoubliable. Que vous cherchiez une retraite paisible ou une randonnée aventureuse, nous avons l'expérience parfaite pour vous !
+              Réservez votre place et partez pour un voyage inoubliable. Que
+              vous cherchiez une retraite paisible ou une randonnée aventureuse,
+              nous avons l'expérience parfaite pour vous !
             </p>
-            <br /><br />
+            <br />
+            <br />
           </center>
           <Container>
             <Row>
@@ -75,7 +78,11 @@ const Accueil = () => {
                   <br />
                   <label>Email</label>
                   <br />
-                  <input type="email" placeholder="johnsondoe@nomail.com" required />
+                  <input
+                    type="email"
+                    placeholder="johnsondoe@nomail.com"
+                    required
+                  />
                   <br />
                   <label>Phone Number</label>
                   <br />
@@ -83,11 +90,21 @@ const Accueil = () => {
                   <br />
                   <label>Number of Participants</label>
                   <br />
-                  <input type="number" placeholder="0" required min="1" step="1" />
+                  <input
+                    type="number"
+                    placeholder="0"
+                    required
+                    min="1"
+                    step="1"
+                  />
                   <br />
                   <label htmlFor="specialRequests">Demandes spéciales</label>
                   <br />
-                  <textarea id="specialRequests" placeholder="Enter your special requests or description" required></textarea>
+                  <textarea
+                    id="specialRequests"
+                    placeholder="Enter your special requests or description"
+                    required
+                  ></textarea>
                   <br />
                   <button type="submit">Soumettre</button>
                   <br />
