@@ -43,9 +43,29 @@ const Accueil = () => {
         <section className="bg-black text-white p-5 shadow-lg">
           <h1 classname="hell">Explorer Nos Circuits en Carte</h1>
           <h1>jyyfufuyk</h1>
-          <h1>kugmighm</h1>
-          <h2>oihiomimgh</h2>
-          <CircuitMap center={position1} />
+
+          <Container>
+  <Row>
+    <Col xs={12} md={6}>
+    <center>
+
+    1 of 2
+
+    </center>
+
+    </Col>
+    <Col xs={12} md={6}>
+    <center>
+      <CircuitMap center={position1} />
+      </center>
+    </Col>
+  </Row>
+</Container>
+
+
+
+
+
 
         </section>
 
