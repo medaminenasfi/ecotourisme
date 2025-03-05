@@ -2,6 +2,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useState } from 'react';
+import "./Circuit.css";
 
 // Fix Leaflet marker icon issue
 import markerIconPng from 'leaflet/dist/images/marker-icon.png';

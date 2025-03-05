@@ -331,3 +331,8 @@
   .MuiPickersDay-root:hover {
     background-color: rgba(25, 118, 210, 0.3) !important;
   }
+  .MuiPickersCalendarHeader-label {
+    opacity: 1 !important;
+    display: block !important;
+  }
+  

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../Components/navbar";
 import "./Reservation.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -7,32 +7,35 @@ import backgroundImage from "../assest/Accueil.jpg";
 import Container from "react-bootstrap/Container";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
-import { Box, ThemeProvider, createTheme } from "@mui/material";
+import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+import { Box, Button } from "@mui/material";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-
-const theme = createTheme({
-  components: {
-    MuiPickersDay: {
-      styleOverrides: {
-        root: {
-          color: "black !important",
-        },
-        today: {
-          border: "1px solid #1976d2 !important",
-        },
-        selected: {
-          backgroundColor: "#1976d2 !important",
-          color: "white !important",
-        },
-      },
-    },
-  },
-});
+import dayjs from "dayjs";
 
 const Accueil = () => {
-  console.log("Rendering Accueil page");
+  const [selectedDate, setSelectedDate] = useState(dayjs()); // Manage selected date state
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [participants, setParticipants] = useState(1);
+  const [specialRequests, setSpecialRequests] = useState("");
+
+  const handleReservation = () => {
+    if (!fullName || !email || !phone || participants < 1) {
+      alert("Veuillez remplir tous les champs obligatoires !");
+      return;
+    }
+
+    alert(
+      `Réservation confirmée ! 🎉\n\nNom: ${fullName}\nEmail: ${email}\nTéléphone: ${phone}\nParticipants: ${participants}\nDate: ${selectedDate.format(
+        "DD/MM/YYYY"
+      )}\nDemandes spéciales: ${specialRequests || "Aucune"}`
+    );
+
+    // Here, you can send the reservation data to a server using fetch() or axios
+  };
+
   return (
     <>
       <Navbar />
@@ -74,25 +77,41 @@ const Accueil = () => {
                 <center>
                   <label>Full Name</label>
                   <br />
-                  <input type="text" placeholder="Full Name" required />
+                  <input
+                    type="text"
+                    placeholder="Full Name"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
+                  />
                   <br />
                   <label>Email</label>
                   <br />
                   <input
                     type="email"
                     placeholder="johnsondoe@nomail.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                   <br />
                   <label>Phone Number</label>
                   <br />
-                  <input type="tel" placeholder="+216 22 222 222" required />
+                  <input
+                    type="tel"
+                    placeholder="+216 22 222 222"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    required
+                  />
                   <br />
                   <label>Number of Participants</label>
                   <br />
                   <input
                     type="number"
                     placeholder="0"
+                    value={participants}
+                    onChange={(e) => setParticipants(e.target.value)}
                     required
                     min="1"
                     step="1"
@@ -103,10 +122,10 @@ const Accueil = () => {
                   <textarea
                     id="specialRequests"
                     placeholder="Enter your special requests or description"
+                    value={specialRequests}
+                    onChange={(e) => setSpecialRequests(e.target.value)}
                     required
                   ></textarea>
-                  <br />
-                  <button type="submit">Soumettre</button>
                   <br />
                 </center>
               </Col>
@@ -122,31 +141,30 @@ const Accueil = () => {
                       borderRadius: "8px",
                     }}
                   >
-                    <ThemeProvider theme={theme}>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <StaticDatePicker orientation="landscape" />
-                      </LocalizationProvider>
-                    </ThemeProvider>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DateCalendar
+                        value={selectedDate}
+                        onChange={(newValue) => setSelectedDate(newValue)}
+                      />
+                    </LocalizationProvider>
                   </section>
+                  <p className="text-white mt-3">
+                    Date sélectionnée : {selectedDate.format("DD/MM/YYYY")}
+                  </p>
+
+                  {/* ✅ Reservation Button */}
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleReservation}
+                    sx={{ mt: 2 }}
+                  >
+                    Réserver
+                  </Button>
                 </center>
               </Col>
             </Row>
           </Container>
-        </section>
-        <section className="bg-black text-white p-5 shadow-lg">
-          <center>
-            <section className="image-section d-flex justify-content-center align-items-center">
-              <div className="main-container">
-                <div className="mask-group" />
-                <span className="explore-tunisia">
-                  Explorez
-                  <br />
-                  la Tunisie autrement
-                </span>
-                <div className="frame-1" />
-              </div>
-            </section>
-          </center>
         </section>
       </main>
       <Footer />

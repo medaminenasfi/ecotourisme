@@ -43,6 +43,7 @@ const Accueil = () => {
         <section className="bg-black text-white p-5 shadow-lg">
           <h1 classname="hell">Explorer Nos Circuits en Carte</h1>
           <h1>jyyfufuyk</h1>
+          <h1>kugmighm</h1>
 
           <Container>
   <Row>
