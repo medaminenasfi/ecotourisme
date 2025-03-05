@@ -1,147 +1,76 @@
-import React, { useState } from 'react'; 
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { Button } from 'react-bootstrap';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+import { useState } from 'react';
 
-// Circuit Coordinates
-const tozeurCircuitCoordinates = [
-  [33.9143, 8.1292], // Start
-  [33.9183, 8.1352],
-  [33.9223, 8.1412],
-  [33.9263, 8.1452],
-  [33.9300, 8.1500], // Finish
+// Fix Leaflet marker icon issue
+import markerIconPng from 'leaflet/dist/images/marker-icon.png';
+import markerShadowPng from 'leaflet/dist/images/marker-shadow.png';
+
+const customIcon = new L.Icon({
+  iconUrl: markerIconPng,
+  shadowUrl: markerShadowPng,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+const tunisiaCenter = [33.8869, 9.5375];
+const zoomLevel = 6;
+
+const regions = [
+  { name: 'Tunis', coords: [36.8065, 10.1815] },
+  { name: 'Ariana', coords: [36.8665, 10.1647] },
+  { name: 'Ben Arous', coords: [36.7435, 10.2317] },
+  { name: 'Manouba', coords: [36.8083, 9.9991] },
+  { name: 'Nabeul', coords: [36.451, 10.7361] },
+  { name: 'Bizerte', coords: [37.2744, 9.8739] },
+  { name: 'Beja', coords: [36.733, 9.1843] },
+  { name: 'Jendouba', coords: [36.5011, 8.7802] },
+  { name: 'Kef', coords: [36.1675, 8.704] },
+  { name: 'Siliana', coords: [36.088, 9.3746] },
+  { name: 'Zaghouan', coords: [36.4021, 10.1447] },
+  { name: 'Sousse', coords: [35.8256, 10.6369] },
+  { name: 'Monastir', coords: [35.7643, 10.8113] },
+  { name: 'Mahdia', coords: [35.5047, 11.0622] },
+  { name: 'Sfax', coords: [34.7391, 10.7593] },
+  { name: 'Kairouan', coords: [35.6781, 10.0963] },
+  { name: 'Kasserine', coords: [35.1676, 8.8368] },
+  { name: 'Sidi Bouzid', coords: [35.0382, 9.4858] },
+  { name: 'Gabes', coords: [33.8815, 10.0982] },
+  { name: 'Medenine', coords: [33.3549, 10.5055] },
+  { name: 'Tataouine', coords: [32.929, 10.4518] },
+  { name: 'Tozeur', coords: [33.9197, 8.1335] },
+  { name: 'Kebili', coords: [33.7076, 8.9715] },
+  { name: 'Gafsa', coords: [34.425, 8.7842] },
 ];
 
-// Restaurants & Guesthouses
-const pointsOfInterest = [
-  { name: "Dar Tozeur (Maison d’Hôte)", position: [33.9155, 8.1320], type: "guesthouse" },
-  { name: "Restaurant Le Soleil", position: [33.9200, 8.1380], type: "restaurant" },
-  { name: "El Bey (Maison d’Hôte)", position: [33.9250, 8.1430], type: "guesthouse" },
-  { name: "Le Palmier Restaurant", position: [33.9280, 8.1480], type: "restaurant" },
-];
-
-// Leaflet Default Icons
-const createIcon = (size = [40, 40]) => 
-  new L.Icon({
-    iconUrl: markerIcon,
-    shadowUrl: markerShadow,
-    iconSize: size,
-    iconAnchor: [size[0] / 2, size[1]],
-    popupAnchor: [0, -size[1] / 2],
-  });
-
-const startIcon = createIcon();
-const finishIcon = createIcon();
-const arrowIcon = createIcon([25, 25]);
-const restaurantIcon = createIcon([30, 30]);
-const guesthouseIcon = createIcon([30, 30]);
-const userLocationIcon = createIcon([30, 30]);
-
-// Handle Clicks on the Map
-const ClickHandler = ({ setClickedPosition }) => {
-  useMapEvents({
-    click(e) {
-      setClickedPosition(e.latlng);
-    },
-  });
+function ChangeView({ coords }) {
+  const map = useMap();
+  map.setView(coords, 10);
   return null;
-};
+}
 
-const CircuitMap = () => {
-  const [userLocation, setUserLocation] = useState(null);
-  const [clickedPosition, setClickedPosition] = useState(null);
-  const [selectedCircuit, setSelectedCircuit] = useState("");
-
-  // Get Current Location
-  const getCurrentLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserLocation([position.coords.latitude, position.coords.longitude]);
-        },
-        (error) => {
-          alert("Error getting location: " + error.message);
-        }
-      );
-    } else {
-      alert("Geolocation not supported.");
-    }
-  };
+const Circuit = () => {
+  const [selectedRegion, setSelectedRegion] = useState(null);
 
   return (
-    <div>
-      <MapContainer center={tozeurCircuitCoordinates[0]} zoom={14} style={{ height: "500px", width: "100%" }}>
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-
-        {/* Click Event Handler */}
-        <ClickHandler setClickedPosition={setClickedPosition} />
-
-        {/* Circuit Path */}
-        <Polyline
-          positions={tozeurCircuitCoordinates}
-          color="blue"
-          eventHandlers={{
-            click: () => setSelectedCircuit("Tozeur Circuit"),
-          }}
-        />
-
-        {/* Start & Finish Markers */}
-        <Marker position={tozeurCircuitCoordinates[0]} icon={startIcon}>
-          <Popup>Start: Oasis de Tozeur</Popup>
+    <MapContainer center={tunisiaCenter} zoom={zoomLevel} style={{ height: '100vh', width: '100%' }}>
+      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      {selectedRegion && <ChangeView coords={selectedRegion} />}
+      {regions.map((region, index) => (
+        <Marker
+          key={index}
+          position={region.coords}
+          icon={customIcon} // Set custom icon
+          eventHandlers={{ click: () => setSelectedRegion(region.coords) }}
+        >
+          <Popup>{region.name}</Popup>
         </Marker>
-        <Marker position={tozeurCircuitCoordinates[tozeurCircuitCoordinates.length - 1]} icon={finishIcon}>
-          <Popup>End: Circuit Finish</Popup>
-        </Marker>
-
-        {/* Direction Arrows */}
-        {tozeurCircuitCoordinates.slice(1, -1).map((point, index) => (
-          <Marker key={`arrow-${index}`} position={point} icon={arrowIcon}>
-            <Popup>Direction</Popup>
-          </Marker>
-        ))}
-
-        {/* Restaurants & Guesthouses */}
-        {pointsOfInterest.map((poi, index) => (
-          <Marker
-            key={`poi-${index}`}
-            position={poi.position}
-            icon={poi.type === "restaurant" ? restaurantIcon : guesthouseIcon}
-          >
-            <Popup>{poi.name}</Popup>
-          </Marker>
-        ))}
-
-        {/* Clicked Position Marker */}
-        {clickedPosition && (
-          <Marker position={clickedPosition}>
-            <Popup>You clicked here!</Popup>
-          </Marker>
-        )}
-
-        {/* User Location */}
-        {userLocation && (
-          <Marker position={userLocation} icon={userLocationIcon}>
-            <Popup>Your Location</Popup>
-          </Marker>
-        )}
-      </MapContainer>
-
-      {/* Display Selected Circuit Name */}
-      {selectedCircuit && (
-        <div style={{ marginTop: "10px", fontWeight: "bold" }}>
-          Selected Circuit: {selectedCircuit}
-        </div>
-      )}
-
-      {/* Get Location Button */}
-      <Button onClick={getCurrentLocation} style={{ marginTop: "10px" }}>
-        Get My Location
-      </Button>
-    </div>
+      ))}
+    </MapContainer>
   );
 };
 
-export default CircuitMap;
+export default Circuit;
