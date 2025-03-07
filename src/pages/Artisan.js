@@ -10,7 +10,7 @@ import Col from "react-bootstrap/Col";
 import Cuir from "../assest/Cuir.webp";
 import Potier  from "../assest/potier.jpg";
 import Tisserand from "../assest/tisserand.jpg";
-
+import CircuitArtisan from "../Components/CircuitArtisan"
 
 
 
@@ -43,10 +43,19 @@ L'Artisanat Local            </h1>
           
         </section>
 
-   <section className="bg-black text-white p-5 shadow-lg">
-   <h1 classname="hell">Carte des Artisans</h1>
-   /* Section pour carte */
-   </section>
+        <section className="bg-black text-white p-5 shadow-lg rounded-3">
+  <h1 className="text-center mb-4">Carte des Artisans</h1>
+  <div className="container">
+    <div className="row justify-content-center">
+      <div className="col-12 col-md-8">
+        <div className="map-container rounded-3">
+          <CircuitArtisan />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 
 

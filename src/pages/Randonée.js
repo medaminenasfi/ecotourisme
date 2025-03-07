@@ -50,14 +50,14 @@ const Accueil = () => {
     <Col xs={12} md={6}>
     <center>
 
-    1 of 2
+    <CircuitMap center={position1} />
 
     </center>
 
     </Col>
     <Col xs={12} md={6}>
     <center>
-      <CircuitMap center={position1} />
+      sdgsdfgsdf
       </center>
     </Col>
   </Row>
