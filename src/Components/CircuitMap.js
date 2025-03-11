@@ -1,12 +1,12 @@
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
-import { useState } from 'react';
-import './Circuit.css';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+import { useState } from "react";
+import "./Circuit.css";
 
 // Fix Leaflet marker icon issue
-import markerIconPng from 'leaflet/dist/images/marker-icon.png';
-import markerShadowPng from 'leaflet/dist/images/marker-shadow.png';
+import markerIconPng from "leaflet/dist/images/marker-icon.png";
+import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
 
 const customIcon = new L.Icon({
   iconUrl: markerIconPng,
@@ -23,105 +23,336 @@ const zoomLevel = 6;
 // All circuits for the 24 regions in Tunisia
 const circuitsByRegion = {
   Tunis: [
-    { name: 'Circuit de la médina', description: 'Une promenade à travers les rues historiques de la médina de Tunis.', start: '2025-04-01', end: '2025-04-07' },
-    { name: 'Circuit des plages', description: 'Explorez les magnifiques plages autour de Tunis.', start: '2025-05-01', end: '2025-05-10' },
-    { name: 'Circuit des sites historiques', description: 'Visitez les sites historiques importants de Tunis, y compris le musée du Bardo.', start: '2025-06-01', end: '2025-06-05' }
+    {
+      name: "Circuit du Belvédère - Lac de Tunise",
+      description:
+        "Vue panoramique sur Tunis et le lac.",
+      start: "Parc du Belvédère",
+      end: "Lac de Tunis",
+    },
+    {
+      name: "Circuit de la Forêt de Radès",
+      description: "Promenade forestière menant à la mer.",
+      start: "Forêt de Radès",
+      end: "Bord de mer de Radès",
+    },
+  
   ],
   Ariana: [
-    { name: 'Circuit de l’Oasis d’Ariana', description: 'Explorez les oasis de la région d’Ariana.', start: '2025-07-01', end: '2025-07-07' },
-    { name: 'Circuit de la médina', description: 'Visitez la médina d’Ariana avec ses charmantes rues et architectures.', start: '2025-08-01', end: '2025-08-10' }
+    {
+      name: "Circuit du Parc Ennahli",
+      description: "Sentiers en pleine nature autour des collines.",
+      start: "Parc Ennahli",
+      end: "Colline Ennahli",
+    },
+    {
+      name: "Circuit du Parc de la Soukra",
+      description:
+        "Randonnée dans une forêt de pins.",
+      start: "Forêt de la Soukra",
+      end: "Coteaux d’Ariana",
+    },
   ],
   Manouba: [
-    { name: 'Circuit de la nature', description: 'Explorez les forêts et la biodiversité de Manouba.', start: '2025-10-01', end: '2025-10-07' }
+    {
+      name: "Circuit de la Médina de Testour",
+      description: "Visite historique de Testour.",
+      start: "Médina de Testour",
+      end: "Vallée de la Medjerda",
+    },
+    {
+      name: "Circuit d’Oued Ellil",
+      description: "Randonnée à travers les collines verdoyantes.",
+      start: "Oued Ellil",
+      end: "Collines de Jedaida",
+    },
   ],
   Nabeul: [
-    { name: 'Circuit des plages de Nabeul', description: 'Détendez-vous sur les plages immaculées de Nabeul.', start: '2025-04-10', end: '2025-04-20' }
+    {
+      name: "Circuit de Korbous",
+      description: "Randonnée côtière avec vue sur la mer.",
+      start: "Korbous",
+      end: "Sources thermales naturelles",
+    },
+    {
+      name: "Circuit de la Forêt de Dar Chichou",
+      description: "Exploration de la forêt et des plages.",
+      start: "Dar Chichou",
+      end: "Cap Bon",
+    },
   ],
   Bizerte: [
-    { name: 'Circuit de l’Île de la Galite', description: 'Découvrez l’île préservée de la Galite.', start: '2025-05-15', end: '2025-05-20' }
+    {
+      name: "Circuit du Lac d’Ichkeul",
+      description: " Découverte du parc naturel et de sa faune.",
+      start: "Parc National d’Ichkeul",
+      end: "Mont Ichkeul",
+    },
+    {
+      name: "Circuit de la Forêt de Rafraf",
+      description: "Sentiers forestiers menant à la mer.",
+      start: "Village de Rafraf",
+      end: "Plage Sidi Ali El Mekki",
+    },
   ],
   Beja: [
-    { name: 'Circuit des ruines romaines de Timgad', description: 'Visitez les ruines romaines de Timgad à Beja.', start: '2025-06-15', end: '2025-06-18' }
+    {
+      name: "Circuit de la Forêt de Nefza",
+      description: "Randonnée dans une forêt dense.",
+      start: "Nefza",
+      end: "Barrage de Sidi El Barrak",
+    },
+    {
+      name: "Circuit d’Oued Zarga",
+      description: "Découverte des cascades et paysages verdoyants.",
+      start: "Oued Zarga",
+      end: "Cascade naturelle",
+    },
   ],
   Jendouba: [
-    { name: 'Circuit des montagnes de Jendouba', description: 'Randonnez dans les montagnes verdoyantes de Jendouba.', start: '2025-07-10', end: '2025-07-15' }
+    {
+      name: "Circuit du Parc National de Feija",
+      description: "Exploration de la faune et flore locales.",
+      start: " Ain Draham",
+      end: " Parc de Feija",
+    },
+    {
+      name: "Circuit de Fernana",
+      description: "Randonnée en pleine nature avec vues magnifiques.",
+      start: "Fernana",
+      end: "Sources thermales",
+    },
   ],
   Kef: [
-    { name: 'Circuit des anciennes forteresses', description: 'Visitez les anciennes forteresses du Kef.', start: '2025-08-15', end: '2025-08-20' }
+    {
+      name: "Circuit du Jebel Serj",
+      description: "Ascension offrant une vue panoramique.",
+      start: "Dahmani",
+      end: "Grottes naturelles",
+    },
+    {
+      name: "Circuit de l’Oasis de Tajerouine",
+      description: "Découverte des oasis locales.",
+      start: "Tajerouine",
+      end: "Sources naturelles",
+    },
   ],
   Siliana: [
-    { name: 'Circuit des Gorges de Siliana', description: 'Explorez les magnifiques gorges de Siliana.', start: '2025-09-10', end: '2025-09-15' }
+    {
+      name: "Circuit du Mont Bargou",
+      description: "Ascension avec vue sur les vallées.",
+      start: "Bargou",
+      end: "Sommet du Jebel Bargou",
+    },
+    {
+      name: "Circuit de la Vallée de Kesra",
+      description: "Randonnée dans une vallée sauvage.",
+      start: "Kesra",
+      end: "Chutes d’eau",
+    },
   ],
   Zaghouan: [
-    { name: 'Circuit des sources d\'eau', description: 'Découvrez les fameuses sources d’eau de Zaghouan.', start: '2025-10-10', end: '2025-10-15' }
+    {
+      name: "Circuit du Mont Zaghouan",
+      description: "Ascension avec une vue époustouflante.",
+      start: "Zaghouan",
+      end: "Sommet du Mont Zaghouan",
+    },
+    {
+      name: "Circuit de la Forêt de Zaghouan",
+      description: "Randonnée calme à travers la forêt.",
+      start: "Zaghouan",
+      end: "Parc naturel",
+    },
   ],
   Sousse: [
-    { name: 'Circuit du Ribat de Sousse', description: 'Explorez le Ribat historique de Sousse, un lieu de défense contre les invasions.', start: '2025-11-01', end: '2025-11-05' },
-    { name: 'Circuit des plages de Sousse', description: 'Détendez-vous sur les plages magnifiques de Sousse.', start: '2025-12-01', end: '2025-12-10' }
+    {
+      name: "Circuit de la Forêt de Sousse",
+      description:
+        " Randonnée en forêt paisible",
+      start: "Forêt de Sousse",
+      end: "Plage de Hammam Sousse",
+    },
+    {
+      name: "Circuit des plages de Sousse",
+      description: "Détendez-vous sur les plages magnifiques de Sousse.",
+      start: "Plage de Sousse",
+      end: "Port El Kantaoui",
+    },
   ],
   Monastir: [
-    { name: 'Circuit du mausolée de Bourguiba', description: 'Visitez le mausolée de Bourguiba à Monastir.', start: '2025-12-15', end: '2025-12-20' }
+    {
+      name: "Circuit du mausolée de Bourguiba",
+      description: "Visitez le mausolée de Bourguiba à Monastir.",
+      start: "..",
+      end: "..",
+    },
+    {
+      name: "Circuit du Parc National de Boukornine",
+      description: "Sentiers avec vues panoramiques.",
+      start: "Hammam-Lif",
+      end: "Boukornine",
+    },
   ],
   Mahdia: [
-    { name: 'Circuit des plages de Mahdia', description: 'Randonnez sur les plages immaculées de Mahdia.', start: '2025-01-01', end: '2025-01-07' }
+    {
+      name: "Circuit de la Plage de Mahdia",
+      description: "Randonnée sur des plages immaculées.",
+      start: "Plage de Mahdia",
+      end: "Oued Mahdia",
+    },
+    {
+      name: "Circuit du Parc Naturel de Mahdia",
+      description: " Exploration de la faune et de la flore locales.",
+      start: "Plage de Mahdia",
+      end: "Forêt de Mahdia",
+    },
   ],
   Sfax: [
-    { name: 'Circuit du centre historique de Sfax', description: 'Explorez la médina et le centre historique de Sfax.', start: '2025-02-01', end: '2025-02-07' }
+    {
+      name: "Circuit du Parc Naturel de Sidi Mansour",
+      description: "Randonnée en bord de mer",
+      start: "Sidi Mansour",
+      end: "Plage de Sidi Mansour",
+    },
+    
   ],
   Kairouan: [
-    { name: 'Circuit du mausolée de Sidi Sahbi', description: 'Visitez le mausolée de Sidi Sahbi à Kairouan.', start: '2025-03-01', end: '2025-03-05' }
+    {
+      name: "Circuit de la Forêt de Oueslatia",
+      description: "Promenade au cœur de la nature.",
+      start: "Oueslatia",
+      end: "Source de Oueslatia",
+    },
+    {
+      name: "Circuit des Oliveraies",
+      description: "Randonnée à travers les champs d’oliviers.",
+      start: "Kairouan",
+      end: "Oasis de Barrouta",
+    },
+
   ],
   Kasserine: [
-    { name: 'Circuit de Jebel Mghilla', description: 'Randonnez dans les montagnes du Jebel Mghilla, le plus haut sommet de la Tunisie.', start: '2025-04-01', end: '2025-04-07' },
-    { name: 'Circuit des Gorges de Selja', description: 'Explorez les spectaculaires gorges de Selja.', start: '2025-05-01', end: '2025-05-07' }
+    {
+      name: "Circuit du Mont Chambi",
+      description:
+        "Ascension du plus haut sommet de Tunisie.",
+      start: "Base du Mont Chambi",
+      end: "Sommet (1 544m)",
+    },
+    {
+      name: "Circuit du Jebel Selloum",
+      description: " Exploration de montagnes sauvages.",
+      start: "Thala",
+      end: "Grottes naturelles",
+    },
   ],
   Gabes: [
-    { name: 'Circuit de l’Oasis de Gabes', description: 'Découvrez l’oasis de Gabes, unique en bord de mer.', start: '2025-07-01', end: '2025-07-10' },
-    { name: 'Circuit des dunes', description: 'Parcourez les dunes du désert en direction de l’oasis.', start: '2025-08-01', end: '2025-08-05' }
+    {
+      name: "Circuit de l’Oasis de Gabes",
+      description: "Découvrez l’oasis de Gabes, unique en bord de mer.",
+      start: "Oasis de Gabès",
+      end: "Bord de mer",
+    },
+  
   ],
   Medenine: [
-    { name: 'Circuit de l’oasis de Medenine', description: 'Explorez l’oasis de Medenine dans le sud tunisien.', start: '2025-09-01', end: '2025-09-07' }
+    {
+      name: "Circuit de Matmata",
+      description: "Exploration des habitations troglodytes.",
+      start: "Matmata",
+      end: "Désert de Tataouine",
+    },
+    {
+      name: "Circuit de Douz",
+      description: "Découverte des dunes du désert.",
+      start: "Douz",
+      end: "Erg Djemel",
+    },
   ],
   Tataouine: [
-    { name: 'Circuit des ksour de Tataouine', description: 'Découvrez les ksour traditionnels de Tataouine.', start: '2025-10-01', end: '2025-10-07' }
+    {
+      name: "Circuit de Tataouine",
+      description: "Découverte des ksour et paysages sahariens.",
+      start: "Tataouine",
+      end: "Ksar Ouled Soltane",
+    },
+    {
+      name: "Circuit du Désert de Chenini",
+      description: "Randonnée au cœur du désert.",
+      start: "Chenini",
+      end: "Désert de Tataouine",
+    },
   ],
   Tozeur: [
-    { name: 'Circuit de l’Oasis de Tozeur', description: 'Un circuit à travers les oasis luxuriantes de Tozeur.', start: '2025-11-01', end: '2025-11-07' },
-    { name: 'Circuit du Chott El Jerid', description: 'Marchez sur le désert salé du Chott El Jerid.', start: '2025-12-01', end: '2025-12-07' }
+    {
+      name: "Circuit des Oasis de Tozeur",
+      description: "Randonnée à travers les palmeraies.",
+      start: "Tozeur",
+      end: "Chott el-Jerid",
+    },
+    {
+      name: "Circuit des Ksour",
+      description: "Exploration des villages fortifiés.",
+      start: "Ksar Ouled Soltane",
+      end: "Chott el-Jerid",
+    },
   ],
   Kebili: [
-    { name: 'Circuit de l’oasis de Kebili', description: 'Découvrez l’oasis de Kebili au cœur du désert.', start: '2025-01-10', end: '2025-01-15' }
+    {
+      name: "Circuit de l’Oasis de Kebili",
+      description: "Randonnée dans une oasis du désert.",
+      start: "Kebili",
+      end: "Erg el-Naouel",
+    },
+    {
+      name: "Circuit de la Vallée de l’Oued Djerid",
+      description: "Découverte des paysages désertiques.",
+      start: "Kebili",
+      end: "Chott el-Jerid",
+    },
   ],
   Gafsa: [
-    { name: 'Circuit des montagnes de Gafsa', description: 'Explorez les montagnes et oasis de Gafsa.', start: '2025-02-10', end: '2025-02-15' }
-  ]
+    {
+      name: "Circuit de l’Oasis de Tozeur",
+      description: "Exploration des oasis au bord du désert.",
+      start: "Tozeur",
+      end: "Oasis de Chott el-Jerid",
+    },
+    {
+      name: "Circuit du Ksar Ouled Soltane",
+      description: "Découverte de l’architecture des ksour.",
+      start: "sar Ouled Soltane",
+      end: "Erg Chebbi",
+    },
+  ],
 };
 
 const regions = [
-  { name: 'Tunis', coords: [36.8065, 10.1815] },
-  { name: 'Ariana', coords: [36.8665, 10.1647] },
-  { name: 'Ben Arous', coords: [36.7435, 10.2317] },
-  { name: 'Manouba', coords: [36.8083, 9.9991] },
-  { name: 'Nabeul', coords: [36.451, 10.7361] },
-  { name: 'Bizerte', coords: [37.2744, 9.8739] },
-  { name: 'Beja', coords: [36.733, 9.1843] },
-  { name: 'Jendouba', coords: [36.5011, 8.7802] },
-  { name: 'Kef', coords: [36.1675, 8.704] },
-  { name: 'Siliana', coords: [36.088, 9.3746] },
-  { name: 'Zaghouan', coords: [36.4021, 10.1447] },
-  { name: 'Sousse', coords: [35.8256, 10.6369] },
-  { name: 'Monastir', coords: [35.7643, 10.8113] },
-  { name: 'Mahdia', coords: [35.5047, 11.0622] },
-  { name: 'Sfax', coords: [34.7391, 10.7593] },
-  { name: 'Kairouan', coords: [35.6781, 10.0963] },
-  { name: 'Kasserine', coords: [35.1676, 8.8368] },
-  { name: 'Sidi Bouzid', coords: [35.0382, 9.4858] },
-  { name: 'Gabes', coords: [33.8815, 10.0982] },
-  { name: 'Medenine', coords: [33.3549, 10.5055] },
-  { name: 'Tataouine', coords: [32.929, 10.4518] },
-  { name: 'Tozeur', coords: [33.9197, 8.1335] },
-  { name: 'Kebili', coords: [33.7076, 8.9715] },
-  { name: 'Gafsa', coords: [34.425, 8.7806] }
+  { name: "Tunis", coords: [36.8065, 10.1815] },
+  { name: "Ariana", coords: [36.8665, 10.1647] },
+  { name: "Ben Arous", coords: [36.7435, 10.2317] },
+  { name: "Manouba", coords: [36.8083, 9.9991] },
+  { name: "Nabeul", coords: [36.451, 10.7361] },
+  { name: "Bizerte", coords: [37.2744, 9.8739] },
+  { name: "Beja", coords: [36.733, 9.1843] },
+  { name: "Jendouba", coords: [36.5011, 8.7802] },
+  { name: "Kef", coords: [36.1675, 8.704] },
+  { name: "Siliana", coords: [36.088, 9.3746] },
+  { name: "Zaghouan", coords: [36.4021, 10.1447] },
+  { name: "Sousse", coords: [35.8256, 10.6369] },
+  { name: "Monastir", coords: [35.7643, 10.8113] },
+  { name: "Mahdia", coords: [35.5047, 11.0622] },
+  { name: "Sfax", coords: [34.7391, 10.7593] },
+  { name: "Kairouan", coords: [35.6781, 10.0963] },
+  { name: "Kasserine", coords: [35.1676, 8.8368] },
+  { name: "Sidi Bouzid", coords: [35.0382, 9.4858] },
+  { name: "Gabes", coords: [33.8815, 10.0982] },
+  { name: "Medenine", coords: [33.3549, 10.5055] },
+  { name: "Tataouine", coords: [32.929, 10.4518] },
+  { name: "Tozeur", coords: [33.9197, 8.1335] },
+  { name: "Kebili", coords: [33.7076, 8.9715] },
+  { name: "Gafsa", coords: [34.425, 8.7806] },
 ];
 
 function ChangeView({ coords }) {
@@ -133,7 +364,7 @@ function ChangeView({ coords }) {
 const Circuit = () => {
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [regionCircuits, setRegionCircuits] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [filteredRegions, setFilteredRegions] = useState(regions);
   const [reviews, setReviews] = useState({});
 
@@ -178,7 +409,11 @@ const Circuit = () => {
         onChange={handleSearchChange}
         className="search-bar"
       />
-      <MapContainer center={tunisiaCenter} zoom={zoomLevel} style={{ height: "100vh", width: "100%" }}>
+      <MapContainer
+        center={tunisiaCenter}
+        zoom={zoomLevel}
+        style={{ height: "100vh", width: "100%" }}
+      >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {regions.map((region) => (
           <Marker
@@ -203,9 +438,15 @@ const Circuit = () => {
               <li key={index}>
                 <h3>{circuit.name}</h3>
                 <p>{circuit.description}</p>
-                <p><strong>Start:</strong> {circuit.start}</p>
-                <p><strong>End:</strong> {circuit.end}</p>
-                <button onClick={() => handleReserveClick(circuit)}>Reserver</button>
+                <p>
+                  <strong>Départ :</strong> {circuit.start}
+                </p>
+                <p>
+                  <strong>Arrivée :</strong> {circuit.end}
+                </p>
+                <button onClick={() => handleReserveClick(circuit)}>
+                  Reserver
+                </button>
 
                 {/* Review Form for Each Circuit */}
                 <div className="review-form">
@@ -250,8 +491,12 @@ const Circuit = () => {
                     <ul>
                       {reviews[circuit.name].map((review, idx) => (
                         <li key={idx}>
-                          <p><strong>Rating:</strong> {review.rating} / 5</p>
-                          <p><strong>Comment:</strong> {review.comment}</p>
+                          <p>
+                            <strong>Rating:</strong> {review.rating} / 5
+                          </p>
+                          <p>
+                            <strong>Comment:</strong> {review.comment}
+                          </p>
                         </li>
                       ))}
                     </ul>
