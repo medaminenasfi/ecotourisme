@@ -25,8 +25,7 @@ const circuitsByRegion = {
   Tunis: [
     {
       name: "Circuit du Belvédère - Lac de Tunise",
-      description:
-        "Vue panoramique sur Tunis et le lac.",
+      description: "Vue panoramique sur Tunis et le lac.",
       start: "Parc du Belvédère",
       end: "Lac de Tunis",
     },
@@ -36,7 +35,6 @@ const circuitsByRegion = {
       start: "Forêt de Radès",
       end: "Bord de mer de Radès",
     },
-  
   ],
   Ariana: [
     {
@@ -47,8 +45,7 @@ const circuitsByRegion = {
     },
     {
       name: "Circuit du Parc de la Soukra",
-      description:
-        "Randonnée dans une forêt de pins.",
+      description: "Randonnée dans une forêt de pins.",
       start: "Forêt de la Soukra",
       end: "Coteaux d’Ariana",
     },
@@ -84,7 +81,7 @@ const circuitsByRegion = {
   Bizerte: [
     {
       name: "Circuit du Lac d’Ichkeul",
-      description: " Découverte du parc naturel et de sa faune.",
+      description: "Découverte du parc naturel et de sa faune.",
       start: "Parc National d’Ichkeul",
       end: "Mont Ichkeul",
     },
@@ -113,8 +110,8 @@ const circuitsByRegion = {
     {
       name: "Circuit du Parc National de Feija",
       description: "Exploration de la faune et flore locales.",
-      start: " Ain Draham",
-      end: " Parc de Feija",
+      start: "Ain Draham",
+      end: "Parc de Feija",
     },
     {
       name: "Circuit de Fernana",
@@ -168,8 +165,7 @@ const circuitsByRegion = {
   Sousse: [
     {
       name: "Circuit de la Forêt de Sousse",
-      description:
-        " Randonnée en forêt paisible",
+      description: "Randonnée en forêt paisible",
       start: "Forêt de Sousse",
       end: "Plage de Hammam Sousse",
     },
@@ -203,7 +199,7 @@ const circuitsByRegion = {
     },
     {
       name: "Circuit du Parc Naturel de Mahdia",
-      description: " Exploration de la faune et de la flore locales.",
+      description: "Exploration de la faune et de la flore locales.",
       start: "Plage de Mahdia",
       end: "Forêt de Mahdia",
     },
@@ -215,7 +211,6 @@ const circuitsByRegion = {
       start: "Sidi Mansour",
       end: "Plage de Sidi Mansour",
     },
-    
   ],
   Kairouan: [
     {
@@ -230,19 +225,17 @@ const circuitsByRegion = {
       start: "Kairouan",
       end: "Oasis de Barrouta",
     },
-
   ],
   Kasserine: [
     {
       name: "Circuit du Mont Chambi",
-      description:
-        "Ascension du plus haut sommet de Tunisie.",
+      description: "Ascension du plus haut sommet de Tunisie.",
       start: "Base du Mont Chambi",
       end: "Sommet (1 544m)",
     },
     {
       name: "Circuit du Jebel Selloum",
-      description: " Exploration de montagnes sauvages.",
+      description: "Exploration de montagnes sauvages.",
       start: "Thala",
       end: "Grottes naturelles",
     },
@@ -254,7 +247,6 @@ const circuitsByRegion = {
       start: "Oasis de Gabès",
       end: "Bord de mer",
     },
-  
   ],
   Medenine: [
     {
@@ -329,30 +321,126 @@ const circuitsByRegion = {
 };
 
 const regions = [
-  { name: "🌿Tunis, Tunisia 🌿  Parc du Belvédère, nature urbaine.", coords: [36.8065, 10.1815] },
-  { name: "🌿Ariana, Tunisia🌿", coords: [36.8665, 10.1647] },
-  { name: "🌿Ben Arous, Tunisia🌿", coords: [36.7435, 10.2317] },
-  { name: "🌿 Manouba, Tunisia🌿", coords: [36.8083, 9.9991] },
-  { name: "🌿 Nabeul, Tunisia🌿", coords: [36.451, 10.7361] },
-  { name: "🌿 Bizerte, Tunisia 🌿 Parc Ichkeul, oiseaux migrateurs.", coords: [37.2744, 9.8739] },
-  { name: "🌿 Béja, Tunisia 🌿 Dougga, nature et patrimoine.", coords: [36.733, 9.1843] },
-  { name: "🌿Jendouba, Tunisia🌿", coords: [36.5011, 8.7802] },
-  { name: "🌿 Le Kef, Tunisia 🌿 Jebel Ouergha, nature sauvage.", coords: [36.1675, 8.704] },
-  { name: "🌿 Siliana, Tunisia🌿", coords: [36.088, 9.3746] },
-  { name: "🌿 Zaghouan, Tunisia🌿", coords: [36.4021, 10.1447] },
-  { name: "🌿 Sousse, Tunisia 🌿 Oliveraies et terroir local.", coords: [35.8256, 10.6369] },
-  { name: "🌿 Monastir, Tunisia 🌿 Sentiers côtiers et conservation marine.", coords: [35.7643, 10.8113] },
-  { name: "🌿 Mahdia, Tunisia🌿", coords: [35.5047, 11.0622] },
-  { name: "🌿 Sfax, Tunisia 🌿 Îles Kerkennah, pêche durable.", coords: [34.7391, 10.7593] },
-  { name: "🌿 Kairouan, Tunisia 🌿 Lac Sidi Saad, oasis désertique.", coords: [35.6781, 10.0963] },
-  { name: "🌿 Kasserine, Tunisia 🌿 Chaambi, plus haut sommet de Tunisie.", coords: [35.1676, 8.8368] },
-  { name: "🌿 Sidi Bouzid, Tunisia 🌿Montagnes et nature rurale.", coords: [35.0382, 9.4858] },
-  { name: "🌿 Gabès, Tunisia🌿 Oasis maritime unique.", coords: [33.8815, 10.0982] },
-  { name: "🌿 Médenine, Tunisia 🌿 Ksours et randonnées berbères.", coords: [33.3549, 10.5055] },
-  { name: "🌿 Tataouine, Tunisia🌿  Ksar Ghilane, désert et patrimoine.", coords: [32.929, 10.4518] },
-  { name: "🌿 Tozeur, Tunisia 🌿 Chébika, oasis et dunes.", coords: [33.9197, 8.1335] },
-  { name: "🌿 Kebili, Tunisia🌿", coords: [33.7076, 8.9715] },
-  { name: "🌿 Gafsa, Tunisia  Cascades et oasis de montagne.", coords: [34.425, 8.7806] },
+  {
+    id: "Tunis",
+    name: "🌿Tunis, Tunisia 🌿  Parc du Belvédère, nature urbaine.",
+    coords: [36.8065, 10.1815],
+  },
+  {
+    id: "Ariana",
+    name: "🌿Ariana, Tunisia🌿",
+    coords: [36.8665, 10.1647],
+  },
+  {
+    id: "BenArous",
+    name: "🌿Ben Arous, Tunisia🌿",
+    coords: [36.7435, 10.2317],
+  },
+  {
+    id: "Manouba",
+    name: "🌿Manouba, Tunisia🌿",
+    coords: [36.8083, 9.9991],
+  },
+  {
+    id: "Nabeul",
+    name: "🌿Nabeul, Tunisia🌿",
+    coords: [36.451, 10.7361],
+  },
+  {
+    id: "Bizerte",
+    name: "🌿Bizerte, Tunisia 🌿 Parc Ichkeul, oiseaux migrateurs.",
+    coords: [37.2744, 9.8739],
+  },
+  {
+    id: "Beja",
+    name: "🌿Béja, Tunisia 🌿 Dougga, nature et patrimoine.",
+    coords: [36.733, 9.1843],
+  },
+  {
+    id: "Jendouba",
+    name: "🌿Jendouba, Tunisia🌿",
+    coords: [36.5011, 8.7802],
+  },
+  {
+    id: "Kef",
+    name: "🌿Le Kef, Tunisia 🌿 Jebel Ouergha, nature sauvage.",
+    coords: [36.1675, 8.704],
+  },
+  {
+    id: "Siliana",
+    name: "🌿Siliana, Tunisia🌿",
+    coords: [36.088, 9.3746],
+  },
+  {
+    id: "Zaghouan",
+    name: "🌿Zaghouan, Tunisia🌿",
+    coords: [36.4021, 10.1447],
+  },
+  {
+    id: "Sousse",
+    name: "🌿Sousse, Tunisia 🌿 Oliveraies et terroir local.",
+    coords: [35.8256, 10.6369],
+  },
+  {
+    id: "Monastir",
+    name: "🌿Monastir, Tunisia 🌿 Sentiers côtiers et conservation marine.",
+    coords: [35.7643, 10.8113],
+  },
+  {
+    id: "Mahdia",
+    name: "🌿Mahdia, Tunisia🌿",
+    coords: [35.5047, 11.0622],
+  },
+  {
+    id: "Sfax",
+    name: "🌿Sfax, Tunisia 🌿 Îles Kerkennah, pêche durable.",
+    coords: [34.7391, 10.7593],
+  },
+  {
+    id: "Kairouan",
+    name: "🌿Kairouan, Tunisia 🌿 Lac Sidi Saad, oasis désertique.",
+    coords: [35.6781, 10.0963],
+  },
+  {
+    id: "Kasserine",
+    name: "🌿Kasserine, Tunisia 🌿 Chaambi, plus haut sommet de Tunisie.",
+    coords: [35.1676, 8.8368],
+  },
+  {
+    id: "SidiBouzid",
+    name: "🌿Sidi Bouzid, Tunisia 🌿Montagnes et nature rurale.",
+    coords: [35.0382, 9.4858],
+  },
+  {
+    id: "Gabes",
+    name: "🌿Gabès, Tunisia🌿 Oasis maritime unique.",
+    coords: [33.8815, 10.0982],
+  },
+  {
+    id: "Medenine",
+    name: "🌿Médenine, Tunisia 🌿 Ksours et randonnées berbères.",
+    coords: [33.3549, 10.5055],
+  },
+  {
+    id: "Tataouine",
+    name: "🌿Tataouine, Tunisia🌿  Ksar Ghilane, désert et patrimoine.",
+    coords: [32.929, 10.4518],
+  },
+  {
+    id: "Tozeur",
+    name: "🌿Tozeur, Tunisia 🌿 Chébika, oasis et dunes.",
+    coords: [33.9197, 8.1335],
+  },
+  {
+    id: "Kebili",
+    name: "🌿Kebili, Tunisia🌿",
+    coords: [33.7076, 8.9715],
+  },
+  {
+    id: "Gafsa",
+    name: "🌿Gafsa, Tunisia  Cascades et oasis de montagne.",
+    coords: [34.425, 8.7806],
+  },
 ];
 
 function ChangeView({ coords }) {
@@ -369,8 +457,8 @@ const Circuit = () => {
   const [reviews, setReviews] = useState({});
 
   const handleRegionClick = (region) => {
-    setSelectedRegion(region.coords);
-    setRegionCircuits(circuitsByRegion[region.name] || []);
+    setSelectedRegion(region);
+    setRegionCircuits(circuitsByRegion[region.id] || []);
   };
 
   const handleSearchChange = (e) => {
@@ -389,7 +477,7 @@ const Circuit = () => {
 
   const handleReserveClick = (circuit) => {
     alert(`You have reserved: ${circuit.name}`);
-    // Add reservation functionality here, such as navigating to a confirmation page or saving the reservation
+    // Add reservation functionality here (e.g., navigation or API call)
   };
 
   const handleReviewSubmit = (circuitName, reviewData) => {
@@ -417,7 +505,7 @@ const Circuit = () => {
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {regions.map((region) => (
           <Marker
-            key={region.name}
+            key={region.id}
             position={region.coords}
             icon={customIcon}
             eventHandlers={{
@@ -427,7 +515,7 @@ const Circuit = () => {
             <Popup>{region.name}</Popup>
           </Marker>
         ))}
-        {selectedRegion && <ChangeView coords={selectedRegion} />}
+        {selectedRegion && <ChangeView coords={selectedRegion.coords} />}
       </MapContainer>
 
       {regionCircuits.length > 0 && (
@@ -459,6 +547,7 @@ const Circuit = () => {
                         comment: e.target.comment.value,
                       };
                       handleReviewSubmit(circuit.name, reviewData);
+                      e.target.reset(); // clear the form after submit
                     }}
                   >
                     <div>
