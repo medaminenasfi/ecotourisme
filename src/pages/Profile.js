@@ -25,16 +25,18 @@ const Profile = () => {
   }
 
   return (
+
     <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-100">
       <div className="w-full max-w-md p-6 bg-white shadow-md rounded-2xl">
         <h2 className="text-2xl font-semibold text-center mb-4">Profil Utilisateur</h2>
         <div className="space-y-3">
           <p><strong>Prénom :</strong> {user.first_name || "Non renseigné"}</p>
-          <p><strong>Nom :</strong> {user.last_name || "Non renseigné"}</p>
-          <p><strong>Email :</strong> {user.email || "Non renseigné"}</p>
-          <p><strong>Téléphone :</strong> {user.phone_number || "Non renseigné"}</p>
-          <p><strong>Genre :</strong> {user.gender }</p>
-          <p><strong>Rôle :</strong> {user.role }</p>
+<p><strong>Nom :</strong> {user.last_name || "Non renseigné"}</p>
+<p><strong>Email :</strong> {user.email || "Non renseigné"}</p>
+<p><strong>Téléphone :</strong> {user.phone_number || "Non renseigné"}</p>
+<p><strong>Genre :</strong> {user.gender }</p>
+<p><strong>Rôle :</strong> {user.role }</p>
+
         </div>
         <div className="mt-6 text-center">
           {user.role === "admin" && (

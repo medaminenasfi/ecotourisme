@@ -9,8 +9,18 @@ const AuthProvider = ({ children }) => {
     const token = localStorage.getItem("accessToken");
     if (token) {
       const decodedUser = decodeToken(token);
-      if (decodedUser && !isTokenExpired(decodedUser)) {
-        setUser(decodedUser.UserInfo);  // Set full user data
+      console.log("🟢 Decoded User from Token:", decodedUser);
+
+      if (decodedUser?.UserInfo && !isTokenExpired(decodedUser)) {
+        setUser({
+          id: decodedUser.UserInfo.id,
+          email: decodedUser.UserInfo.email,
+          first_name: decodedUser.UserInfo.first_name,
+          last_name: decodedUser.UserInfo.last_name,
+          phone_number: decodedUser.UserInfo.phone_number,
+          gender: decodedUser.UserInfo.gender,
+          role: decodedUser.UserInfo.role,
+        });
       } else {
         logout();
       }
@@ -21,11 +31,21 @@ const AuthProvider = ({ children }) => {
     console.log("🔄 Mise à jour de l'utilisateur :", user);
   }, [user]);
 
-  const login = (token, userData) => {
+  const login = (token, userData = {}) => {
     localStorage.setItem("accessToken", token);
     const decodedUser = decodeToken(token);
-    if (decodedUser && !isTokenExpired(decodedUser)) {
-      setUser(userData);  // Set full user data, including role and other fields
+
+    if (decodedUser?.UserInfo && !isTokenExpired(decodedUser)) {
+      setUser({
+        id: decodedUser.UserInfo.id,
+        email: decodedUser.UserInfo.email,
+        first_name: decodedUser.UserInfo.first_name,
+        last_name: decodedUser.UserInfo.last_name,
+        phone_number: decodedUser.UserInfo.phone_number,
+        gender: decodedUser.UserInfo.gender,
+        role: decodedUser.UserInfo.role,
+        ...userData, // Ensure userData does not override JWT data
+      });
     } else {
       logout();
     }
@@ -44,7 +64,10 @@ const AuthProvider = ({ children }) => {
       }
       const base64Url = parts[1];
       const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      return JSON.parse(window.atob(base64));
+      const decoded = JSON.parse(window.atob(base64));
+
+      console.log("🟢 Decoded Token:", decoded);
+      return decoded;
     } catch (error) {
       console.error("❌ Erreur de décodage du token:", error);
       return null;
@@ -52,8 +75,8 @@ const AuthProvider = ({ children }) => {
   };
 
   const isTokenExpired = (decodedToken) => {
-    if (!decodedToken || !decodedToken.exp) return true;
-    return Date.now() > decodedToken.exp * 1000;
+    if (!decodedToken?.exp) return true;
+    return Math.floor(Date.now() / 1000) >= decodedToken.exp;
   };
 
   return (
