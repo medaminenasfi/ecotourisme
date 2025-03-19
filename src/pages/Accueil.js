@@ -11,7 +11,6 @@ import myImage from "../assest/matmata.webp";
 import tozeur from "../assest/Tozeur.jpg";
 import tata from "../assest/tatouine.jpg";
 import { Link } from "react-router-dom";
-import Randonée from "../pages/Randonée";
 
 const Accueil = () => {
   console.log("Rendering Accueil page");
@@ -19,6 +18,7 @@ const Accueil = () => {
     <>
       <Navbar />
       <main>
+        {/* Main Content Section */}
         <section
           className="d-flex align-items-center justify-content-center text-white"
           style={{
@@ -53,26 +53,26 @@ const Accueil = () => {
               <br />
               <strong>— Proverbe Lakota</strong>
             </p>
-          </div>{" "}
+          </div>
         </section>
+
+        {/* Destinations Section */}
         <section className="bg-black text-white p-5 shadow-lg">
-          <h1 classname="hell">Les meilleures destinations</h1>
-          <br />
-          <center>
-            {" "}
+          <h1 className="hell">Les meilleures destinations</h1>
+          <div style={{ textAlign: "center" }}>
             <p>
               Partez à la découverte de paysages incroyables, des déserts aux
               plages superbes.
-            </p>{" "}
+            </p>
             <br />
-          </center>
-          <center>
+          </div>
+          <div style={{ textAlign: "center" }}>
             <Container>
               <Row>
                 <Col>
                   <img
                     src={myImage}
-                    alt="Description of the image"
+                    alt="Habitations troglodytiques de Matmata, Tunisie"
                     style={{
                       width: "100%",
                       height: "auto",
@@ -82,15 +82,12 @@ const Accueil = () => {
                   />
                 </Col>
                 <Col>
-                  <br /> <br /> <br />
-                  <h1>Matmata, gabes.</h1>
-                  <br /> <br />
+                  <h1>Matmata, Gabes</h1>
                   <p>
                     Située au sud de la Tunisie, Matmata est une destination
                     unique connue pour ses habitations troglodytiques creusées
                     dans la roche, offrant une immersion authentique dans la
-                    culture berbère. 
-                    Ce village pittoresque, célèbre pour avoir
+                    culture berbère. Ce village pittoresque, célèbre pour avoir
                     servi de décor à des films comme Star Wars, attire les
                     visiteurs en quête de paysages atypiques et d’expériences
                     écotouristiques enrichissantes.
@@ -98,15 +95,13 @@ const Accueil = () => {
                 </Col>
               </Row>
             </Container>
-          </center>
-          <br /> <br />
-          <center>
+          </div>
+          <br />
+          <div style={{ textAlign: "center" }}>
             <Container>
               <Row>
                 <Col>
-                  <br /> <br /> <br />
                   <h1>Tozeur, Tunisia</h1>
-                  <br /> <br />
                   <p>
                     Située à l’ouest de la Tunisie, aux portes du désert du
                     Sahara, Tozeur est une ville emblématique pour les amateurs
@@ -120,7 +115,7 @@ const Accueil = () => {
                 <Col>
                   <img
                     src={tozeur}
-                    alt="Description of the image"
+                    alt="Palmeraie et architecture traditionnelle de Tozeur, Tunisie"
                     style={{
                       width: "100%",
                       height: "auto",
@@ -131,15 +126,15 @@ const Accueil = () => {
                 </Col>
               </Row>
             </Container>
-          </center>
-          <br /> <br /> <br />
-          <center>
+          </div>
+          <br />
+          <div style={{ textAlign: "center" }}>
             <Container>
               <Row>
                 <Col>
                   <img
                     src={tata}
-                    alt="Description of the image"
+                    alt="Ksar et paysage désertique de Tataouine, Tunisie"
                     style={{
                       width: "100%",
                       height: "auto",
@@ -149,9 +144,7 @@ const Accueil = () => {
                   />
                 </Col>
                 <Col>
-                  <br /> <br />
-                  <h1>tataouin</h1>
-                  <br /> <br />
+                  <h1>Tataouine</h1>
                   <p>
                     Nichée au sud-est de la Tunisie, Tataouine est une terre de
                     contrastes où le désert rencontre des paysages montagneux
@@ -164,10 +157,12 @@ const Accueil = () => {
                 </Col>
               </Row>
             </Container>
-          </center>
+          </div>
         </section>
-        <section className="bg-black text-white p-5 shadow-lg">
-          <center>
+
+        {/* Explore Tunisia Section at the Bottom */}
+        <section className="bg-black text-white p-5 shadow-lg" style={{ position: "relative", bottom: 0 }}>
+          <div style={{ textAlign: "center" }}>
             <section className="image-section d-flex justify-content-center align-items-center">
               <div className="main-container">
                 <div className="mask-group" />
@@ -176,11 +171,16 @@ const Accueil = () => {
                   <br />
                   la Tunisie autrement
                 </span>
-                <Link to="/Randonée" className="frame-1"           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                ></Link>
+                <Link
+                  to="/Randonée"
+                  className="frame-1"
+                  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                >
+                  {/* You can add some content here */}
+                </Link>
               </div>
             </section>
-          </center>
+          </div>
         </section>
       </main>
       <Footer />

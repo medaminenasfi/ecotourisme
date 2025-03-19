@@ -1,6 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap");
 
-/* Global Styles */
 body {
   margin: 0;
   padding: 0;
@@ -73,9 +72,7 @@ body {
   position: relative;
   z-index: 2;
   color: white;
-  width: 1515px;
-  height: 859px;
-  left: -1px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -101,38 +98,84 @@ h1 {
   margin-top: 1rem;
 }
 
-/* Quotes Section */
-.quotes {
-  position: absolute;
-  bottom: 5%;
-  width: 90%;
+/* Form Styles */
+.main-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-align: center;
+}
+
+.main-div {
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 100%;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.forgot-password-title {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.password-recovery-message {
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+}
+
+.email-label {
   font-size: 1rem;
-  font-style: italic;
+  font-weight: 500;
+}
+
+.email-input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.btn-continue {
+  background-color: #2c3e50;
   color: white;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  cursor: pointer;
 }
 
-.quote {
-  width: 40%;
-  z-index: 2;
+.btn-continue:hover {
+  background-color: #34495e;
 }
 
-.quote.left {
-  text-align: left;
-}
-
-.quote.right {
-  text-align: right;
+.back-to-login {
+  color: #fff;
+  font-size: 1rem;
+  text-decoration: none;
+  margin-bottom: 10px;
+  display: inline-block;
 }
 
 /* Footer */
 .main-footer {
   background-color: #222222;
   color: white;
-  margin-top: auto;
   padding: 3rem 2rem;
   width: 100%;
+  margin-top: auto;
 }
 
 .footer-links-container {
@@ -168,125 +211,15 @@ h1 {
   color: #888888;
 }
 
-
-
-.image-section {
-  width: 1264px;
-  height: 420px;
-  background-color: black; /* Optional background */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
-
-.image-style {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: cover; /* Ensures the image fits inside */
-}
-
-
-
-
-:root {
-  --default-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Ubuntu, "Helvetica Neue", Helvetica, Arial, "PingFang SC",
-    "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei",
-    "Source Han Sans CN", sans-serif;
-}
-
-.main-container {
-  overflow: hidden;
-}
-
-.main-container,
-.main-container * {
-  box-sizing: border-box;
-}
-
-input,
-select,
-textarea,
-button {
-  outline: 0;
-}
-
-.main-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  flex-wrap: nowrap;
-  gap: 10px;
-  position: relative;
-  width: 1264px;
-  margin: 0 auto;
-    padding: 0 15px; /* Add padding for responsiveness */
-
-}
-.mask-group {
-  flex-shrink: 0;
-  position: relative;
-  width: 1264px;
-  height: 420px;
-  background: url(../assest/tatouine.jpg)
-    no-repeat center;
-  background-size: cover;
-}
-.explore-tunisia {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  position: absolute;
-  width: 620px;
-  height: 128px;
-  top: 157px;
-  left: 53px;
-  color: #ffffff;
-  font-family: Poppins, var(--default-font-family);
-  font-size: 60px;
-  font-weight: 600;
-  line-height: 63.6px;
-  text-align: left;
-  text-overflow: initial;
-  letter-spacing: -0.6px;
-  z-index: 1;
-  overflow: hidden;
-
-}
-.frame-1 {
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: nowrap;
-  flex-shrink: 0;
-  gap: 10px;
-  position: absolute;
-  width: 86px;
-  height: 86px;
-  top: 188px;
-  left: 1085px;
-  background: url(../assest/fleche.png)
-    no-repeat center;
-  background-size: cover;
-  z-index: 2;
-}
-@media (max-width: 480px) {
-  .explore-tunisia {
-    font-size: 1.5rem; /* Smaller text */
-  }
-  .image-section {
-    height: 250px; /* Adjust height */
-  }
-  .main-container {
-    padding: 0 10px; /* Add more padding */
-  }
-}
+/* Media Queries for responsiveness */
 @media (max-width: 768px) {
-  .explore-tunisia {
-    font-size: 2rem; /* Adjust font size */
+  .main-div {
+    width: 90%;
   }
-  .image-section {
-    height: 300px; /* Adjust height */
+  .forgot-password-title {
+    font-size: 1.5rem;
+  }
+  .email-input {
+    padding: 10px;
   }
 }

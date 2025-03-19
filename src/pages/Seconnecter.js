@@ -1,94 +1,124 @@
-import React from "react";
-import Navbar from "../Components/navbar";
-import "./accueil.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import Footer from "../Components/footer";
-import backgroundImage from "../assest/Accueil.jpg";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { TextField, Button, Box, Typography, Container, Paper, Alert, IconButton, InputAdornment, Link } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
+const Seconnecter = () => {
+  const [credentials, setCredentials] = useState({ email: '', password: '' });
+  const [error, setError] = useState(''); // Error state to hold error messages
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const navigate = useNavigate();
 
+  const handleChange = (e) => {
+    setCredentials({ ...credentials, [e.target.name]: e.target.value });
+  };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(''); // Reset error message on form submission
+    try {
+      const response = await axios.post('http://localhost:5000/auth/login', credentials);
+      if (response.data.accessToken) {
+        // Store the access token in localStorage
+        localStorage.setItem('accessToken', response.data.accessToken);
+        // Redirect to homepage after successful login
+        navigate('/');
+      } else {
+        setError(response.data.message || 'Login failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+      setError('Login failed. Please try again.');
+    }
+  };
 
-const Accueil = () => {
-  console.log("Rendering Accueil page");
+  // Toggle the visibility of the password
+  const handleClickShowPassword = () => {
+    setShowPassword((prev) => !prev);
+  };
+
   return (
-    <>
-      <Navbar />
-      <main>
-        <section
-          className="d-flex align-items-center justify-content-center text-white"
-          style={{
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            height: "100vh",
-            width: "100%",
-          }}
-        >
-        <Container>
-        <center>
-
-      <Row>
-        <Col>1 of 2</Col>
-        <Col>
+    <Container 
+      component="main" 
+      maxWidth="xs" 
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+      }}
+    >
+      <Paper elevation={3} sx={{ padding: 4, width: '100%' }}>
+        <Typography variant="h5" align="center" gutterBottom>
+          Se Connecter
+        </Typography>
         
-        <div className="main-container">
-      <div className="main-div">
-        <div className="header">
-          <span className="lets-get-started">WELCOME BACK</span><br/>
-          <h2 className="create-account">Log In to your Account</h2><br/>
-        </div>
-        <form className="form">
-          <label>Email</label><br/>
-          <input type="email" placeholder="johnsondoe@nomail.com" /><br/>
+        {/* Show error message if there's an error */}
+        {error && <Alert severity="error" sx={{ marginBottom: 2 }}>{error}</Alert>}
 
-          <label>Password</label><br/>
-          <input type="password" placeholder="***************" /><br/>
-          
-          <div className="options"><br/>
-            <label>
-              <input type="checkbox" /> Remember me
-            </label>
-            <a href="/forgot" className="forgot-password">Forgot Password?</a><br/>
-          </div>
-
-          <button type="submit" className="btn-pry">CONTINUE</button><br/>
+        <form onSubmit={handleSubmit}>
+          <Box mb={2}>
+            <TextField
+              label="Email"
+              name="email"
+              type="email"
+              value={credentials.email}
+              onChange={handleChange}
+              fullWidth
+              required
+              variant="outlined"
+            />
+          </Box>
+          <Box mb={2}>
+            <TextField
+              label="Password"
+              name="password"
+              type={showPassword ? 'text' : 'password'} // Toggle password visibility
+              value={credentials.password}
+              onChange={handleChange}
+              fullWidth
+              required
+              variant="outlined"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={handleClickShowPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Box>
+          <Box mt={2}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+            >
+              Se Connecter
+            </Button>
+          </Box>
         </form>
-        
-        <div className="divider-label">
-          <span className="or">Or</span><br/>
-        </div>
 
-        <button className="btn-outline">
-          <span className="sign-up-with-google">Log In with Google</span><br/>
-        </button>
-
-        <div className="already-have-account">
-          <span>New User? </span><br/>
-          <a href="/inscrire" className="sign-up-here">SIGN UP HERE</a><br/>
-        </div>
-      </div>
-    </div>
-        
-        
-        
-        </Col>
-      </Row>
-      </center>
-
+        {/* Forgot password link */}
+        <Box mt={2} textAlign="center">
+          <Link 
+            href="/forgot" 
+            variant="body2"
+            sx={{ cursor: 'pointer', textDecoration: 'none' }}
+          >
+            Mot de passe oublié ?
+          </Link>
+        </Box>
+      </Paper>
     </Container>
-
-        
-        </section>
-      
-    
-      </main>
-      <Footer />
-    </>
   );
 };
 
-export default Accueil;
+export default Seconnecter;

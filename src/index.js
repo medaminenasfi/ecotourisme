@@ -2,40 +2,47 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
+import AuthProvider from "./context/AuthContext";
+import AdminDashboard from "./pages/AdminDashboard";
 import Accueil from "./pages/Accueil";
 import Artisan from "./pages/Artisan";
 import Randonée from "./pages/Randonée";
 import Contact from "./pages/Contact";
 import Reservation from "./pages/Reservation";
 import Seconnecter from "./pages/Seconnecter";
-import Inscrire from "./pages/inscrire"; // Capitalized the component name
-import Forgot from "../src/pages/forgot";
+import Inscrire from "./pages/inscrire";
+import Forgot from "./pages/forgot";
+import Profile from "./pages/Profile";
+import ProtectedRoute from "./pages/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Accueil />,
-    errorElement: <h1>Sorry</h1>,
+    errorElement: <h1>Page non trouvée</h1>,
   },
   {
     path: "/Randonée",
     element: <Randonée />,
   },
   {
-    path: "/Artisan",
+    path: "/artisan",
     element: <Artisan />,
   },
   {
-    path: "/Reservation",
-    element: <Reservation />,
+    path: "/reservation",
+    element: (
+      <ProtectedRoute>
+        <Reservation />
+      </ProtectedRoute>
+    ),
   },
   {
-    path: "/Contact",
+    path: "/contact",
     element: <Contact />,
   },
   {
-    path: "/Seconnecter",
+    path: "/seconnecter",
     element: <Seconnecter />,
   },
   {
@@ -46,11 +53,29 @@ const router = createBrowserRouter([
     path: "/forgot",
     element: <Forgot />,
   },
+  {
+    path: "/profile",
+    element: (
+      <ProtectedRoute>
+        <Profile />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/AdminDashboard",
+    element: (
+      <ProtectedRoute>
+        <AdminDashboard />
+      </ProtectedRoute>
+    ),
+  },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );

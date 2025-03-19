@@ -10,16 +10,16 @@ import Col from "react-bootstrap/Col";
 import Sidi from "../assest/sidi.jpg";
 import tozeur from "../assest/Tozeur.jpg";
 import Oriental from "../assest/oriental.jpg";
-import { Link } from "react-router-dom";
 import CircuitMap from "../Components/CircuitMap";
-const Accueil = () => {
-  const position1 = [36.806389, 10.181667]; // Example coordinates for the first map
 
-  console.log("Rendering Accueil page");
+const Accueil = () => {
+  const position1 = [36.806389, 10.181667]; // Coordinates for CircuitMap
+
   return (
     <>
       <Navbar />
       <main>
+        {/* Hero Section */}
         <section
           className="d-flex align-items-center justify-content-center text-white"
           style={{
@@ -33,184 +33,130 @@ const Accueil = () => {
         >
           <div className="overlay"></div>
           <div className="content text-center">
-            <center>
-              <h1>
-                Explorer <br /> Nos Circuits et Randonnées
-              </h1>
-            </center>
+            <h1>
+              Explorer <br /> Nos Circuits et Randonnées
+            </h1>
           </div>
         </section>
-        <section className="bg-black text-white p-5 shadow-lg">
-          <h1 classname="hell">Explorer Nos Circuits en Carte</h1>
-          <h1>jyyfufuyk</h1>
-          <h1>kugmighm</h1>
 
+        {/* Map Section */}
+        <section className="bg-black text-white p-5 shadow-lg">
+          <h1 className="text-center">Explorer Nos Circuits en Carte</h1>
           <Container>
-  <Row>
-    <Col xs={12} md={6}>
-    <center>
-
-    <CircuitMap center={position1} />
-
-    </center>
-
-    </Col>
-    <Col xs={12} md={6}>
-    <center>
-      sdgsdfgsdf
-      </center>
-    </Col>
-  </Row>
-</Container>
-
-
-
-
-
-
+            <Row>
+              <Col xs={12} md={6} className="text-center">
+                <CircuitMap center={position1} />
+              </Col>
+              <Col xs={12} md={6} className="text-center">
+                <p>Découvrez nos circuits et planifiez votre prochaine aventure.</p>
+              </Col>
+            </Row>
+          </Container>
         </section>
 
+        {/* Circuits Section */}
         <section className="bg-black text-white p-5 shadow-lg">
-          <h1 classname="hell">Circuits Célèbres à Ne Pas Manquer</h1> <br />
-          <center>
-            {" "}
-            <p>
-              Découvrez les itinéraires les plus emblématiques de la région,
-              entre désert et patrimoine historique..
-            </p>{" "}
-            <br />
-          </center>
-          <center>
-            <Container>
-              <Row>
-                <Col>
-                  <img
-                    src={tozeur}
-                    alt="Description of the image"
-                    style={{
-                      width: "100%",
-                      height: "auto",
-                      borderRadius: "50px",
-                      objectFit: "cover",
-                    }}
-                  />
-                </Col>
-                <Col>
+          <h1 className="text-center">Circuits Célèbres à Ne Pas Manquer</h1>
+          <p className="text-center">
+            Découvrez les itinéraires les plus emblématiques de la région, entre désert et patrimoine historique.
+          </p>
+
+          {/* Circuit 1: Oasis de Tozeur */}
+          <Container className="mt-5">
+            <Row>
+              <Col md={6}>
+                <img
+                  src={tozeur}
+                  alt="Oasis de Tozeur"
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    borderRadius: "50px",
+                    objectFit: "cover",
+                  }}
+                />
+              </Col>
+              <Col md={6}>
+                <h2>Circuit de l’Oasis de Tozeur</h2>
+                <p>
+                  Explorez les oasis de Tozeur, avec ses palmeraies, canyons et villages berbères.
                   <br />
+                  <strong>Points d’intérêt :</strong>
+                  <ul>
+                    <li>Chebika, une oasis en montagne</li>
+                    <li>Tamerza, avec ses cascades naturelles</li>
+                    <li>Ksar Ouled Soltane, un ksar typique</li>
+                  </ul>
+                </p>
+              </Col>
+            </Row>
+          </Container>
+
+          {/* Circuit 2: Médina de Tunis et Sidi Bou Saïd */}
+          <Container className="mt-5">
+            <Row>
+              <Col md={6}>
+                <h2>Circuit de la Médina de Tunis et Sidi Bou Saïd</h2>
+                <p>
+                  Découvrez les ruelles pittoresques de la médina et le charme de Sidi Bou Saïd.
                   <br />
-                  <h1>Circuit de l’Oasis de Tozeur</h1>
+                  <strong>Points d’intérêt :</strong>
+                  <ul>
+                    <li>Médina de Tunis (UNESCO)</li>
+                    <li>Mosquée Zitouna</li>
+                    <li>Sidi Bou Saïd et ses panoramas</li>
+                  </ul>
+                </p>
+              </Col>
+              <Col md={6}>
+                <img
+                  src={Sidi}
+                  alt="Médina de Tunis et Sidi Bou Saïd"
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    borderRadius: "50px",
+                    objectFit: "cover",
+                  }}
+                />
+              </Col>
+            </Row>
+          </Container>
+
+          {/* Circuit 3: Grand Erg Oriental */}
+          <Container className="mt-5">
+            <Row>
+              <Col md={6}>
+                <img
+                  src={Oriental}
+                  alt="Grand Erg Oriental"
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    borderRadius: "50px",
+                    objectFit: "cover",
+                  }}
+                />
+              </Col>
+              <Col md={6}>
+                <h2>Circuit du Grand Erg Oriental</h2>
+                <p>
+                  Traversez le désert du Sahara et explorez les dunes dorées du Grand Erg Oriental.
                   <br />
-                  <p>
-                    e circuit traverse les oasis de Tozeur, l’une des régions
-                    les plus vertes du sud tunisien, où les visiteurs découvrent
-                    une mosaïque de palmeraies, de canyons et de villages
-                    traditionnels berbères. La visite inclut la découverte de
-                    l'architecture des ksours et des montagnes environnantes.{" "}
-                    <br />
-                    Points d’intérêt :<br />
-                    Chebika, une oasis en montagne
-                    <br />
-                    Tamerza, avec ses cascades naturelles
-                    <br />
-                    Ksar Ouled Soltane, un ksar typique.
-                    <br />
-                  </p>   
-                </Col>
-              </Row>
-            </Container>
-          </center>
-          <br />
-          <br />
-          <br />
-          <center>
-            <Container>
-              <Row>
-                <Col>
-                  <br />
-                  <h1>Circuit de la Médina de Tunis et Sidi Bou Saïd</h1>
-                  <br />
-                  <p>
-                    Ce circuit culturel explore les rues pittoresques de la
-                    médina de Tunis et les charmantes ruelles de Sidi Bou Saïd,
-                    un village côtier célèbre pour ses maisons blanches et
-                    bleues. C’est une expérience immersive dans la culture,
-                    l'histoire et l'artisanat tunisien. Points d’intérêt :
-                    Médina de Tunis, classée au patrimoine mondial de l’UNESCO
-                    Mosquée Zitouna Sidi Bou Saïd, avec ses vues panoramiques
-                    sur la mer Méditerranée
-                  </p>
-                </Col>
-                <Col>
-                  <img
-                    src={Sidi}
-                    alt="Description of the image"
-                    style={{
-                      width: "100%",
-                      height: "auto",
-                      borderRadius: "50px",
-                      objectFit: "cover",
-                    }}
-                  />
-                </Col>
-              </Row>
-            </Container>
-          </center>
-          <br />
-          <br />
-          <br />
-          <center>
-            <Container>
-              <Row>
-                <Col>
-                  <img
-                    src={Oriental}
-                    alt="Description of the image"
-                    style={{
-                      width: "100%",
-                      height: "auto",
-                      borderRadius: "50px",
-                      objectFit: "cover",
-                    }}
-                  />
-                </Col>
-                <Col>
-                  <h1>Circuit du Grand Erg Oriental</h1>
-                  <br />
-                  <p>
-                    Ce circuit emmène les visiteurs à travers le désert du
-                    Sahara, dans les dunes dorées du Grand Erg Oriental, à la
-                    découverte de l'immensité du désert tunisien. Les
-                    randonneurs peuvent explorer les paysages à couper le
-                    souffle et vivre une expérience authentique à dos de
-                    dromadaire ou en 4x4. Points d’intérêt : Dunes de Douz Chott
-                    el Jerid, un grand lac salé Village traditionnel berbère
-                  </p>
-                </Col>
-              </Row>
-            </Container>
-          </center>
+                  <strong>Points d’intérêt :</strong>
+                  <ul>
+                    <li>Dunes de Douz</li>
+                    <li>Chott el Jerid, un grand lac salé</li>
+                    <li>Village traditionnel berbère</li>
+                  </ul>
+                </p>
+              </Col>
+            </Row>
+          </Container>
         </section>
-        <section className="bg-black text-white p-5 shadow-lg">
-          <center>
-            <section className="image-section d-flex justify-content-center align-items-center">
-              <div className="main-container">
-                <div className="mask-group"></div>
-                <span className="explore-tunisia">
-                  Explorez
-                  <br />
-                  Réservation
-                </span>
-                <Link
-                  to="/Reservation"
-                  className="frame-1"
-                  onClick={() =>
-                    window.scrollTo({ top: 0, behavior: "smooth" })
-                  }
-                ></Link>
-              </div>
-            </section>
-          </center>
-        </section>
+
+        {/* Reservation Section */}
+  
       </main>
       <Footer />
     </>
