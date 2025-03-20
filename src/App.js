@@ -15,7 +15,7 @@ import Navbar from "./Components/navbar";
 import Footer from "./Components/footer";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
-
+import EditUser from "./pages/EditUser"
 function ProtectedRoute({ children }) {
   const { user } = useContext(AuthContext);
 
@@ -98,6 +98,14 @@ function App() {
               </AdminRoute>
             }
           />
+          <Route
+              path="/admin/edit/:id" // ✅ Added the missing Edit User route
+              element={
+                <AdminRoute>
+                  <EditUser />
+                </AdminRoute>
+              }
+            />
         </Routes>
       </div>
       <Footer />

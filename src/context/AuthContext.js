@@ -9,8 +9,6 @@ const AuthProvider = ({ children }) => {
     const token = localStorage.getItem("accessToken");
     if (token) {
       const decodedUser = decodeToken(token);
-      console.log("🟢 Decoded User from Token:", decodedUser);
-
       if (decodedUser?.UserInfo && !isTokenExpired(decodedUser)) {
         setUser({
           id: decodedUser.UserInfo.id,
@@ -27,11 +25,12 @@ const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log("🔄 Mise à jour de l'utilisateur :", user);
-  }, [user]);
-
   const login = (token, userData = {}) => {
+    if (!token) {
+      console.error("❌ Token is missing");
+      return;
+    }
+
     localStorage.setItem("accessToken", token);
     const decodedUser = decodeToken(token);
 
@@ -44,7 +43,7 @@ const AuthProvider = ({ children }) => {
         phone_number: decodedUser.UserInfo.phone_number,
         gender: decodedUser.UserInfo.gender,
         role: decodedUser.UserInfo.role,
-        ...userData, // Ensure userData does not override JWT data
+        ...userData,
       });
     } else {
       logout();
@@ -54,29 +53,30 @@ const AuthProvider = ({ children }) => {
   const logout = () => {
     setUser(null);
     localStorage.removeItem("accessToken");
-  };
+    window.location.reload(); // Force app to refresh
+};
+
 
   const decodeToken = (token) => {
     try {
       const parts = token.split(".");
       if (parts.length !== 3) {
-        throw new Error("Format du token invalide");
+        throw new Error("Invalid token format");
       }
       const base64Url = parts[1];
       const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      const decoded = JSON.parse(window.atob(base64));
-
-      console.log("🟢 Decoded Token:", decoded);
-      return decoded;
+      const jsonPayload = JSON.parse(atob(base64));
+      return jsonPayload;
     } catch (error) {
-      console.error("❌ Erreur de décodage du token:", error);
+      console.error("❌ Token decoding error:", error);
       return null;
     }
   };
 
   const isTokenExpired = (decodedToken) => {
     if (!decodedToken?.exp) return true;
-    return Math.floor(Date.now() / 1000) >= decodedToken.exp;
+    const now = Math.floor(Date.now() / 1000);
+    return now >= decodedToken.exp;
   };
 
   return (

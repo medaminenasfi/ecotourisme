@@ -14,6 +14,7 @@ import Inscrire from "./pages/inscrire";
 import Forgot from "./pages/forgot";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./pages/ProtectedRoute";
+import EditUser from "./pages/EditUser";  // Import EditUser
 
 const router = createBrowserRouter([
   {
@@ -66,6 +67,15 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <AdminDashboard />
+      </ProtectedRoute>
+    ),
+    
+  },
+  {
+    path: "/admin/edit/:id", // Add this route for editing users
+    element: (
+      <ProtectedRoute>
+        <EditUser />
       </ProtectedRoute>
     ),
   },

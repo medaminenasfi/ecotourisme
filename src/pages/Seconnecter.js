@@ -6,8 +6,8 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 const Seconnecter = () => {
   const [credentials, setCredentials] = useState({ email: '', password: '' });
-  const [error, setError] = useState(''); // Error state to hold error messages
-  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -16,24 +16,21 @@ const Seconnecter = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); // Reset error message on form submission
+    setError('');
     try {
       const response = await axios.post('http://localhost:5000/auth/login', credentials);
       if (response.data.accessToken) {
-        // Store the access token in localStorage
         localStorage.setItem('accessToken', response.data.accessToken);
-        // Redirect to homepage after successful login
         navigate('/');
       } else {
-        setError(response.data.message || 'Login failed. Please try again.');
+        setError(response.data.message || 'Échec de la connexion. Veuillez réessayer.');
       }
     } catch (error) {
-      console.error('Error during login:', error);
-      setError('Login failed. Please try again.');
+      console.error('Erreur lors de la connexion:', error);
+      setError('Échec de la connexion. Veuillez réessayer.');
     }
   };
 
-  // Toggle the visibility of the password
   const handleClickShowPassword = () => {
     setShowPassword((prev) => !prev);
   };
@@ -49,12 +46,11 @@ const Seconnecter = () => {
         minHeight: '100vh',
       }}
     >
-      <Paper elevation={3} sx={{ padding: 4, width: '100%' }}>
-        <Typography variant="h5" align="center" gutterBottom>
+      <Paper elevation={3} sx={{ padding: 4, width: '100%', textAlign: 'center' }}>
+        <Typography variant="h5" gutterBottom>
           Se Connecter
         </Typography>
         
-        {/* Show error message if there's an error */}
         {error && <Alert severity="error" sx={{ marginBottom: 2 }}>{error}</Alert>}
 
         <form onSubmit={handleSubmit}>
@@ -72,9 +68,9 @@ const Seconnecter = () => {
           </Box>
           <Box mb={2}>
             <TextField
-              label="Password"
+              label="Mot de passe"
               name="password"
-              type={showPassword ? 'text' : 'password'} // Toggle password visibility
+              type={showPassword ? 'text' : 'password'}
               value={credentials.password}
               onChange={handleChange}
               fullWidth
@@ -106,15 +102,20 @@ const Seconnecter = () => {
           </Box>
         </form>
 
-        {/* Forgot password link */}
-        <Box mt={2} textAlign="center">
-          <Link 
-            href="/forgot" 
-            variant="body2"
-            sx={{ cursor: 'pointer', textDecoration: 'none' }}
-          >
+        <Box mt={2}>
+          <Link href="/forgot" variant="body2" sx={{ cursor: 'pointer', textDecoration: 'none' }}>
             Mot de passe oublié ?
           </Link>
+        </Box>
+
+        {/* Ajouter le lien pour la création de compte */}
+        <Box mt={1}>
+          <Typography variant="body2">
+            Pas encore de compte ? 
+            <Link href="/inscrire" sx={{ marginLeft: 0.5, textDecoration: 'none', fontWeight: 'bold' }}>
+              Créer un compte
+            </Link>
+          </Typography>
         </Box>
       </Paper>
     </Container>
