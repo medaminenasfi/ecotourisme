@@ -3,6 +3,7 @@ import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaEdit, FaTrashAlt } from "react-icons/fa"; // Importing FontAwesome icons
+import Navbar from "../Components/navbar"; // Import the Navbar component
 
 const AdminDashboard = () => {
   const { user } = useContext(AuthContext);
@@ -70,6 +71,10 @@ const AdminDashboard = () => {
   if (loading) return <p>Loading users...</p>;
 
   return (
+    <>
+    <Navbar /> {/* Include the Navbar component at the top */}
+  <br/> <br/> <br/>    <br/>    <br/>    <br/>
+
     <div className="admin-dashboard p-6 bg-gray-50 rounded-lg shadow-lg">
     <center>
       <h2 className="text-2xl font-bold text-gray-700">Admin Dashboard</h2>
@@ -85,6 +90,8 @@ const AdminDashboard = () => {
               <th className="border px-4 py-2 text-gray-700">Phone Number</th>
               <th className="border px-4 py-2 text-gray-700">Email</th>
               <th className="border px-4 py-2 text-gray-700">Role</th>
+              <th className="border px-4 py-2 text-gray-700">Gender</th>
+
               <th className="border px-4 py-2 text-gray-700">Actions</th>
             </tr>
           </thead>
@@ -95,6 +102,8 @@ const AdminDashboard = () => {
                 <td className="border px-4 py-2 text-gray-800">{user.phone_number}</td>
                 <td className="border px-4 py-2 text-gray-800">{user.email}</td>
                 <td className="border px-4 py-2 text-gray-800">{user.role}</td>
+                <td className="border px-4 py-2 text-gray-800">{user.gender}</td>
+
                 <td className="border px-4 py-2 text-center">
                   <button
                     onClick={() => handleUpdate(user._id)}
@@ -115,6 +124,8 @@ const AdminDashboard = () => {
         </table>
       </div>
     </div>
+    </>
+
   );
 };
 
