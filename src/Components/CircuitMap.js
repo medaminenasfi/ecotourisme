@@ -20,305 +20,394 @@ const customIcon = new L.Icon({
 const tunisiaCenter = [33.8869, 9.5375];
 const zoomLevel = 6;
 
+
+
+
+
 // All circuits for the 24 regions in Tunisia
 const circuitsByRegion = {
   Tunis: [
     {
       name: "Circuit du Belvédère - Lac de Tunise",
       description: "Vue panoramique sur Tunis et le lac.",
-      start: "Parc du Belvédère",
-      end: "Lac de Tunis",
+      location: "Parc du Belvédère",
+      duration: 2, // Duration in hours
+      price: 30, // Price in TND
+      difficulty: "Facile",
     },
     {
       name: "Circuit de la Forêt de Radès",
       description: "Promenade forestière menant à la mer.",
-      start: "Forêt de Radès",
-      end: "Bord de mer de Radès",
+      location: "Forêt de Radès",
+      duration: 3,
+      price: 40,
+      difficulty: "Moyen",
     },
   ],
   Ariana: [
     {
       name: "Circuit du Parc Ennahli",
       description: "Sentiers en pleine nature autour des collines.",
-      start: "Parc Ennahli",
-      end: "Colline Ennahli",
+      location: "Parc Ennahli - Colline Ennahli",
+      duration: 1.5,
+      price: 15,
+      difficulty: "Facile",
     },
     {
       name: "Circuit du Parc de la Soukra",
       description: "Randonnée dans une forêt de pins.",
-      start: "Forêt de la Soukra",
-      end: "Coteaux d’Ariana",
+      location: "Forêt de la Soukra - Coteaux d’Ariana",
+      duration: 2,
+      price: 18,
+      difficulty: "Moyen",
     },
   ],
   Manouba: [
     {
       name: "Circuit de la Médina de Testour",
       description: "Visite historique de Testour.",
-      start: "Médina de Testour",
-      end: "Vallée de la Medjerda",
+      location: "Médina de Testour - Vallée de la Medjerda",
+      duration: 2,
+      price: 22,
+      difficulty: "Facile",
     },
     {
       name: "Circuit d’Oued Ellil",
       description: "Randonnée à travers les collines verdoyantes.",
-      start: "Oued Ellil",
-      end: "Collines de Jedaida",
+      location: "Oued Ellil - Collines de Jedaida",
+      duration: 3,
+      price: 30,
+      difficulty: "Moyen",
     },
   ],
   Nabeul: [
     {
       name: "Circuit de Korbous",
       description: "Randonnée côtière avec vue sur la mer.",
-      start: "Korbous",
-      end: "Sources thermales naturelles",
+      location: "Korbous - Sources thermales naturelles",
+      duration: 4,
+      price: 35,
+      difficulty: "Moyen",
     },
     {
       name: "Circuit de la Forêt de Dar Chichou",
       description: "Exploration de la forêt et des plages.",
-      start: "Dar Chichou",
-      end: "Cap Bon",
+      location: "Dar Chichou - Cap Bon",
+      duration: 5,
+      price: 40,
+      difficulty: "Difficile",
     },
   ],
   Bizerte: [
     {
       name: "Circuit du Lac d’Ichkeul",
       description: "Découverte du parc naturel et de sa faune.",
-      start: "Parc National d’Ichkeul",
-      end: "Mont Ichkeul",
+      location: "Parc National d’Ichkeul - Mont Ichkeul",
+      duration: 3,
+      price: 25,
+      difficulty: "Moyen",
     },
     {
       name: "Circuit de la Forêt de Rafraf",
       description: "Sentiers forestiers menant à la mer.",
-      start: "Village de Rafraf",
-      end: "Plage Sidi Ali El Mekki",
+      location: "Village de Rafraf - Plage Sidi Ali El Mekki",
+      duration: 2.5,
+      price: 20,
+      difficulty: "Facile",
     },
   ],
   Beja: [
     {
       name: "Circuit de la Forêt de Nefza",
       description: "Randonnée dans une forêt dense.",
-      start: "Nefza",
-      end: "Barrage de Sidi El Barrak",
+      location: "Nefza - Barrage de Sidi El Barrak",
+      duration: 3,
+      price: 28,
+      difficulty: "Moyen",
     },
     {
       name: "Circuit d’Oued Zarga",
       description: "Découverte des cascades et paysages verdoyants.",
-      start: "Oued Zarga",
-      end: "Cascade naturelle",
+      location: "Oued Zarga - Cascade naturelle",
+      duration: 4,
+      price: 35,
+      difficulty: "Difficile",
     },
   ],
   Jendouba: [
     {
       name: "Circuit du Parc National de Feija",
       description: "Exploration de la faune et flore locales.",
-      start: "Ain Draham",
-      end: "Parc de Feija",
+      location: "Ain Draham - Parc de Feija",
+      duration: 4,
+      price: 30,
+      difficulty: "Moyen",
     },
     {
       name: "Circuit de Fernana",
       description: "Randonnée en pleine nature avec vues magnifiques.",
-      start: "Fernana",
-      end: "Sources thermales",
+      location: "Fernana - Sources thermales",
+      duration: 5,
+      price: 40,
+      difficulty: "Difficile",
     },
   ],
   Kef: [
     {
       name: "Circuit du Jebel Serj",
       description: "Ascension offrant une vue panoramique.",
-      start: "Dahmani",
-      end: "Grottes naturelles",
+      location: "Dahmani - Grottes naturelles",
+      duration: 5,
+      price: 45,
+      difficulty: "Difficile",
     },
     {
       name: "Circuit de l’Oasis de Tajerouine",
       description: "Découverte des oasis locales.",
-      start: "Tajerouine",
-      end: "Sources naturelles",
+      location: "Tajerouine - Sources naturelles",
+      duration: 3,
+      price: 30,
+      difficulty: "Moyen",
     },
   ],
   Siliana: [
     {
       name: "Circuit du Mont Bargou",
       description: "Ascension avec vue sur les vallées.",
-      start: "Bargou",
-      end: "Sommet du Jebel Bargou",
+      location: "Bargou - Sommet du Jebel Bargou",
+      duration: 4,
+      price: 35,
+      difficulty: "Difficile",
     },
     {
       name: "Circuit de la Vallée de Kesra",
       description: "Randonnée dans une vallée sauvage.",
-      start: "Kesra",
-      end: "Chutes d’eau",
+      location: "Kesra - Chutes d’eau",
+      duration: 3,
+      price: 28,
+      difficulty: "Moyen",
     },
   ],
   Zaghouan: [
     {
       name: "Circuit du Mont Zaghouan",
       description: "Ascension avec une vue époustouflante.",
-      start: "Zaghouan",
-      end: "Sommet du Mont Zaghouan",
+      location: "Zaghouan - Sommet du Mont Zaghouan",
+      duration: 4,
+      price: 35,
+      difficulty: "Difficile",
     },
     {
       name: "Circuit de la Forêt de Zaghouan",
       description: "Randonnée calme à travers la forêt.",
-      start: "Zaghouan",
-      end: "Parc naturel",
+      location: "Zaghouan - Parc naturel",
+      duration: 2,
+      price: 20,
+      difficulty: "Facile",
     },
   ],
   Sousse: [
     {
       name: "Circuit de la Forêt de Sousse",
       description: "Randonnée en forêt paisible",
-      start: "Forêt de Sousse",
-      end: "Plage de Hammam Sousse",
+      location: "Forêt de Sousse - Plage de Hammam Sousse",
+      duration: 2,
+      price: 18,
+      difficulty: "Facile",
     },
     {
       name: "Circuit des plages de Sousse",
       description: "Détendez-vous sur les plages magnifiques de Sousse.",
-      start: "Plage de Sousse",
-      end: "Port El Kantaoui",
+      location: "Plage de Sousse - Port El Kantaoui",
+      duration: 2,
+      price: 15,
+      difficulty: "Facile",
     },
   ],
   Monastir: [
     {
       name: "Circuit du mausolée de Bourguiba",
       description: "Visitez le mausolée de Bourguiba à Monastir.",
-      start: "..",
-      end: "..",
+      location: "..",
+      duration: 1,
+      price: 10,
+      difficulty: "Facile",
     },
     {
       name: "Circuit du Parc National de Boukornine",
       description: "Sentiers avec vues panoramiques.",
-      start: "Hammam-Lif",
-      end: "Boukornine",
+      location: "Hammam-Lif - Boukornine",
+      duration: 3,
+      price: 25,
+      difficulty: "Moyen",
     },
   ],
   Mahdia: [
     {
       name: "Circuit de la Plage de Mahdia",
       description: "Randonnée sur des plages immaculées.",
-      start: "Plage de Mahdia",
-      end: "Oued Mahdia",
+      location: "Plage de Mahdia - Oued Mahdia",
+      duration: 2,
+      price: 15,
+      difficulty: "Facile",
     },
     {
       name: "Circuit du Parc Naturel de Mahdia",
       description: "Exploration de la faune et de la flore locales.",
-      start: "Plage de Mahdia",
-      end: "Forêt de Mahdia",
+      location: "Plage de Mahdia - Forêt de Mahdia",
+      duration: 3,
+      price: 28,
+      difficulty: "Moyen",
     },
   ],
   Sfax: [
     {
       name: "Circuit du Parc Naturel de Sidi Mansour",
       description: "Randonnée en bord de mer",
-      start: "Sidi Mansour",
-      end: "Plage de Sidi Mansour",
+      location: "Sidi Mansour - Plage de Sidi Mansour",
+      duration: 2.5,
+      price: 20,
+      difficulty: "Facile",
     },
   ],
   Kairouan: [
     {
       name: "Circuit de la Forêt de Oueslatia",
       description: "Promenade au cœur de la nature.",
-      start: "Oueslatia",
-      end: "Source de Oueslatia",
+      location: "Oueslatia - Source de Oueslatia",
+      duration: 2,
+      price: 18,
+      difficulty: "Facile",
     },
     {
       name: "Circuit des Oliveraies",
       description: "Randonnée à travers les champs d’oliviers.",
-      start: "Kairouan",
-      end: "Oasis de Barrouta",
+      location: "Kairouan - Oasis de Barrouta",
+      duration: 3,
+      price: 25,
+      difficulty: "Moyen",
     },
   ],
   Kasserine: [
     {
       name: "Circuit du Mont Chambi",
       description: "Ascension du plus haut sommet de Tunisie.",
-      start: "Base du Mont Chambi",
-      end: "Sommet (1 544m)",
+      location: "Base du Mont Chambi - Sommet (1 544m)",
+      duration: 5,
+      price: 45,
+      difficulty: "Difficile",
     },
     {
       name: "Circuit du Jebel Selloum",
       description: "Exploration de montagnes sauvages.",
-      start: "Thala",
-      end: "Grottes naturelles",
+      location: "Thala - Grottes naturelles",
+      duration: 4,
+      price: 40,
+      difficulty: "Moyen",
     },
   ],
   Gabes: [
     {
       name: "Circuit de l’Oasis de Gabes",
       description: "Découvrez l’oasis de Gabes, unique en bord de mer.",
-      start: "Oasis de Gabès",
-      end: "Bord de mer",
+      location: "Oasis de Gabès - Bord de mer",
+      duration: 3,
+      price: 28,
+      difficulty: "Moyen",
     },
   ],
   Medenine: [
     {
       name: "Circuit de Matmata",
       description: "Exploration des habitations troglodytes.",
-      start: "Matmata",
-      end: "Désert de Tataouine",
+      location: "Matmata - Désert de Tataouine",
+      duration: 4,
+      price: 35,
+      difficulty: "Moyen",
     },
     {
       name: "Circuit de Douz",
       description: "Découverte des dunes du désert.",
-      start: "Douz",
-      end: "Erg Djemel",
+      location: "Douz - Erg Djemel",
+      duration: 5,
+      price: 40,
+      difficulty: "Difficile",
     },
   ],
   Tataouine: [
     {
       name: "Circuit de Tataouine",
       description: "Découverte des ksour et paysages sahariens.",
-      start: "Tataouine",
-      end: "Ksar Ouled Soltane",
+      location: "Tataouine - Ksar Ouled Soltane",
+      duration: 3,
+      price: 30,
+      difficulty: "Moyen",
     },
     {
       name: "Circuit du Désert de Chenini",
       description: "Randonnée au cœur du désert.",
-      start: "Chenini",
-      end: "Désert de Tataouine",
+      location: "Chenini - Désert de Tataouine",
+      duration: 5,
+      price: 45,
+      difficulty: "Difficile",
     },
   ],
   Tozeur: [
     {
       name: "Circuit des Oasis de Tozeur",
       description: "Randonnée à travers les palmeraies.",
-      start: "Tozeur",
-      end: "Chott el-Jerid",
+      location: "Tozeur - Chott el-Jerid",
+      duration: 4,
+      price: 35,
+      difficulty: "Moyen",
     },
     {
       name: "Circuit des Ksour",
       description: "Exploration des villages fortifiés.",
-      start: "Ksar Ouled Soltane",
-      end: "Chott el-Jerid",
+      location: "Ksar Ouled Soltane - Chott el-Jerid",
+      duration: 5,
+      price: 40,
+      difficulty: "Difficile",
     },
   ],
   Kebili: [
     {
       name: "Circuit de l’Oasis de Kebili",
       description: "Randonnée dans une oasis du désert.",
-      start: "Kebili",
-      end: "Erg el-Naouel",
+      location: "Kebili - Erg el-Naouel",
+      duration: 5,
+      price: 45,
+      difficulty: "Difficile",
     },
     {
       name: "Circuit de la Vallée de l’Oued Djerid",
       description: "Découverte des paysages désertiques.",
-      start: "Kebili",
-      end: "Chott el-Jerid",
+      location: "Kebili - Chott el-Jerid",
+      duration: 4,
+      price: 35,
+      difficulty: "Moyen",
     },
   ],
   Gafsa: [
     {
       name: "Circuit de l’Oasis de Tozeur",
       description: "Exploration des oasis au bord du désert.",
-      start: "Tozeur",
-      end: "Oasis de Chott el-Jerid",
+      location: "Tozeur - Oasis de Chott el-Jerid",
+      duration: 4,
+      price: 35,
+      difficulty: "Moyen",
     },
     {
       name: "Circuit du Ksar Ouled Soltane",
       description: "Découverte de l’architecture des ksour.",
-      start: "sar Ouled Soltane",
-      end: "Erg Chebbi",
+      location: "Ksar Ouled Soltane - Erg Chebbi",
+      duration: 5,
+      price: 45,
+      difficulty: "Difficile",
     },
   ],
 };
+
 
 const regions = [
   {
@@ -512,7 +601,7 @@ const Circuit = () => {
               click: () => handleRegionClick(region),
             }}
           >
-            <Popup>{region.name}</Popup> 
+            <Popup>{region.name}</Popup>
           </Marker>
         ))}
         {selectedRegion && <ChangeView coords={selectedRegion.coords} />}
@@ -527,10 +616,16 @@ const Circuit = () => {
                 <h3>{circuit.name}</h3>
                 <p>{circuit.description}</p>
                 <p>
-                  <strong>Départ :</strong> {circuit.start}
+                  <strong>Départ :</strong> {circuit.location}
                 </p>
                 <p>
-                  <strong>Arrivée :</strong> {circuit.end}
+                  <strong>Durée :</strong> {circuit.duration} heures
+                </p>
+                <p>
+                  <strong>Prix :</strong> {circuit.price} TND
+                </p>
+                <p>
+                  <strong>Difficulté :</strong> {circuit.difficulty}
                 </p>
                 <button onClick={() => handleReserveClick(circuit)}>
                   Reserver
@@ -603,3 +698,4 @@ const Circuit = () => {
 };
 
 export default Circuit;
+ 
