@@ -453,7 +453,7 @@ const Circuit = () => {
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [regionCircuits, setRegionCircuits] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredRegions, setFilteredRegions] = useState(regions);
+  const [, setFilteredRegions] = useState(regions);
   const [reviews, setReviews] = useState({});
 
   const handleRegionClick = (region) => {
@@ -512,7 +512,7 @@ const Circuit = () => {
               click: () => handleRegionClick(region),
             }}
           >
-            <Popup>{region.name}</Popup>
+            <Popup>{region.name}</Popup> 
           </Marker>
         ))}
         {selectedRegion && <ChangeView coords={selectedRegion.coords} />}

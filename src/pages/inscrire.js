@@ -98,6 +98,8 @@ const Inscrire = () => {
               variant="outlined"
             />
           </Box>
+
+
           <Box mb={2}>
             <TextField
               label="Password"
@@ -108,8 +110,13 @@ const Inscrire = () => {
               fullWidth
               required
               variant="outlined"
+              inputProps={{ minLength: 8 }}
+              helperText="Password must be at least 8 characters long"
+
             />
           </Box>
+
+
           <Box mb={2}>
             <FormControl fullWidth required variant="outlined">
               <InputLabel>Gender</InputLabel>

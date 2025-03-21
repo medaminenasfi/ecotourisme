@@ -1,6 +1,11 @@
 import React, { useContext } from "react";
-import { BrowserRouter as Route, Routes, Navigate  , Router} from "react-router-dom";
-import { AuthContext , AuthProvider } from "./context/AuthContext";
+import {
+  BrowserRouter as Route,
+  Routes,
+  Navigate,
+  Router,
+} from "react-router-dom";
+import { AuthContext, AuthProvider } from "./context/AuthContext";
 import Accueil from "./pages/Accueil";
 import Artisan from "./pages/Artisan";
 import Randonée from "./pages/Randonée";
@@ -15,16 +20,12 @@ import Navbar from "./Components/navbar";
 import Footer from "./Components/footer";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
-import EditUser from "./pages/EditUser"
+import EditUser from "./pages/EditUser";
 
 import GestionUtilisateurs from "./pages/GestionUtilisateurs";
 import GestionFournisseurs from "./pages/GestionFournisseurs";
 import GestionReservations from "./pages/GestionReservations";
 import GestionCircuits from "./pages/GestionCircuits";
-
-
-
-
 
 function ProtectedRoute({ children }) {
   const { user } = useContext(AuthContext);
@@ -48,7 +49,7 @@ function AdminRoute({ children }) {
 
 function AuthRedirectRoute({ children }) {
   const { user } = useContext(AuthContext);
-  
+
   if (user === undefined) {
     return <p className="text-center text-gray-500">Chargement...</p>;
   }
@@ -59,56 +60,56 @@ function AuthRedirectRoute({ children }) {
 function App() {
   return (
     <AuthProvider>
-    <Router>
-      <Navbar />
-      <div className="content">
-        <Routes>
-          <Route path="/" element={<Accueil />} />
-          <Route path="/Randonée" element={<Randonée />} />
-          <Route path="/Artisan" element={<Artisan />} />
-          <Route path="/Contact" element={<Contact />} />
-          <Route
-            path="/Seconnecter"
-            element={
-              <AuthRedirectRoute>
-                <Seconnecter />
-              </AuthRedirectRoute>
-            }
-          />
-          <Route
-            path="/inscrire"
-            element={
-              <AuthRedirectRoute>
-                <Inscrire />
-              </AuthRedirectRoute>
-            }
-          />
-          <Route path="/forgot" element={<Forgot />} />
-          <Route
-            path="/Reservation"
-            element={
-              <ProtectedRoute>
-                <Reservation />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/AdminDashboard"
-            element={
-              <AdminRoute>
-                <AdminDashboard />
-              </AdminRoute>
-            }
-          />
-          <Route
+      <Router>
+        <Navbar />
+        <div className="content">
+          <Routes>
+            <Route path="/" element={<Accueil />} />
+            <Route path="/Randonée" element={<Randonée />} />
+            <Route path="/Artisan" element={<Artisan />} />
+            <Route path="/Contact" element={<Contact />} />
+            <Route
+              path="/Seconnecter"
+              element={
+                <AuthRedirectRoute>
+                  <Seconnecter />
+                </AuthRedirectRoute>
+              }
+            />
+            <Route
+              path="/inscrire"
+              element={
+                <AuthRedirectRoute>
+                  <Inscrire />
+                </AuthRedirectRoute>
+              }
+            />
+            <Route path="/forgot" element={<Forgot />} />
+            <Route
+              path="/Reservation"
+              element={
+                <ProtectedRoute>
+                  <Reservation />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/AdminDashboard"
+              element={
+                <AdminRoute>
+                  <AdminDashboard />
+                </AdminRoute>
+              }
+            />
+            <Route
               path="/admin/edit/:id" // ✅ Added the missing Edit User route
               element={
                 <AdminRoute>
@@ -117,17 +118,43 @@ function App() {
               }
             />
 
-<Route path="/admin/utilisateurs" element={<AdminRoute><GestionUtilisateurs /></AdminRoute>} />
-            <Route path="/admin/fournisseurs" element={<AdminRoute><GestionFournisseurs /></AdminRoute>} />
-            <Route path="/admin/reservations" element={<AdminRoute><GestionReservations /></AdminRoute>} />
-            <Route path="/admin/circuits" element={<AdminRoute><GestionCircuits /></AdminRoute>} />
-            
-        </Routes>
-      </div>
-      <Footer />
-    </Router>
-  </AuthProvider>
-
+            <Route
+              path="/admin/utilisateurs"
+              element={
+                <AdminRoute>
+                  <GestionUtilisateurs />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/fournisseurs"
+              element={
+                <AdminRoute>
+                  <GestionFournisseurs />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/reservations"
+              element={
+                <AdminRoute>
+                  <GestionReservations />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/circuits"
+              element={
+                <AdminRoute>
+                  <GestionCircuits />
+                </AdminRoute>
+              }
+            />
+          </Routes>
+        </div>
+        <Footer />
+      </Router>
+    </AuthProvider>
   );
 }
 
