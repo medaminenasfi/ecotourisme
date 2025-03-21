@@ -1,132 +1,75 @@
-import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { FaEdit, FaTrashAlt } from "react-icons/fa"; // Importing FontAwesome icons
-import Navbar from "../Components/navbar"; // Import the Navbar component
+import React from "react";
+import { NavLink } from "react-router-dom";
+import { FaUsers, FaBox, FaClipboardList, FaMapMarkedAlt } from "react-icons/fa";
+import Navbar from "../Components/navbar"; // Import Navbar component
 
-const AdminDashboard = () => {
-  const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!user || user.role !== "admin") {
-      navigate("/profile");
-    } else {
-      fetchUsers();
-    }
-  }, [user, navigate]);
-
-  const fetchUsers = async () => {
-    try {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        console.error("❌ No token found in localStorage");
-        return;
-      }
-
-      const response = await axios.get("http://localhost:5000/users", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      setUsers(response.data);
-      setLoading(false);
-    } catch (error) {
-      console.error("❌ Error fetching users:", error.response?.data || error.message);
-      setLoading(false);
-    }
-  };
-
-  const handleUpdate = (userId) => {
-    navigate(`/admin/edit/${userId}`);
-  };
-
-  const deleteUser = async (userId) => {
-    try {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        console.error("❌ No token found in localStorage");
-        return;
-      }
-
-      await axios.delete(`http://localhost:5000/users/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      console.log("✅ User deleted successfully");
-      fetchUsers();
-    } catch (error) {
-      console.error("❌ Error deleting user:", error.response?.data || error.message);
-    }
-  };
-
-  if (loading) return <p>Loading users...</p>;
-
+const AdminSidebar = () => {
   return (
-    <>
-    <Navbar /> {/* Include the Navbar component at the top */}
-  <br/> <br/> <br/>    <br/>    <br/>    <br/>
+    <div className="container-fluid">
+      <div className="row vh-100">
+        {/* Sidebar */}
+        <div className="col-md-3 p-0 bg-white shadow-sm">
+          <div className="text-center py-4">
+            <Navbar /> {/* Include Navbar inside sidebar */}
+          </div>
 
-    <div className="admin-dashboard p-6 bg-gray-50 rounded-lg shadow-lg">
-    <center>
-      <h2 className="text-2xl font-bold text-gray-700">Admin Dashboard</h2>
-      <p className="text-gray-600 mt-2">Bienvenue, Admin! Gérez les utilisateurs et les paramètres ici.</p>
-      <h3 className="mt-6 text-xl font-semibold">All Users</h3>
+          {/* Sidebar Title */}
+<br/><br/>         <div className="text-center mb-4">
+            <h2 className="text-primary">Admin Dashboard</h2>
+            <p className="text-muted">Bienvenue, Admin ! Gérez tous les utilisateurs, fournisseurs, réservations et circuits ici.</p>
+          </div>
 
-      </center>
-      <div className="overflow-x-auto mt-4">
-        <table className="min-w-full table-auto bg-white shadow-md rounded-md overflow-hidden mx-auto">
-          <thead className="bg-gray-200">
-            <tr>
-              <th className="border px-4 py-2 text-gray-700">Name</th>
-              <th className="border px-4 py-2 text-gray-700">Phone Number</th>
-              <th className="border px-4 py-2 text-gray-700">Email</th>
-              <th className="border px-4 py-2 text-gray-700">Role</th>
-              <th className="border px-4 py-2 text-gray-700">Gender</th>
+          {/* Sidebar Links */}
+          <ul className="list-unstyled px-3">
+            <li className="mb-3">
+              <NavLink
+                to="/admin/utilisateurs"
+                className="d-flex align-items-center p-3 bg-light text-dark rounded-lg transition-all"
+                activeClassName="active"
+              >
+                <FaUsers size={24} className="mr-3" />
+                <span>Gestion Utilisateurs</span>
+              </NavLink>
+            </li>
 
-              <th className="border px-4 py-2 text-gray-700">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user._id}>
-                <td className="border px-4 py-2 text-gray-800">{user.first_name} {user.last_name}</td>
-                <td className="border px-4 py-2 text-gray-800">{user.phone_number}</td>
-                <td className="border px-4 py-2 text-gray-800">{user.email}</td>
-                <td className="border px-4 py-2 text-gray-800">{user.role}</td>
-                <td className="border px-4 py-2 text-gray-800">{user.gender}</td>
+            <li className="mb-3">
+              <NavLink
+                to="/admin/circuits"
+                className="d-flex align-items-center p-3 bg-light text-dark rounded-lg transition-all"
+                activeClassName="active"
+              >
+                <FaMapMarkedAlt size={24} className="mr-3" />
+                <span>Gestion Circuits</span>
+              </NavLink>
+            </li>
+            
+            <li className="mb-3">
+              <NavLink
+                to="/admin/reservations"
+                className="d-flex align-items-center p-3 bg-light text-dark rounded-lg transition-all"
+                activeClassName="active"
+              >
+                <FaClipboardList size={24} className="mr-3" />
+                <span>Gestion Réservations</span>
+              </NavLink>
+            </li>
+            <li className="mb-3">
+              <NavLink
+                to="/admin/fournisseurs"
+                className="d-flex align-items-center p-3 bg-light text-dark rounded-lg transition-all"
+                activeClassName="active"
+              >
+                <FaBox size={24} className="mr-3" />
+                <span>Gestion Fournisseurs</span>
+              </NavLink>
+            </li>
+          </ul>
+        </div>
 
-                <td className="border px-4 py-2 text-center">
-                  <button
-                    onClick={() => handleUpdate(user._id)}
-                    className="text-blue-500 hover:text-blue-700 p-2 rounded-full"
-                  >
-                    <FaEdit size={20} />
-                  </button>
-                  <button
-                    onClick={() => deleteUser(user._id)}
-                    className="text-red-500 hover:text-red-700 p-2 rounded-full ml-2"
-                  >
-                    <FaTrashAlt size={20} />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        
       </div>
     </div>
-    </>
-
   );
 };
 
-export default AdminDashboard;
+export default AdminSidebar;

@@ -52,7 +52,7 @@ const EditUser = () => {
                 }
             });
 
-            navigate("/AdminDashboard");
+            navigate("/admin/utilisateurs");
         } catch (error) {
             setError("Failed to update user.");
         }
@@ -118,10 +118,10 @@ const EditUser = () => {
 
                 {/* Return to Admin Dashboard Button */}
                 <button
-                    onClick={() => navigate("/AdminDashboard")}
+                    onClick={() => navigate("/admin/utilisateurs")}
                     className="w-full py-3 mt-4 bg-gray-500 text-white font-semibold rounded-md hover:bg-gray-600 transition"
                 >
-                    Return to Admin Dashboard
+                    Return to Gestion Utilisateurs Dashboard
                 </button>
             </div>
         </div>

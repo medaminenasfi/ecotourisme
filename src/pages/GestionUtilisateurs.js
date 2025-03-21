@@ -49,8 +49,8 @@ const GestionUtilisateurs = () => {
 
     <div className="admin-dashboard p-6 bg-gray-50 rounded-lg shadow-lg">
     <center>
-      <h2 className="text-2xl font-bold text-gray-700">Admin Dashboard</h2>
-      <p className="text-gray-600 mt-2">Bienvenue, Admin! Gérez les utilisateurs et les paramètres ici.</p>
+      <h2 className="text-2xl font-bold text-gray-700">Gestion Utilisateurs Dashboard</h2>
+      <p className="text-gray-600 mt-2"> Gérez les utilisateurs ici. Modifiez, supprimez et mettez à jour les informations des utilisateurs.</p>
       <h3 className="mt-6 text-xl font-semibold">All Users</h3>
 
       </center>
@@ -99,5 +99,6 @@ const GestionUtilisateurs = () => {
     </>
   );
 };
+
 
 export default GestionUtilisateurs;
