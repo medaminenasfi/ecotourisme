@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Route, Routes, Navigate  , Router} from "react-router-dom";
+import { BrowserRouter as Route, Routes, Navigate  , Router} from "react-router-dom";
 import { AuthContext , AuthProvider } from "./context/AuthContext";
 import Accueil from "./pages/Accueil";
 import Artisan from "./pages/Artisan";
@@ -16,6 +16,16 @@ import Footer from "./Components/footer";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 import EditUser from "./pages/EditUser"
+
+import GestionUtilisateurs from "./pages/GestionUtilisateurs";
+import GestionFournisseurs from "./pages/GestionFournisseurs";
+import GestionReservations from "./pages/GestionReservations";
+import GestionCircuits from "./pages/GestionCircuits";
+
+
+
+
+
 function ProtectedRoute({ children }) {
   const { user } = useContext(AuthContext);
 
@@ -106,6 +116,12 @@ function App() {
                 </AdminRoute>
               }
             />
+
+<Route path="/admin/utilisateurs" element={<AdminRoute><GestionUtilisateurs /></AdminRoute>} />
+            <Route path="/admin/fournisseurs" element={<AdminRoute><GestionFournisseurs /></AdminRoute>} />
+            <Route path="/admin/reservations" element={<AdminRoute><GestionReservations /></AdminRoute>} />
+            <Route path="/admin/circuits" element={<AdminRoute><GestionCircuits /></AdminRoute>} />
+            
         </Routes>
       </div>
       <Footer />

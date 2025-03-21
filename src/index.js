@@ -15,6 +15,11 @@ import Forgot from "./pages/forgot";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import EditUser from "./pages/EditUser";  // Import EditUser
+import GestionUtilisateurs from "./pages/GestionUtilisateurs";
+import GestionFournisseurs from "./pages/GestionFournisseurs";
+import GestionReservations from "./pages/GestionReservations";
+import GestionCircuits from "./pages/GestionCircuits";
+import AdminRoute from "./pages/AdminRoute"; 
 
 const router = createBrowserRouter([
   {
@@ -79,6 +84,40 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
+
+  {
+    path: "/admin/fournisseurs",
+    element: (
+      <AdminRoute>
+        <GestionFournisseurs />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/admin/reservations",
+    element: (
+      <AdminRoute>
+        <GestionReservations />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/admin/utilisateurs",
+    element: (
+      <AdminRoute>
+        <GestionUtilisateurs />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/admin/circuits",
+    element: (
+      <AdminRoute>
+        <GestionCircuits />
+      </AdminRoute>
+    ),
+  },
+  
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

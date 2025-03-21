@@ -3,22 +3,15 @@ import { AuthContext } from "../context/AuthContext";
 import { Navigate } from "react-router-dom";
 
 function ProtectedRoute({ children }) {
-  const { user } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
 
   console.log("ProtectedRoute: User state is", user);
 
-  // If user is undefined, we can either render a loading spinner or nothing
-  if (user === undefined) {
-    return null; // or <LoadingSpinner />
+  if (loading) {
+    return <p className="text-center text-gray-500">Chargement...</p>; // 🔥 Show loading while checking auth state
   }
 
-  if (!user) {
-    // If the user is not authenticated, redirect them to the login page
-    return <Navigate to="/Seconnecter" />;
-  }
-
-  // If the user is authenticated, return the children (protected content)
-  return children;
+  return user ? children : <Navigate to="/Seconnecter" />;
 }
 
 export default ProtectedRoute;

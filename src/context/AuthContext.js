@@ -4,11 +4,16 @@ export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // 🔥 Add loading state
 
   useEffect(() => {
+    console.log("🔄 Checking localStorage for token...");
+
     const token = localStorage.getItem("accessToken");
     if (token) {
       const decodedUser = decodeToken(token);
+      console.log("🧑‍💻 Decoded User from Token:", decodedUser);
+
       if (decodedUser?.UserInfo && !isTokenExpired(decodedUser)) {
         setUser({
           id: decodedUser.UserInfo.id,
@@ -20,9 +25,11 @@ const AuthProvider = ({ children }) => {
           role: decodedUser.UserInfo.role,
         });
       } else {
+
         logout();
       }
     }
+    setLoading(false); // 🔥 Set loading to false when authentication is ready
   }, []);
 
   const login = (token, userData = {}) => {
@@ -45,6 +52,9 @@ const AuthProvider = ({ children }) => {
         role: decodedUser.UserInfo.role,
         ...userData,
       });
+      setTimeout(() => setUser((prevUser) => ({ ...prevUser })), 100);
+      console.log("✅ User logged in:", decodedUser.UserInfo);
+
     } else {
       logout();
     }
@@ -53,9 +63,8 @@ const AuthProvider = ({ children }) => {
   const logout = () => {
     setUser(null);
     localStorage.removeItem("accessToken");
-    window.location.reload(); // Force app to refresh
-};
-
+    window.location.reload(); // 🔥 Force a refresh to clear state
+  };
 
   const decodeToken = (token) => {
     try {
@@ -80,9 +89,9 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{ user, login, logout, loading }}>
+      {!loading && children}
+      </AuthContext.Provider>
   );
 };
 
