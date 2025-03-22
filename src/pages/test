@@ -24,129 +24,113 @@ const GestionReservations = () => {
     status: 'pending'
   });
 
-  // Check token validity
-  const validateToken = () => {
-    const token = localStorage.getItem('accessToken');
-    if (!token) {
-      window.location.href = '/login';
-      return false;
+  // Configure axios instance
+  const api = axios.create({
+    baseURL: 'hhttp://localhost:5000/api/reservations',
+    headers: {
+      'Content-Type': 'application/json'
     }
-    
-    try {
-      const decoded = jwtDecode(token);
-      if (decoded.exp * 1000 < Date.now()) {
-        localStorage.removeItem('accessToken');
-        window.location.href = '/login';
-        return false;
-      }
-      setIsAdmin(decoded.roles?.includes('admin'));
-      return true;
-    } catch (error) {
-      localStorage.removeItem('accessToken');
-      window.location.href = '/login';
-      return false;
-    }
-  };
+  });
 
-  // Fetch reservations from API
-  const fetchReservations = async () => {
-    if (!validateToken()) return;
-    
-    try {
-      const token = localStorage.getItem('accessToken');
-      const response = await axios.get('http://localhost:5000/api/reservations', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      setReservations(response.data);
-      setError('');
-    } catch (err) {
-      handleError(err);
-    } finally {
-      setLoading(false);
+  // Add JWT interceptor
+  api.interceptors.request.use(config => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
-  };
+    return config;
+  });
 
   useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem('accessToken');
+      if (!token) {
+        window.location.href = '/login';
+        return;
+      }
+      
+      try {
+        const decoded = jwtDecode(token);
+        setIsAdmin(decoded.roles.includes('admin'));
+        if (decoded.exp * 1000 < Date.now()) {
+          localStorage.removeItem('accessToken');
+          window.location.href = '/login';
+        }
+      } catch (error) {
+        localStorage.removeItem('accessToken');
+        window.location.href = '/login';
+      }
+    };
+
+    const fetchReservations = async () => {
+      try {
+        checkAuth();
+        const response = await api.get('http://localhost:5000/api/reservations');
+        setReservations(response.data);
+      } catch (err) {
+        handleError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchReservations();
   }, []);
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateToken()) return;
-    
     setError('');
     setSuccess('');
-    
+
     try {
-      const token = localStorage.getItem('accessToken');
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      };
-
       if (selectedReservation) {
-        await axios.put(
-          `http://localhost:5000/api/reservations/${selectedReservation._id}`,
-          formData,
-          config
-        );
-        setSuccess('Reservation updated successfully');
+        const response = await api.put(`http://localhost:5000/api/reservations/${id}${selectedReservation._id}`, formData);
+        setReservations(reservations.map(r => r._id === response.data._id ? response.data : r));
+        setSuccess('Reservation updated successfully!');
       } else {
-        await axios.post('http://localhost:5000/api/reservations', formData, config);
-        setSuccess('Reservation created successfully');
+        const response = await api.post('http://localhost:5000/api/reservations', formData);
+        setReservations([...reservations, response.data]);
+        setSuccess('Reservation created successfully!');
       }
-
       setShowModal(false);
-      await fetchReservations();
     } catch (err) {
       handleError(err);
     }
   };
 
-  // Handle delete
   const handleDelete = async (id) => {
-    if (!validateToken()) return;
-    
     if (window.confirm('Are you sure you want to delete this reservation?')) {
       try {
-        const token = localStorage.getItem('accessToken');
-        await axios.delete(`http://localhost:5000/api/reservations/${id}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setSuccess('Reservation deleted successfully');
-        await fetchReservations();
+        await api.delete(`http://localhost:5000/api/reservations/${id}`);
+        setReservations(reservations.filter(r => r._id !== id));
+        setSuccess('Reservation deleted successfully!');
       } catch (err) {
         handleError(err);
       }
     }
   };
 
-  // Error handling
   const handleError = (err) => {
-    console.error(err);
-    if (err.response?.status === 401 || err.response?.status === 403) {
-      localStorage.removeItem('accessToken');
-      window.location.href = '/login';
+    if (err.response) {
+      if (err.response.status === 401) {
+        localStorage.removeItem('accessToken');
+        window.location.href = '/login';
+      }
+      setError(err.response.data.message || 'An error occurred');
+    } else {
+      setError(err.message);
     }
-    setError(err.response?.data?.message || 'An error occurred');
   };
 
-  // Open modal for edit/add
   const openModal = (reservation = null) => {
     setSelectedReservation(reservation);
     setFormData(reservation ? {
       user: reservation.user?._id || '',
       circuit: reservation.circuit?._id || '',
       date: reservation.date?.split('T')[0] || '',
-      numberOfPeople: reservation.numberOfPeople || '',
-      totalPrice: reservation.totalPrice || '',
-      status: reservation.status || 'pending'
+      numberOfPeople: reservation.numberOfPeople.toString(),
+      totalPrice: reservation.totalPrice.toString(),
+      status: reservation.status
     } : {
       user: '',
       circuit: '',
@@ -161,7 +145,6 @@ const GestionReservations = () => {
   return (
     <>
       <Navbar />
-      <br/><br/><br/>
       <div className="container mt-5">
         <div className="card shadow-sm">
           <div className="card-header bg-white d-flex justify-content-between align-items-center">
@@ -190,7 +173,7 @@ const GestionReservations = () => {
               <div className="text-center py-4 text-muted">No reservations found</div>
             ) : (
               <Table hover responsive className="mb-0">
-                <thead className="thead-light">
+                <thead>
                   <tr>
                     <th>User</th>
                     <th>Circuit</th>
@@ -327,6 +310,7 @@ const GestionReservations = () => {
               <Form.Select
                 value={formData.status}
                 onChange={(e) => setFormData({...formData, status: e.target.value})}
+                disabled={!isAdmin}
               >
                 <option value="pending">Pending</option>
                 <option value="confirmed">Confirmed</option>
