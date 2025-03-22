@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../Components/navbar";
 import "./Reservation.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -8,32 +8,55 @@ import Container from "react-bootstrap/Container";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import {  Button } from "@mui/material";
+import { Button } from "@mui/material";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import dayjs from "dayjs";
 
+// Temporary dummy data for circuits
+const circuits = [
+  { _id: "1", name: "Mountain Adventure", price: 100 },
+  { _id: "2", name: "Forest Expedition", price: 150 },
+  { _id: "3", name: "Desert Safari", price: 200 },
+];
+
 const Accueil = () => {
-  const [selectedDate, setSelectedDate] = useState(dayjs()); // Manage selected date state
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [selectedDate, setSelectedDate] = useState(dayjs());
   const [participants, setParticipants] = useState(1);
-  const [specialRequests, setSpecialRequests] = useState("");
+  const [selectedCircuit, setSelectedCircuit] = useState("");
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  useEffect(() => {
+    if (selectedCircuit && participants > 0) {
+      const circuit = circuits.find(c => c._id === selectedCircuit);
+      setTotalPrice(circuit.price * participants);
+    }
+  }, [selectedCircuit, participants]);
 
   const handleReservation = () => {
-    if (!fullName || !email || !phone || participants < 1) {
-      alert("Veuillez remplir tous les champs obligatoires !");
+    if (!selectedCircuit || participants < 1) {
+      alert("Veuillez sélectionner un circuit et le nombre de participants !");
       return;
     }
 
+    const circuit = circuits.find(c => c._id === selectedCircuit);
+    
+    const reservationData = {
+      circuit: selectedCircuit,
+      date: selectedDate.toDate(),
+      numberOfPeople: participants,
+      totalPrice: totalPrice,
+      // In a real app, user ID would come from authentication context
+    };
+
     alert(
-      `Réservation confirmée ! 🎉\n\nNom: ${fullName}\nEmail: ${email}\nTéléphone: ${phone}\nParticipants: ${participants}\nDate: ${selectedDate.format(
+      `Réservation confirmée ! 🎉\n\nCircuit: ${circuit.name}\nDate: ${selectedDate.format(
         "DD/MM/YYYY"
-      )}\nDemandes spéciales: ${specialRequests || "Aucune"}`
+      )}\nParticipants: ${participants}\nPrix total: $${totalPrice}`
     );
 
-    // Here, you can send the reservation data to a server using fetch() or axios
+    // Here you would typically send reservationData to your backend API
+    // fetch('/api/reservations', { method: 'POST', body: JSON.stringify(reservationData) })
   };
 
   return (
@@ -75,58 +98,36 @@ const Accueil = () => {
             <Row>
               <Col>
                 <center>
-                  <label>Full Name</label>
+                  <label>Circuit</label>
                   <br />
-                  <input
-                    type="text"
-                    placeholder="Full Name"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
+                  <select
+                    value={selectedCircuit}
+                    onChange={(e) => setSelectedCircuit(e.target.value)}
                     required
-                  />
+                    className="form-select"
+                  >
+                    <option value="">Sélectionnez un circuit</option>
+                    {circuits.map((circuit) => (
+                      <option key={circuit._id} value={circuit._id}>
+                        {circuit.name} (${circuit.price})
+                      </option>
+                    ))}
+                  </select>
                   <br />
-                  <label>Email</label>
-                  <br />
-                  <input
-                    type="email"
-                    placeholder="johnsondoe@nomail.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                  <br />
-                  <label>Phone Number</label>
-                  <br />
-                  <input
-                    type="tel"
-                    placeholder="+216 22 222 222"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    required
-                  />
-                  <br />
-                  <label>Number of Participants</label>
+                  <label>Nombre de participants</label>
                   <br />
                   <input
                     type="number"
-                    placeholder="0"
                     value={participants}
-                    onChange={(e) => setParticipants(e.target.value)}
+                    onChange={(e) => setParticipants(Number(e.target.value))}
                     required
                     min="1"
-                    step="1"
+                    className="form-control"
                   />
                   <br />
-                  <label htmlFor="specialRequests">Demandes spéciales</label>
+                  <label>Prix total</label>
                   <br />
-                  <textarea
-                    id="specialRequests"
-                    placeholder="Enter your special requests or description"
-                    value={specialRequests}
-                    onChange={(e) => setSpecialRequests(e.target.value)}
-                    required
-                  ></textarea>
-                  <br />
+                  <div className="total-price">${totalPrice}</div>
                 </center>
               </Col>
               <Col>
@@ -152,7 +153,6 @@ const Accueil = () => {
                     Date sélectionnée : {selectedDate.format("DD/MM/YYYY")}
                   </p>
 
-                  {/* ✅ Reservation Button */}
                   <Button
                     variant="contained"
                     color="primary"
