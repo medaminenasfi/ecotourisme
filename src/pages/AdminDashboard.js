@@ -1,72 +1,92 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { FaUsers, FaBox, FaClipboardList, FaMapMarkedAlt } from "react-icons/fa";
-import Navbar from "../Components/navbar"; // Import Navbar component
+import Navbar from "../Components/navbar";
 
 const AdminSidebar = () => {
   return (
-    <div className="container-fluid">
-      <div className="row vh-100">
-        {/* Sidebar */}
-        <div className="col-md-3 p-0 bg-white shadow-sm">
-          <div className="text-center py-4">
-            <Navbar /> {/* Include Navbar inside sidebar */}
-          </div>
+    <div className="container-fluid p-0">
+      <Navbar /> {/* Keep Navbar at the top */}
+      <br/><br/><br/>
+      <div className="row g-0 vh-100">
+        {/* Sidebar Column */}
+        <div className="col-md-3 bg-white shadow-sm" style={{minHeight: 'calc(100vh - 80px)'}}>
+          <div className="p-4">
+            {/* Sidebar Header */}
+            <div className="text-center mb-5">
+              <h2 className="text-primary fw-bold mb-3">Admin Dashboard</h2>
+              <p className="text-muted small">
+                Bienvenue, Admin !<br />
+                Gérez tous les utilisateurs, fournisseurs,<br />
+                réservations et circuits ici.
+              </p>
+            </div>
 
-          {/* Sidebar Title */}
-<br/><br/>         <div className="text-center mb-4">
-            <h2 className="text-primary">Admin Dashboard</h2>
-            <p className="text-muted">Bienvenue, Admin ! Gérez tous les utilisateurs, fournisseurs, réservations et circuits ici.</p>
-          </div>
-
-          {/* Sidebar Links */}
-          <ul className="list-unstyled px-3">
-            <li className="mb-3">
+            {/* Navigation Links */}
+            <nav className="d-flex flex-column gap-2">
               <NavLink
                 to="/admin/utilisateurs"
-                className="d-flex align-items-center p-3 bg-light text-dark rounded-lg transition-all"
-                activeClassName="active"
+                className={({ isActive }) => 
+                  `text-decoration-none p-3 rounded-3 d-flex align-items-center ${
+                    isActive 
+                      ? 'bg-primary text-white' 
+                      : 'bg-light text-dark hover-bg-primary-10'
+                  }`
+                }
               >
-                <FaUsers size={24} className="mr-3" />
-                <span>Gestion Utilisateurs</span>
+                <FaUsers className="me-3 fs-5" />
+                <span className="fw-medium">Gestion Utilisateurs</span>
               </NavLink>
-            </li>
 
-            <li className="mb-3">
               <NavLink
                 to="/admin/circuits"
-                className="d-flex align-items-center p-3 bg-light text-dark rounded-lg transition-all"
-                activeClassName="active"
+                className={({ isActive }) => 
+                  `text-decoration-none p-3 rounded-3 d-flex align-items-center ${
+                    isActive 
+                      ? 'bg-primary text-white' 
+                      : 'bg-light text-dark hover-bg-primary-10'
+                  }`
+                }
               >
-                <FaMapMarkedAlt size={24} className="mr-3" />
-                <span>Gestion Circuits</span>
+                <FaMapMarkedAlt className="me-3 fs-5" />
+                <span className="fw-medium">Gestion Circuits</span>
               </NavLink>
-            </li>
-            
-            <li className="mb-3">
+
               <NavLink
                 to="/admin/reservations"
-                className="d-flex align-items-center p-3 bg-light text-dark rounded-lg transition-all"
-                activeClassName="active"
+                className={({ isActive }) => 
+                  `text-decoration-none p-3 rounded-3 d-flex align-items-center ${
+                    isActive 
+                      ? 'bg-primary text-white' 
+                      : 'bg-light text-dark hover-bg-primary-10'
+                  }`
+                }
               >
-                <FaClipboardList size={24} className="mr-3" />
-                <span>Gestion Réservations</span>
+                <FaClipboardList className="me-3 fs-5" />
+                <span className="fw-medium">Gestion Réservations</span>
               </NavLink>
-            </li>
-            <li className="mb-3">
+
               <NavLink
                 to="/admin/fournisseurs"
-                className="d-flex align-items-center p-3 bg-light text-dark rounded-lg transition-all"
-                activeClassName="active"
+                className={({ isActive }) => 
+                  `text-decoration-none p-3 rounded-3 d-flex align-items-center ${
+                    isActive 
+                      ? 'bg-primary text-white' 
+                      : 'bg-light text-dark hover-bg-primary-10'
+                  }`
+                }
               >
-                <FaBox size={24} className="mr-3" />
-                <span>Gestion Fournisseurs</span>
+                <FaBox className="me-3 fs-5" />
+                <span className="fw-medium">Gestion Fournisseurs</span>
               </NavLink>
-            </li>
-          </ul>
+            </nav>
+          </div>
         </div>
 
-        
+        {/* Main Content Column */}
+        <div className="col-md-9 bg-light p-4">
+          {/* Your main content will be injected here */}
+        </div>
       </div>
     </div>
   );

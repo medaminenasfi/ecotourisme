@@ -2,11 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import Navbar from "../Components/navbar"; // Import the Navbar component
+import { Button, Table, Alert, Spinner } from "react-bootstrap";
+import Navbar from "../Components/navbar";
 
 const GestionUtilisateurs = () => {
   const [users, setUsers] = useState([]);
-  const navigate = useNavigate(); // Needed for navigation
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchUsers();
@@ -19,8 +23,16 @@ const GestionUtilisateurs = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(response.data);
+      setError("");
     } catch (error) {
-      console.error("❌ Error fetching users:", error);
+      console.error("Error fetching users:", error);
+      setError("Failed to load users");
+      if(error.response?.status === 401) {
+        localStorage.removeItem("accessToken");
+        navigate("/login");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -32,73 +44,98 @@ const GestionUtilisateurs = () => {
       await axios.delete(`http://localhost:5000/users/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      fetchUsers();
+      setSuccess("User deleted successfully");
+      // Update the UI by removing the deleted user
+      setUsers(prev => prev.filter(user => user._id !== id));
     } catch (error) {
-      console.error("❌ Error deleting user:", error);
+      console.error("Error deleting user:", error);
+      setError(error.response?.data?.message || "Failed to delete user");
     }
   };
 
-  const handleUpdate = (id) => {
+  const handleEdit = (id) => {
     navigate(`/admin/edit/${id}`);
   };
 
   return (
     <>
-    <Navbar /> {/* Include the Navbar component at the top */}
-  <br/> <br/> <br/>    <br/>    <br/>    <br/>
+      <Navbar />
+      <br/><br/><br/>
+      <div className="container mt-5">
+        <div className="card shadow-sm">
+          <div className="card-header bg-white d-flex justify-content-between align-items-center">
+            <div>
+              <h2 className="mb-0">User Management</h2>
+              <p className="text-muted mb-0">Manage system users and permissions</p>
+            </div>
+          </div>
 
-    <div className="admin-dashboard p-6 bg-gray-50 rounded-lg shadow-lg">
-    <center>
-      <h2 className="text-2xl font-bold text-gray-700">Gestion Utilisateurs Dashboard</h2>
-      <p className="text-gray-600 mt-2"> Gérez les utilisateurs ici. Modifiez, supprimez et mettez à jour les informations des utilisateurs.</p>
-      <h3 className="mt-6 text-xl font-semibold">All Users</h3>
+          <div className="card-body">
+            {error && <Alert variant="danger">{error}</Alert>}
+            {success && <Alert variant="success">{success}</Alert>}
 
-      </center>
-      <div className="overflow-x-auto mt-4">
-        <table className="min-w-full table-auto bg-white shadow-md rounded-md overflow-hidden mx-auto">
-          <thead className="bg-gray-200">
-            <tr>
-              <th className="border px-4 py-2 text-gray-700">Name</th>
-              <th className="border px-4 py-2 text-gray-700">Phone Number</th>
-              <th className="border px-4 py-2 text-gray-700">Email</th>
-              <th className="border px-4 py-2 text-gray-700">Role</th>
-              <th className="border px-4 py-2 text-gray-700">Gender</th>
-
-              <th className="border px-4 py-2 text-gray-700">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user._id}>
-                <td className="border px-4 py-2 text-gray-800">{user.first_name} {user.last_name}</td>
-                <td className="border px-4 py-2 text-gray-800">{user.phone_number}</td>
-                <td className="border px-4 py-2 text-gray-800">{user.email}</td>
-                <td className="border px-4 py-2 text-gray-800">{user.role}</td>
-                <td className="border px-4 py-2 text-gray-800">{user.gender}</td>
-
-                <td className="border px-4 py-2 text-center">
-                  <button
-                    onClick={() => handleUpdate(user._id)}
-                    className="text-blue-500 hover:text-blue-700 p-2 rounded-full"
-                  >
-                    <FaEdit size={20} />
-                  </button>
-                  <button
-                    onClick={() => deleteUser(user._id)}
-                    className="text-red-500 hover:text-red-700 p-2 rounded-full ml-2"
-                  >
-                    <FaTrashAlt size={20} />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+            {loading ? (
+              <div className="text-center py-5">
+                <Spinner animation="border" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>
+              </div>
+            ) : users.length === 0 ? (
+              <div className="text-center py-4 text-muted">No users found</div>
+            ) : (
+              <Table hover responsive className="mb-0">
+                <thead className="thead-light">
+                  <tr>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Gender</th>
+                    <th className="text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.map(user => (
+                    <tr key={user._id}>
+                      <td>{user.first_name} {user.last_name}</td>
+                      <td>{user.phone_number}</td>
+                      <td>{user.email}</td>
+                      <td>
+                        <span className={`badge ${
+                          user.role === 'Admin' ? 'bg-danger' :
+                          user.role === 'Manager' ? 'bg-warning text-dark' :
+                          'bg-primary'
+                        }`}>
+                          {user.role}
+                        </span>
+                      </td>
+                      <td>{user.gender}</td>
+                      <td className="text-center">
+                        <Button
+                          variant="link"
+                          className="text-primary me-2"
+                          onClick={() => handleEdit(user._id)}
+                        >
+                          <FaEdit size={20} />
+                        </Button>
+                        <Button
+                          variant="link"
+                          className="text-danger"
+                          onClick={() => deleteUser(user._id)}
+                        >
+                          <FaTrashAlt size={20} />
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
     </>
   );
 };
-
 
 export default GestionUtilisateurs;

@@ -1,66 +1,110 @@
 import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../Components/navbar"; // Import the Navbar component
+import { Card, ListGroup, Button, Spinner, Alert } from "react-bootstrap";
+import Navbar from "../Components/navbar";
 
 const Profile = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (!user) {
-      navigate("/Seconnecter"); // Redirect to login if no user
+      navigate("/Seconnecter");
     } else {
-      setTimeout(() => setLoading(false), 1000); // Simulate loading state
+      setTimeout(() => setLoading(false), 1000);
     }
   }, [user, navigate]);
 
-  // Display loading or redirection message
+  const handleLogout = () => {
+    try {
+      logout();
+      navigate("/Seconnecter");
+    } catch (err) {
+      setError("Erreur lors de la déconnexion");
+    }
+  };
+
   if (loading) {
-    return <p className="text-center text-gray-500">Chargement des informations...</p>;
+    return (
+      <div className="d-flex justify-content-center mt-5">
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Chargement...</span>
+        </Spinner>
+      </div>
+    );
   }
 
   if (!user) {
-    return <p className="text-center text-gray-500">Redirection en cours...</p>;
+    return (
+      <div className="d-flex justify-content-center mt-5">
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Redirection en cours...</span>
+        </Spinner>
+      </div>
+    );
   }
 
   return (
     <>
-      <Navbar /> {/* Include the Navbar component at the top */}
-    <br/> <br/> <br/>    <br/>    <br/>    <br/>
-
-
-
-      <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-100">
-        <div className="w-full max-w-md p-6 bg-white shadow-md rounded-2xl">
-          <h2 className="text-2xl font-semibold text-center mb-4">Profil Utilisateur</h2>
-          <div className="space-y-3">
-            <p><strong>Prénom :</strong> {user.first_name || "Non renseigné"}</p>
-            <p><strong>Nom :</strong> {user.last_name || "Non renseigné"}</p>
-            <p><strong>Email :</strong> {user.email || "Non renseigné"}</p>
-            <p><strong>Téléphone :</strong> {user.phone_number || "Non renseigné"}</p>
-            <p><strong>Genre :</strong> {user.gender }</p>
-            <p><strong>Rôle :</strong> {user.role }</p>
+      <Navbar />
+<br/><br/>
+      <div className="container mt-5">
+        <div className="card shadow-sm">
+          <div className="card-header bg-white">
+            <h2 className="mb-0">Profil Utilisateur</h2>
+            <p className="text-muted mb-0">Vos informations personnelles</p>
           </div>
-          <div className="mt-6 text-center">
-            {user.role === "admin" && (
-              <button
-                onClick={() => navigate("/AdminDashboard")}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md mb-4"
+
+          <div className="card-body">
+            {error && <Alert variant="danger">{error}</Alert>}
+
+            <ListGroup variant="flush">
+              <ListGroup.Item>
+                <strong>Prénom:</strong> {user.first_name || "Non renseigné"}
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <strong>Nom:</strong> {user.last_name || "Non renseigné"}
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <strong>Email:</strong> {user.email || "Non renseigné"}
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <strong>Téléphone:</strong> {user.phone_number || "Non renseigné"}
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <strong>Genre:</strong> {user.gender || "Non renseigné"}
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <strong>Rôle:</strong>{" "}
+                <span className={`badge ${
+                  user.role === 'admin' ? 'bg-danger' :
+                  user.role === 'manager' ? 'bg-warning text-dark' :
+                  'bg-primary'
+                }`}>
+                  {user.role}
+                </span>
+              </ListGroup.Item>
+            </ListGroup>
+
+            <div className="mt-4 d-flex gap-2 justify-content-end">
+              {user.role === "admin" && (
+                <Button 
+                  variant="primary"
+                  onClick={() => navigate("/AdminDashboard")}
+                >
+                  Tableau de bord Admin
+                </Button>
+              )}
+              <Button 
+                variant="outline-danger"
+                onClick={handleLogout}
               >
-                Accéder au tableau de bord Admin
-              </button>
-            )}
-            <button
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
-              onClick={() => {
-                logout(); // Logout the user
-                navigate("/Seconnecter"); // Redirect to login after logout
-              }}
-            >
-              Se Déconnecter
-            </button>
+                Se Déconnecter
+              </Button>
+            </div>
           </div>
         </div>
       </div>
