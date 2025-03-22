@@ -624,12 +624,23 @@ const Circuit = () => {
                 <p>
                   <strong>Difficulté :</strong> {circuit.difficulty}
                 </p>
-                <Link to="/Reservation">
-      <button>
-        Reserver
-      </button>
-    </Link>
 
+
+
+    <Link 
+  to="/Reservation" 
+  state={{ 
+    circuit: {
+      ...circuit,
+      _id: `${selectedRegion.id}-${index}`, // Génère un ID unique
+      region: selectedRegion.id
+    }
+  }}
+>
+  <button className="reserve-button">
+    Reserver - {circuit.price} TND
+  </button>
+</Link>
                 {/* Review Form for Each Circuit */}
                 <div className="review-form">
                   <h4>Leave a Review</h4>

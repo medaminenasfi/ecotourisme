@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Navbar from "../Components/navbar";
 import "./Reservation.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -13,25 +14,43 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import dayjs from "dayjs";
 
-// Temporary dummy data for circuits
-const circuits = [
+// Données fictives de base + gestion dynamique des nouveaux circuits
+const initialCircuits = [
   { _id: "1", name: "Mountain Adventure", price: 100 },
   { _id: "2", name: "Forest Expedition", price: 150 },
   { _id: "3", name: "Desert Safari", price: 200 },
 ];
 
 const Accueil = () => {
+  const location = useLocation();
+  const passedCircuit = location.state?.circuit;
+
+  // État pour gérer la liste des circuits (fictifs + transmis)
+  const [circuits, setCircuits] = useState(initialCircuits);
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [participants, setParticipants] = useState(1);
   const [selectedCircuit, setSelectedCircuit] = useState("");
   const [totalPrice, setTotalPrice] = useState(0);
 
+  // Ajouter le circuit transmis s'il existe et n'est pas déjà dans la liste
+  useEffect(() => {
+    if (passedCircuit) {
+      setCircuits(prevCircuits => {
+        const exists = prevCircuits.some(c => c._id === passedCircuit._id);
+        return exists ? prevCircuits : [...prevCircuits, passedCircuit];
+      });
+      setSelectedCircuit(passedCircuit._id);
+      setTotalPrice(passedCircuit.price * 1);
+    }
+  }, [passedCircuit]);
+
+  // Calcul du prix total
   useEffect(() => {
     if (selectedCircuit && participants > 0) {
       const circuit = circuits.find(c => c._id === selectedCircuit);
       setTotalPrice(circuit.price * participants);
     }
-  }, [selectedCircuit, participants]);
+  }, [selectedCircuit, participants, circuits]);
 
   const handleReservation = () => {
     if (!selectedCircuit || participants < 1) {
@@ -46,17 +65,15 @@ const Accueil = () => {
       date: selectedDate.toDate(),
       numberOfPeople: participants,
       totalPrice: totalPrice,
-      // In a real app, user ID would come from authentication context
     };
 
     alert(
       `Réservation confirmée ! 🎉\n\nCircuit: ${circuit.name}\nDate: ${selectedDate.format(
         "DD/MM/YYYY"
-      )}\nParticipants: ${participants}\nPrix total: $${totalPrice}`
+      )}\nParticipants: ${participants}\nPrix total: ${circuit.price * participants} TND`
     );
 
-    // Here you would typically send reservationData to your backend API
-    // fetch('/api/reservations', { method: 'POST', body: JSON.stringify(reservationData) })
+    // Ici vous pouvez ajouter l'appel API pour sauvegarder la réservation
   };
 
   return (
@@ -91,8 +108,7 @@ const Accueil = () => {
               vous cherchiez une retraite paisible ou une randonnée aventureuse,
               nous avons l'expérience parfaite pour vous !
             </p>
-            <br />
-            <br />
+            <br /><br />
           </center>
           <Container>
             <Row>
@@ -109,7 +125,7 @@ const Accueil = () => {
                     <option value="">Sélectionnez un circuit</option>
                     {circuits.map((circuit) => (
                       <option key={circuit._id} value={circuit._id}>
-                        {circuit.name} (${circuit.price})
+                        {circuit.name} ({circuit.price} TND)
                       </option>
                     ))}
                   </select>
@@ -119,7 +135,10 @@ const Accueil = () => {
                   <input
                     type="number"
                     value={participants}
-                    onChange={(e) => setParticipants(Number(e.target.value))}
+                    onChange={(e) => {
+                      const value = Math.max(1, Number(e.target.value));
+                      setParticipants(value);
+                    }}
                     required
                     min="1"
                     className="form-control"
@@ -127,7 +146,9 @@ const Accueil = () => {
                   <br />
                   <label>Prix total</label>
                   <br />
-                  <div className="total-price">${totalPrice}</div>
+                  <div className="total-price">
+                    {totalPrice} TND
+                  </div>
                 </center>
               </Col>
               <Col>
