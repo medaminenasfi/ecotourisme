@@ -71,7 +71,7 @@ const GestionReservations = () => {
 
   useEffect(() => {
     fetchReservations();
-  }, []);
+  }, );
 
   // Handle form submission
   const handleSubmit = async (e) => {
