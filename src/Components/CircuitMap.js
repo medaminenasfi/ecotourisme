@@ -3,6 +3,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useState } from "react";
 import "./Circuit.css";
+import { Link } from 'react-router-dom';
 
 // Fix Leaflet marker icon issue
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
@@ -564,10 +565,6 @@ const Circuit = () => {
     }
   };
 
-  const handleReserveClick = (circuit) => {
-    alert(`You have reserved: ${circuit.name}`);
-    // Add reservation functionality here (e.g., navigation or API call)
-  };
 
   const handleReviewSubmit = (circuitName, reviewData) => {
     // Add or update the review for the selected circuit
@@ -627,9 +624,11 @@ const Circuit = () => {
                 <p>
                   <strong>Difficulté :</strong> {circuit.difficulty}
                 </p>
-                <button onClick={() => handleReserveClick(circuit)}>
-                  Reserver
-                </button>
+                <Link to="/Reservation">
+      <button>
+        Reserver
+      </button>
+    </Link>
 
                 {/* Review Form for Each Circuit */}
                 <div className="review-form">
