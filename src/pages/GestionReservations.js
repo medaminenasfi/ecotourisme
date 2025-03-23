@@ -36,14 +36,14 @@ const GestionReservations = () => {
       const decoded = jwtDecode(token);
       if (decoded.exp * 1000 < Date.now()) {
         localStorage.removeItem('accessToken');
-        window.location.href = '/login';
+        window.location.href = '/seconnecter';
         return false;
       }
       setIsAdmin(decoded.role === 'admin'); // Corrected role check
       return true;
     } catch (error) {
       localStorage.removeItem('accessToken');
-      window.location.href = '/login';
+      window.location.href = '/seconnecter';
       return false;
     }
   };
@@ -68,7 +68,7 @@ const GestionReservations = () => {
 
   useEffect(() => {
     fetchReservations();
-  }, );
+  }, []);
 
   // Handle form submission
   const handleSubmit = async (e) => {
