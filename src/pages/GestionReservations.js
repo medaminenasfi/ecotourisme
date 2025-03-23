@@ -5,7 +5,6 @@ import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import Navbar from '../Components/navbar';
 import jwtDecode from 'jwt-decode';
 
-
 const GestionReservations = () => {
   const [reservations, setReservations] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -149,9 +148,6 @@ const GestionReservations = () => {
     }
   };
 
-
-
-  
   // Handle delete
   const handleDelete = async (id) => {
     if (!validateToken()) return;
@@ -189,7 +185,7 @@ const GestionReservations = () => {
     setSelectedReservation(reservation);
     if (reservation) {
       setFormData({
-        user: reservation.user?._id || '',
+        user: reservation.user?._id || '', // Ensure user ID is set correctly
         circuit: reservation.circuit?._id || '',
         date: reservation.date?.split('T')[0] || '',
         numberOfPeople: reservation.numberOfPeople || '',
@@ -317,6 +313,7 @@ const GestionReservations = () => {
                 value={formData.user}
                 onChange={(e) => setFormData({ ...formData, user: e.target.value })}
                 required
+                disabled={!!selectedReservation} // Disable in edit mode
               >
                 <option value="">Select User</option>
                 {users.map(user => (
