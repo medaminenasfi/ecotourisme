@@ -149,6 +149,9 @@ const GestionReservations = () => {
     }
   };
 
+
+
+  
   // Handle delete
   const handleDelete = async (id) => {
     if (!validateToken()) return;
@@ -176,7 +179,7 @@ const GestionReservations = () => {
     console.error(err);
     if (err.response?.status === 401 || err.response?.status === 403) {
       localStorage.removeItem('accessToken');
-      window.location.href = '/login';
+      window.location.href = '/Seconnecter';
     }
     setError(err.response?.data?.message || 'An error occurred');
   };
