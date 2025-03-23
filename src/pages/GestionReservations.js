@@ -13,6 +13,8 @@ const GestionReservations = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [circuits, setCircuits] = useState([]);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -34,9 +36,6 @@ const GestionReservations = () => {
     
     try {
       const decoded = jwtDecode(token);
-      console.log('Decoded Token:', decoded); // Debugging log
-      
-      // Updated line: Access role through UserInfo
       setIsAdmin(decoded.UserInfo?.role === 'admin');
       
       if (decoded.exp * 1000 < Date.now()) {
@@ -49,6 +48,25 @@ const GestionReservations = () => {
       localStorage.removeItem('accessToken');
       window.location.href = '/login';
       return false;
+    }
+  };
+
+  // Fetch initial data
+  const fetchInitialData = async () => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const [usersRes, circuitsRes] = await Promise.all([
+        axios.get('http://localhost:5000/api/users', {
+          headers: { Authorization: `Bearer ${token}` }
+        }),
+        axios.get('http://localhost:5000/api/circuits', {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+      ]);
+      setUsers(usersRes.data);
+      setCircuits(circuitsRes.data);
+    } catch (err) {
+      handleError(err);
     }
   };
 
@@ -71,7 +89,11 @@ const GestionReservations = () => {
   };
 
   useEffect(() => {
-    fetchReservations();
+    const loadData = async () => {
+      await fetchInitialData();
+      await fetchReservations();
+    };
+    loadData();
   }, []);
 
   // Handle form submission
@@ -85,12 +107,20 @@ const GestionReservations = () => {
     try {
       const token = localStorage.getItem('accessToken');
       const config = { headers: { Authorization: `Bearer ${token}` } };
+      
+      const payload = {
+        ...formData,
+        numberOfPeople: Number(formData.numberOfPeople),
+        totalPrice: Number(formData.totalPrice),
+        date: new Date(formData.date).toISOString()
+      };
+
       const method = selectedReservation ? 'put' : 'post';
       const url = selectedReservation 
         ? `http://localhost:5000/api/reservations/${selectedReservation._id}`
         : 'http://localhost:5000/api/reservations';
 
-      const response = await axios[method](url, formData, config);
+      const response = await axios[method](url, payload, config);
       
       if ([200, 201].includes(response.status)) {
         setSuccess(selectedReservation 
@@ -131,7 +161,7 @@ const GestionReservations = () => {
     console.error(err);
     if (err.response?.status === 401 || err.response?.status === 403) {
       localStorage.removeItem('accessToken');
-      window.location.href = '/seconnecter';
+      window.location.href = '/login';
     }
     setError(err.response?.data?.message || 'An error occurred');
   };
@@ -139,21 +169,25 @@ const GestionReservations = () => {
   // Open modal for edit/add
   const openModal = (reservation = null) => {
     setSelectedReservation(reservation);
-    setFormData(reservation ? {
-      user: reservation.user?._id || '',
-      circuit: reservation.circuit?._id || '',
-      date: reservation.date?.split('T')[0] || '',
-      numberOfPeople: reservation.numberOfPeople || '',
-      totalPrice: reservation.totalPrice || '',
-      status: reservation.status || 'pending'
-    } : {
-      user: '',
-      circuit: '',
-      date: '',
-      numberOfPeople: '',
-      totalPrice: '',
-      status: 'pending'
-    });
+    if (reservation) {
+      setFormData({
+        user: reservation.user?._id || '',
+        circuit: reservation.circuit?._id || '',
+        date: reservation.date?.split('T')[0] || '',
+        numberOfPeople: reservation.numberOfPeople || '',
+        totalPrice: reservation.totalPrice || '',
+        status: reservation.status || 'pending'
+      });
+    } else {
+      setFormData({
+        user: '',
+        circuit: '',
+        date: '',
+        numberOfPeople: '',
+        totalPrice: '',
+        status: 'pending'
+      });
+    }
     setShowModal(true);
   };
 
@@ -210,7 +244,7 @@ const GestionReservations = () => {
                       <td>{reservation.circuit?.name || 'Deleted Circuit'}</td>
                       <td>{new Date(reservation.date).toLocaleDateString()}</td>
                       <td>{reservation.numberOfPeople}</td>
-                      <td>€{reservation.totalPrice.toFixed(2)}</td>
+                      <td>€{reservation.totalPrice?.toFixed(2)}</td>
                       <td>
                         <Badge 
                           bg={
@@ -259,7 +293,92 @@ const GestionReservations = () => {
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
-            {/* Keep existing modal form fields */}
+            <Form.Group className="mb-3">
+              <Form.Label>User</Form.Label>
+              <Form.Select
+                value={formData.user}
+                onChange={(e) => setFormData({ ...formData, user: e.target.value })}
+                required
+              >
+                <option value="">Select User</option>
+                {users.map(user => (
+                  <option key={user._id} value={user._id}>
+                    {user.first_name} {user.last_name}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Circuit</Form.Label>
+              <Form.Select
+                value={formData.circuit}
+                onChange={(e) => setFormData({ ...formData, circuit: e.target.value })}
+                required
+              >
+                <option value="">Select Circuit</option>
+                {circuits.map(circuit => (
+                  <option key={circuit._id} value={circuit._id}>
+                    {circuit.name}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Date</Form.Label>
+              <Form.Control
+                type="date"
+                value={formData.date}
+                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                required
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Number of People</Form.Label>
+              <Form.Control
+                type="number"
+                min="1"
+                value={formData.numberOfPeople}
+                onChange={(e) => setFormData({ ...formData, numberOfPeople: e.target.value })}
+                required
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Total Price</Form.Label>
+              <Form.Control
+                type="number"
+                min="0"
+                step="0.01"
+                value={formData.totalPrice}
+                onChange={(e) => setFormData({ ...formData, totalPrice: e.target.value })}
+                required
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Status</Form.Label>
+              <Form.Select
+                value={formData.status}
+                onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                required
+              >
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="cancelled">Cancelled</option>
+              </Form.Select>
+            </Form.Group>
+
+            <div className="d-flex justify-content-end gap-2">
+              <Button variant="secondary" onClick={() => setShowModal(false)}>
+                Cancel
+              </Button>
+              <Button variant="primary" type="submit">
+                {selectedReservation ? 'Update' : 'Create'}
+              </Button>
+            </div>
           </Form>
         </Modal.Body>
       </Modal>
