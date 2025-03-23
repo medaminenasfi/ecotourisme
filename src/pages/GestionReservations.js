@@ -34,16 +34,20 @@ const GestionReservations = () => {
     
     try {
       const decoded = jwtDecode(token);
+      console.log('Decoded Token:', decoded); // Debugging log
+      
+      // Updated line: Access role through UserInfo
+      setIsAdmin(decoded.UserInfo?.role === 'admin');
+      
       if (decoded.exp * 1000 < Date.now()) {
         localStorage.removeItem('accessToken');
-        window.location.href = '/seconnecter';
+        window.location.href = '/login';
         return false;
       }
-      setIsAdmin(decoded.role === 'admin'); // Corrected role check
       return true;
     } catch (error) {
       localStorage.removeItem('accessToken');
-      window.location.href = '/seconnecter';
+      window.location.href = '/login';
       return false;
     }
   };
