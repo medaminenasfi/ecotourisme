@@ -39,8 +39,7 @@ const GestionReservations = () => {
         window.location.href = '/login';
         return false;
       }
-      // Fixed admin role check
-      setIsAdmin(decoded.role === 'admin');
+      setIsAdmin(decoded.role === 'admin'); // Corrected role check
       return true;
     } catch (error) {
       localStorage.removeItem('accessToken');
@@ -89,7 +88,7 @@ const GestionReservations = () => {
 
       const response = await axios[method](url, formData, config);
       
-      if (response.status === 200 || response.status === 201) {
+      if ([200, 201].includes(response.status)) {
         setSuccess(selectedReservation 
           ? 'Reservation updated successfully' 
           : 'Reservation created successfully');
@@ -193,7 +192,7 @@ const GestionReservations = () => {
                     <th>People</th>
                     <th>Price</th>
                     <th>Status</th>
-                    {isAdmin && <th className="text-center">Actions</th>}
+                    <th className="text-center">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -207,7 +206,7 @@ const GestionReservations = () => {
                       <td>{reservation.circuit?.name || 'Deleted Circuit'}</td>
                       <td>{new Date(reservation.date).toLocaleDateString()}</td>
                       <td>{reservation.numberOfPeople}</td>
-                      <td>€{reservation.totalPrice}</td>
+                      <td>€{reservation.totalPrice.toFixed(2)}</td>
                       <td>
                         <Badge 
                           bg={
@@ -218,24 +217,26 @@ const GestionReservations = () => {
                           {reservation.status}
                         </Badge>
                       </td>
-                      {isAdmin && (
-                        <td className="text-center">
-                          <Button
-                            variant="link"
-                            className="text-primary me-2"
-                            onClick={() => openModal(reservation)}
-                          >
-                            <FaEdit size={20} />
-                          </Button>
-                          <Button
-                            variant="link"
-                            className="text-danger"
-                            onClick={() => handleDelete(reservation._id)}
-                          >
-                            <FaTrashAlt size={20} />
-                          </Button>
-                        </td>
-                      )}
+                      <td className="text-center">
+                        {isAdmin && (
+                          <>
+                            <Button
+                              variant="link"
+                              className="text-primary me-2"
+                              onClick={() => openModal(reservation)}
+                            >
+                              <FaEdit size={20} />
+                            </Button>
+                            <Button
+                              variant="link"
+                              className="text-danger"
+                              onClick={() => handleDelete(reservation._id)}
+                            >
+                              <FaTrashAlt size={20} />
+                            </Button>
+                          </>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -254,7 +255,7 @@ const GestionReservations = () => {
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
-            {/* Keep modal form fields the same */}
+            {/* Keep existing modal form fields */}
           </Form>
         </Modal.Body>
       </Modal>

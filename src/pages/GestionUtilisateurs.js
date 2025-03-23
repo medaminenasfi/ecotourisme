@@ -2,21 +2,57 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import { Button, Table, Alert, Spinner } from "react-bootstrap";
+import { Button, Table, Alert, Spinner, Modal, Form } from "react-bootstrap";
 import Navbar from "../Components/navbar";
+import jwtDecode from "jwt-decode";
 
 const GestionUtilisateurs = () => {
   const [users, setUsers] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    phone_number: "",
+    email: "",
+    role: "User",
+    gender: "Male"
+  });
+
+  const validateToken = () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      navigate("/login");
+      return false;
+    }
+    
+    try {
+      const decoded = jwtDecode(token);
+      if (decoded.exp * 1000 < Date.now()) {
+        localStorage.removeItem("accessToken");
+        navigate("/login");
+        return false;
+      }
+      return true;
+    } catch (error) {
+      localStorage.removeItem("accessToken");
+      navigate("/login");
+      return false;
+    }
+  };
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
   const fetchUsers = async () => {
+    if (!validateToken()) return;
+    
     try {
       const token = localStorage.getItem("accessToken");
       const response = await axios.get("http://localhost:5000/users", {
@@ -25,14 +61,37 @@ const GestionUtilisateurs = () => {
       setUsers(response.data);
       setError("");
     } catch (error) {
-      console.error("Error fetching users:", error);
-      setError("Failed to load users");
-      if(error.response?.status === 401) {
-        localStorage.removeItem("accessToken");
-        navigate("/login");
-      }
+      handleError(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateToken()) return;
+    
+    setError("");
+    setSuccess("");
+    
+    try {
+      const token = localStorage.getItem("accessToken");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      };
+
+      if (selectedUser) {
+        await axios.put(`http://localhost:5000/users/${selectedUser._id}`, formData, config);
+        setSuccess("User updated successfully");
+      }
+
+      setShowModal(false);
+      await fetchUsers();
+    } catch (err) {
+      handleError(err);
     }
   };
 
@@ -45,16 +104,32 @@ const GestionUtilisateurs = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSuccess("User deleted successfully");
-      // Update the UI by removing the deleted user
       setUsers(prev => prev.filter(user => user._id !== id));
     } catch (error) {
-      console.error("Error deleting user:", error);
-      setError(error.response?.data?.message || "Failed to delete user");
+      handleError(error);
     }
   };
 
-  const handleEdit = (id) => {
-    navigate(`/admin/edit/${id}`);
+  const handleError = (err) => {
+    console.error(err);
+    if (err.response?.status === 401 || err.response?.status === 403) {
+      localStorage.removeItem("accessToken");
+      navigate("/login");
+    }
+    setError(err.response?.data?.message || "An error occurred");
+  };
+
+  const openModal = (user = null) => {
+    setSelectedUser(user);
+    setFormData(user || {
+      first_name: "",
+      last_name: "",
+      phone_number: "",
+      email: "",
+      role: "User",
+      gender: "Male"
+    });
+    setShowModal(true);
   };
 
   return (
@@ -114,7 +189,7 @@ const GestionUtilisateurs = () => {
                         <Button
                           variant="link"
                           className="text-primary me-2"
-                          onClick={() => handleEdit(user._id)}
+                          onClick={() => openModal(user)}
                         >
                           <FaEdit size={20} />
                         </Button>
@@ -134,6 +209,62 @@ const GestionUtilisateurs = () => {
           </div>
         </div>
       </div>
+
+      {/* Edit User Modal */}
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit User</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleSubmit}>
+            <div className="row g-3">
+              <div className="col-md-6">
+                <Form.Group className="mb-3">
+                  <Form.Label>First Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={formData.first_name}
+                    onChange={(e) => setFormData({...formData, first_name: e.target.value})}
+                    required
+                  />
+                </Form.Group>
+              </div>
+              <div className="col-md-6">
+                <Form.Group className="mb-3">
+                  <Form.Label>Last Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={formData.last_name}
+                    onChange={(e) => setFormData({...formData, last_name: e.target.value})}
+                    required
+                  />
+                </Form.Group>
+              </div>
+            </div>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Phone Number</Form.Label>
+              <Form.Control
+                type="text"
+                value={formData.phone_number}
+                onChange={(e) => setFormData({...formData, phone_number: e.target.value})}
+                required
+              />
+            </Form.Group>
+
+    
+
+            <div className="d-flex justify-content-end gap-2">
+              <Button variant="secondary" onClick={() => setShowModal(false)}>
+                Cancel
+              </Button>
+              <Button variant="primary" type="submit">
+                Save Changes
+              </Button>
+            </div>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </>
   );
 };
