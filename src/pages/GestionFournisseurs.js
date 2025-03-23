@@ -2,10 +2,15 @@ import React from "react";
 
 const GestionFournisseurs = () => {
   return (
-    <div>
+  <center>
+  <div><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+
+
+
       <h2 className="text-xl font-bold">Gestion des Fournisseurs</h2>
-      <p>Fonctionnalité à venir...</p>
+      <p>Stay Tunned.....................</p>
     </div>
+    </center>
   );
 };
 

@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { Card, ListGroup, Button, Spinner, Alert } from "react-bootstrap";
+import {  ListGroup, Button, Spinner, Alert } from "react-bootstrap";
 import Navbar from "../Components/navbar";
 
 const Profile = () => {

@@ -5,6 +5,7 @@ import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import Navbar from '../Components/navbar';
 import jwtDecode from 'jwt-decode';
 
+
 const GestionReservations = () => {
   const [reservations, setReservations] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -30,7 +31,7 @@ const GestionReservations = () => {
   const validateToken = () => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      window.location.href = '/login';
+      window.location.href = '/Seconnecter';
       return false;
     }
     
@@ -40,13 +41,13 @@ const GestionReservations = () => {
       
       if (decoded.exp * 1000 < Date.now()) {
         localStorage.removeItem('accessToken');
-        window.location.href = '/login';
+        window.location.href = '/Seconnecter';
         return false;
       }
       return true;
     } catch (error) {
       localStorage.removeItem('accessToken');
-      window.location.href = '/login';
+      window.location.href = '/Seconnecter';
       return false;
     }
   };
@@ -58,13 +59,27 @@ const GestionReservations = () => {
       const [usersRes, circuitsRes] = await Promise.all([
         axios.get('http://localhost:5000/api/users', {
           headers: { Authorization: `Bearer ${token}` }
+        }).catch(err => {
+          console.error('Failed to fetch users:', err);
+          return { data: [] };
         }),
         axios.get('http://localhost:5000/api/circuits', {
           headers: { Authorization: `Bearer ${token}` }
+        }).catch(err => {
+          console.error('Failed to fetch circuits:', err);
+          return { data: [] };
         })
       ]);
+      
       setUsers(usersRes.data);
       setCircuits(circuitsRes.data);
+      
+      if (usersRes.data.length === 0) {
+        setError('Failed to load users list');
+      }
+      if (circuitsRes.data.length === 0) {
+        setError('Failed to load circuits list');
+      }
     } catch (err) {
       handleError(err);
     }
