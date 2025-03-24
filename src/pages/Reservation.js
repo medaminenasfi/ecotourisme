@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../Components/navbar";
-import "./Reservation.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Footer from "../Components/footer";
 import backgroundImage from "../assest/Accueil.jpg";
@@ -13,68 +12,164 @@ import { Button } from "@mui/material";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import dayjs from "dayjs";
-
-// Données fictives de base + gestion dynamique des nouveaux circuits
-const initialCircuits = [
-  { _id: "1", name: "Mountain Adventure", price: 100 },
-  { _id: "2", name: "Forest Expedition", price: 150 },
-  { _id: "3", name: "Desert Safari", price: 200 },
-];
+import axios from "axios";
+import jwtDecode from "jwt-decode";
 
 const Accueil = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const passedCircuit = location.state?.circuit;
 
-  // État pour gérer la liste des circuits (fictifs + transmis)
-  const [circuits, setCircuits] = useState(initialCircuits);
+  const [circuits, setCircuits] = useState([]);
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [participants, setParticipants] = useState(1);
   const [selectedCircuit, setSelectedCircuit] = useState("");
   const [totalPrice, setTotalPrice] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [isReserving, setIsReserving] = useState(false);
 
-  // Ajouter le circuit transmis s'il existe et n'est pas déjà dans la liste
-  useEffect(() => {
-    if (passedCircuit) {
-      setCircuits(prevCircuits => {
-        const exists = prevCircuits.some(c => c._id === passedCircuit._id);
-        return exists ? prevCircuits : [...prevCircuits, passedCircuit];
-      });
-      setSelectedCircuit(passedCircuit._id);
-      setTotalPrice(passedCircuit.price * 1);
+  // Updated token validation
+  const validateToken = (token) => {
+    try {
+      const decoded = jwtDecode(token);
+      if (!decoded) throw new Error("Invalid token");
+      
+      // Check token expiration
+      if (decoded.exp && Date.now() >= decoded.exp * 1000) {
+        throw new Error("Token expired");
+      }
+      
+      // Verify token structure
+      if (!decoded.UserInfo?.id) {
+        throw new Error("Invalid token structure");
+      }
+      
+      return decoded;
+    } catch (err) {
+      console.error("Token validation error:", err);
+      localStorage.removeItem("accessToken");
+      navigate("/Seconnecter");
+      return null;
     }
-  }, [passedCircuit]);
+  };
 
-  // Calcul du prix total
+  useEffect(() => {
+    const fetchCircuits = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+          navigate("/Seconnecter");
+          return;
+        }
+
+        const { data } = await axios.get("http://localhost:5000/api/circuits", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        const validCircuits = Array.isArray(data) ? data : [];
+        if (passedCircuit?.price && !validCircuits.some(c => c._id === passedCircuit._id)) {
+          validCircuits.push(passedCircuit);
+        }
+
+        setCircuits(validCircuits);
+        setError("");
+
+        if (passedCircuit?.price) {
+          setSelectedCircuit(passedCircuit._id);
+          setTotalPrice(passedCircuit.price * 1);
+        }
+      } catch (err) {
+        console.error("Fetch error:", err);
+        setError(err.response?.data?.message || "Failed to load circuits");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCircuits();
+  }, [passedCircuit, navigate]);
+
   useEffect(() => {
     if (selectedCircuit && participants > 0) {
       const circuit = circuits.find(c => c._id === selectedCircuit);
-      setTotalPrice(circuit.price * participants);
+      if (circuit?.price) setTotalPrice(circuit.price * participants);
     }
   }, [selectedCircuit, participants, circuits]);
 
-  const handleReservation = () => {
-    if (!selectedCircuit || participants < 1) {
-      alert("Veuillez sélectionner un circuit et le nombre de participants !");
-      return;
+  const handleReservation = async () => {
+    setError("");
+    setIsReserving(true);
+
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        navigate("/Seconnecter");
+        return;
+      }
+
+      // Validate token
+      const decoded = validateToken(token);
+      if (!decoded) return;
+
+      // Corrected user ID extraction
+      const userId = decoded.UserInfo?.id;
+      if (!userId) throw new Error("User information not found in token");
+
+      const circuit = circuits.find(c => c._id === selectedCircuit);
+      if (!circuit?.price) throw new Error("Invalid circuit selection");
+
+      // Validate selected date
+      const selectedDay = dayjs(selectedDate);
+      if (!selectedDay.isValid() || selectedDay.isBefore(dayjs(), "day")) {
+        throw new Error("Invalid date selection");
+      }
+
+      const reservationData = {
+        user: userId,
+        circuit: selectedCircuit,
+        date: selectedDay.format("YYYY-MM-DD"),
+        numberOfPeople: participants,
+        totalPrice: circuit.price * participants,
+      };
+
+      const { data } = await axios.post(
+        "http://localhost:5000/api/reservations",
+        reservationData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+
+      alert(`Reservation confirmed!\n
+        Date: ${dayjs(reservationData.date).format("DD/MM/YYYY")}\n
+        Total: ${reservationData.totalPrice} TND`);
+
+      // Reset form
+      setSelectedCircuit(passedCircuit?._id || "");
+      setParticipants(1);
+      setSelectedDate(dayjs());
+
+    } catch (err) {
+      console.error("Reservation error:", err);
+      setError(err.response?.data?.message || err.message || "Reservation failed. Please try again.");
+    } finally {
+      setIsReserving(false);
     }
-
-    const circuit = circuits.find(c => c._id === selectedCircuit);
-    
-    const reservationData = {
-      circuit: selectedCircuit,
-      date: selectedDate.toDate(),
-      numberOfPeople: participants,
-      totalPrice: totalPrice,
-    };
-
-    alert(
-      `Réservation confirmée ! 🎉\n\nCircuit: ${circuit.name}\nDate: ${selectedDate.format(
-        "DD/MM/YYYY"
-      )}\nParticipants: ${participants}\nPrix total: ${circuit.price * participants} TND`
-    );
-
-    // Ici vous pouvez ajouter l'appel API pour sauvegarder la réservation
   };
+
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -85,106 +180,100 @@ const Accueil = () => {
           style={{
             backgroundImage: `url(${backgroundImage})`,
             backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
             height: "100vh",
-            width: "100%",
           }}
         >
-          <div className="overlay"></div>
-          <div className="content text-center">
-            <h1>Votre Aventure Commence Ici</h1>
+          <div className="text-center">
+            <h1>Your Adventure Starts Here</h1>
             <p className="lead">
-              La nature ne fait rien en vain, et chaque paysage est une
-              invitation à l'aventure
+              Discover breathtaking landscapes and unforgettable experiences
             </p>
           </div>
         </section>
-        <section className="bg-black text-white p-5 shadow-lg">
-          <h1 className="hell">Effectuer une réservation</h1>
-          <center>
-            <p>
-              Réservez votre place et partez pour un voyage inoubliable. Que
-              vous cherchiez une retraite paisible ou une randonnée aventureuse,
-              nous avons l'expérience parfaite pour vous !
-            </p>
-            <br /><br />
-          </center>
-          <Container>
-            <Row>
-              <Col>
-                <center>
-                  <label>Circuit</label>
-                  <br />
-                  <select
-                    value={selectedCircuit}
-                    onChange={(e) => setSelectedCircuit(e.target.value)}
-                    required
-                    className="form-select"
-                  >
-                    <option value="">Sélectionnez un circuit</option>
-                    {circuits.map((circuit) => (
-                      <option key={circuit._id} value={circuit._id}>
-                        {circuit.name} ({circuit.price} TND)
-                      </option>
-                    ))}
-                  </select>
-                  <br />
-                  <label>Nombre de participants</label>
-                  <br />
-                  <input
-                    type="number"
-                    value={participants}
-                    onChange={(e) => {
-                      const value = Math.max(1, Number(e.target.value));
-                      setParticipants(value);
-                    }}
-                    required
-                    min="1"
-                    className="form-control"
-                  />
-                  <br />
-                  <label>Prix total</label>
-                  <br />
-                  <div className="total-price">
-                    {totalPrice} TND
-                  </div>
-                </center>
-              </Col>
-              <Col>
-                <center>
-                  <section
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      marginTop: "24px",
-                      backgroundColor: "white",
-                      padding: "16px",
-                      borderRadius: "8px",
-                    }}
-                  >
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DateCalendar
-                        value={selectedDate}
-                        onChange={(newValue) => setSelectedDate(newValue)}
-                      />
-                    </LocalizationProvider>
-                  </section>
-                  <p className="text-white mt-3">
-                    Date sélectionnée : {selectedDate.format("DD/MM/YYYY")}
-                  </p>
 
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleReservation}
-                    sx={{ mt: 2 }}
-                  >
-                    Réserver
-                  </Button>
-                </center>
+        <section className="bg-dark text-white p-5">
+          <Container>
+            <h2 className="text-center mb-4">Make a Reservation</h2>
+            {error && <div className="alert alert-danger">{error}</div>}
+            
+            <Row className="g-4">
+              <Col md={6}>
+                <div className="bg-light p-4 rounded text-dark">
+                  <div className="mb-3">
+                    <label className="form-label">Select Circuit</label>
+                    <select
+                      className="form-select"
+                      value={selectedCircuit}
+                      onChange={(e) => setSelectedCircuit(e.target.value)}
+                      required
+                    >
+                      <option value="">Choose a circuit...</option>
+                      {circuits.map(circuit => (
+                        <option key={circuit._id} value={circuit._id}>
+                          {circuit.name} ({circuit.price} TND)
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Number of Participants</label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      min="1"
+                      value={participants}
+                      onChange={(e) => setParticipants(Math.max(1, e.target.valueAsNumber || 1))}
+                      required
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Total Price</label>
+                    <div className="h4">
+                      {circuits.find(c => c._id === selectedCircuit)?.price
+                        ? `${totalPrice} TND`
+                        : "Select a circuit"}
+                    </div>
+                  </div>
+                </div>
+              </Col>
+
+              <Col md={6}>
+                <div className="bg-light p-4 rounded">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateCalendar
+                      value={selectedDate}
+                      onChange={setSelectedDate}
+                      minDate={dayjs().add(1, 'day')}
+                      disablePast
+                    />
+                  </LocalizationProvider>
+                  <div className="text-center mt-3 text-dark">
+                    Selected Date: {selectedDate.format("DD/MM/YYYY")}
+                  </div>
+                </div>
               </Col>
             </Row>
+
+            <div className="text-center mt-4">
+              <Button
+                variant="contained"
+                size="large"
+                onClick={handleReservation}
+                disabled={!selectedCircuit || isReserving}
+                sx={{ px: 6, py: 2, fontSize: '1.2rem' }}
+              >
+                {isReserving ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" />
+                    Processing...
+                  </>
+                ) : (
+                  "Confirm Reservation"
+                )}
+              </Button>
+            </div>
           </Container>
         </section>
       </main>
