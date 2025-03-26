@@ -43,7 +43,7 @@ const Footer = () => {
         </a>
       </div>
       <div className="text-center mt-4">
-        <p>&copy; {new Date().getFullYear()} Ecotourism TN. Tous droits réservés.</p>
+        <p>&copy; {new Date().getFullYear()} Ecotourism TN . Tous droits réservés.</p>
       </div>
     </footer>
   );
