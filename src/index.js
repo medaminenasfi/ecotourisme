@@ -117,7 +117,7 @@ const router = createBrowserRouter([
       </AdminRoute>
     ),
   },
-  
+
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

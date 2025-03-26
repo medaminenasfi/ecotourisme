@@ -57,6 +57,15 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+
+      {isAuthenticated && user.role === "fournisseur" && (
+  <li className="nav-item">
+    <Link to="/creer-service" className="nav-link">
+      Créer un Service
+    </Link>
+  </li>
+)}
     </nav>
   );
 };
