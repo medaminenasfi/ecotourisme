@@ -59,13 +59,15 @@ const Navbar = () => {
       </div>
 
 
-      {isAuthenticated && user.role === "fournisseur" && (
-  <li className="nav-item">
-    <Link to="/creer-service" className="nav-link">
-      Créer un Service
-    </Link>
-  </li>
-)}
+<ul className="navbar-nav mx-auto">
+  {/* ... existing links ... */}
+  
+  {isAuthenticated && user.role === "fournisseur" && (
+    <li className="nav-item">
+      <Link to="/create-service" className="nav-link">Créer un Service</Link>
+    </li>
+  )}
+</ul>
     </nav>
   );
 };

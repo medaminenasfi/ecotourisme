@@ -20,6 +20,7 @@ import GestionFournisseurs from "./pages/GestionFournisseurs";
 import GestionReservations from "./pages/GestionReservations";
 import GestionCircuits from "./pages/GestionCircuits";
 import AdminRoute from "./pages/AdminRoute"; 
+import CreateService from "./Components/CreateService ";
 
 const router = createBrowserRouter([
   {
@@ -117,6 +118,16 @@ const router = createBrowserRouter([
       </AdminRoute>
     ),
   },
+
+  {
+    path: "/create-service",
+    element: (
+      <ProtectedRoute>
+        <CreateService />
+      </ProtectedRoute>
+    ),
+  },
+
 
 ]);
 

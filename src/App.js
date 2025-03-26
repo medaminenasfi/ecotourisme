@@ -21,6 +21,7 @@ import Footer from "./Components/footer";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 import EditUser from "./pages/EditUser";
+import CreateService from "./pages/CreateService";
 
 import GestionUtilisateurs from "./pages/GestionUtilisateurs";
 import GestionFournisseurs from "./pages/GestionFournisseurs";
@@ -149,8 +150,17 @@ function App() {
                   <GestionCircuits />
                 </AdminRoute>
               }
-              
             />
+
+<Route
+  path="/create-service"
+  element={
+    <ProtectedRoute>
+      <CreateService />
+    </ProtectedRoute>
+  }
+/>
+
           </Routes>
         </div>
         <Footer />
