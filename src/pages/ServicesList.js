@@ -181,8 +181,68 @@ const ServicesList = () => {
           </Row>
 
           <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-            {/* Le contenu de la modal reste inchangé */}
-          </Modal>
+          <Modal.Header closeButton>
+              <Modal.Title>Modifier le Service</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Type de service</Form.Label>
+                  <Form.Select
+                    name="type"
+                    value={formData.type}
+                    onChange={(e) => setFormData({...formData, type: e.target.value})}
+                    required
+                  >
+                    {serviceTypes.map(type => (
+                      <option key={type} value={type}>{type}</option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Description</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    name="description"
+                    value={formData.description}
+                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                    required
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>URL de la photo</Form.Label>
+                  <Form.Control
+                    type="url"
+                    name="photo"
+                    value={formData.photo}
+                    onChange={(e) => setFormData({...formData, photo: e.target.value})}
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Numéro de téléphone</Form.Label>
+                  <Form.Control
+                    type="tel"
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
+                    onChange={(e) => setFormData({...formData, phoneNumber: e.target.value})}
+                    required
+                  />
+                </Form.Group>
+
+                <div className="d-flex justify-content-end gap-2">
+                  <Button variant="secondary" onClick={() => setShowModal(false)}>
+                    Annuler
+                  </Button>
+                  <Button variant="primary" type="submit">
+                    Enregistrer
+                  </Button>
+                </div>
+              </Form>
+            </Modal.Body>          </Modal>
         </>
       )}
     </div>
