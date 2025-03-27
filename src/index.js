@@ -21,6 +21,7 @@ import GestionReservations from "./pages/GestionReservations";
 import GestionCircuits from "./pages/GestionCircuits";
 import AdminRoute from "./pages/AdminRoute"; 
 import CreateService from "./Components/CreateService ";
+import ServicesList  from  "./pages/ServicesList"
 
 const router = createBrowserRouter([
   {
@@ -128,6 +129,15 @@ const router = createBrowserRouter([
     ),
   },
 
+
+  {
+    path: "/ServicesList",
+  element :( 
+    <ProtectedRoute allowedRoles={['admin', 'fournisseur', 'voyageur']}>
+      <ServicesList />
+    </ProtectedRoute>
+)
+  }
 
 ]);
 

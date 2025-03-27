@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext"; 
-
+import "../pages/ServicesList"
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -36,6 +36,10 @@ const Navbar = () => {
             <li className="nav-item"><Link to="/Reservation" className="nav-link">Réservation</Link></li>
             <li className="nav-item"><Link to="/Artisan" className="nav-link">Artisan</Link></li>
             <li className="nav-item"><Link to="/Contact" className="nav-link">Contact</Link></li>
+            <li className="nav-item">
+  <Link to="/ServicesList" className="nav-link">Services</Link>
+</li>
+
 
             {isAuthenticated && user.role === "admin" && (
               <li className="nav-item"><Link to="/AdminDashboard" className="nav-link">Admin Dashboard</Link></li>

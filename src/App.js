@@ -22,7 +22,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 import EditUser from "./pages/EditUser";
 import CreateService from "./pages/CreateService";
-
+import ServicesList  from  "./pages/ServicesList"
 import GestionUtilisateurs from "./pages/GestionUtilisateurs";
 import GestionFournisseurs from "./pages/GestionFournisseurs";
 import GestionReservations from "./pages/GestionReservations";
@@ -151,6 +151,16 @@ function App() {
                 </AdminRoute>
               }
             />
+
+// Ajouter la route
+<Route
+  path="/ServicesList"
+  element={
+    <ProtectedRoute allowedRoles={['admin', 'fournisseur', 'voyageur']}>
+      <ServicesList />
+    </ProtectedRoute>
+  }
+/>
 
 <Route
   path="/create-service"
