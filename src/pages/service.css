@@ -19,4 +19,26 @@
 
 .action-buttons:hover {
   opacity: 1;
+}.discount-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #ff4757;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 14px;
+  font-weight: bold;
+  z-index: 1;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.position-relative {
+  position: relative;
 }
