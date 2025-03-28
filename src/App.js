@@ -27,7 +27,9 @@ import GestionUtilisateurs from "./pages/GestionUtilisateurs";
 import GestionFournisseurs from "./pages/GestionFournisseurs";
 import GestionReservations from "./pages/GestionReservations";
 import GestionCircuits from "./pages/GestionCircuits";
-
+import AvisTable from "./Components/AvisTable.jsx";
+import Gestion  from "./Components/gestion.jsx";
+import ReclamationsTable from "./Components/ReclamationsTable.jsx"
 function ProtectedRoute({ children }) {
   const { user } = useContext(AuthContext);
 
@@ -167,6 +169,38 @@ function App() {
   element={
     <ProtectedRoute>
       <CreateService />
+    </ProtectedRoute>
+  }
+/>
+
+
+
+
+
+
+<Route
+  path="/gestion"
+  element={
+    <ProtectedRoute>
+      <Gestion />
+    </ProtectedRoute>
+  }
+/>
+
+
+<Route
+  path="/AvisTable"
+  element={
+    <ProtectedRoute>
+      <AvisTable />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/ReclamationsTable"
+  element={
+    <ProtectedRoute>
+      <ReclamationsTable />
     </ProtectedRoute>
   }
 />

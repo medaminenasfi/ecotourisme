@@ -22,6 +22,14 @@ import GestionCircuits from "./pages/GestionCircuits";
 import AdminRoute from "./pages/AdminRoute"; 
 import CreateService from "./Components/CreateService ";
 import ServicesList  from  "./pages/ServicesList"
+ import { NavLink } from "react-router-dom";
+import AvisTable from "./Components/AvisTable.jsx";
+import Gestion  from "./Components/gestion.jsx";
+import { Navigate } from "react-router-dom";
+import ReclamationsTable from "./Components/ReclamationsTable.jsx"
+
+
+
 
 const router = createBrowserRouter([
   {
@@ -137,7 +145,36 @@ const router = createBrowserRouter([
       <ServicesList />
     </ProtectedRoute>
 )
-  }
+  },
+
+
+
+  {
+    path: "gestion",
+    element: (
+      <ProtectedRoute allowedRoles={['admin', 'fournisseur', 'voyageur']}>
+        <Gestion /> {/* Utilisez le composant Gestion au lieu de Sidebar */}
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        index: true, // Redirection par défaut
+        element: <Navigate to="avis" replace />
+      },
+      {
+        path: "avis",
+        element: <AvisTable />
+      },
+      {
+        path: "reclamations",
+        element: <ReclamationsTable />
+      }
+    ]
+  },
+
+
+
+
 
 ]);
 
