@@ -68,7 +68,7 @@ const Navbar = () => {
   
   {isAuthenticated && user.role === "fournisseur" && (
     <li className="nav-item">
-      <Link to="/create-service" className="nav-link">Créer un Service</Link>
+      <Link to="/create-service" className="nav-link">Gestion Service</Link>
     </li>
   )}
 </ul>
