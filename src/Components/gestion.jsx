@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
-import { FaCommentDots, FaExclamationCircle, FaPlus } from "react-icons/fa";
+import { FaCommentDots, FaExclamationCircle } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Gestion.css";
 import Navbar from "../Components/navbar";

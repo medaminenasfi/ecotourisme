@@ -42,7 +42,13 @@ const Navbar = () => {
   <Link to="/ServicesList" className="nav-link">Services</Link>
 </li>
 
-
+{user && (
+  <li className="nav-item">
+    <Link to="./gestion" className="nav-link">
+      Gestion
+    </Link>
+  </li>
+)}
 
 
 
@@ -80,13 +86,7 @@ const Navbar = () => {
     </li>
   )}
 </ul>
-{user && (
-  <li className="nav-item">
-    <Link to="./gestion" className="nav-link">
-      Gestion
-    </Link>
-  </li>
-)}
+
 
 
     </nav>
