@@ -152,7 +152,7 @@ if (!token) {
               <Form.Select
                 value={formData.circuitId}
                 onChange={(e) => setFormData({ ...formData, circuitId: e.target.value })}
-                required
+                
               >
                 <option value="">Sélectionner un circuit</option>
                 {circuits.map(circuit => (
