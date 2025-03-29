@@ -1,7 +1,35 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Box, Typography, Container, Paper, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import { 
+  TextField, 
+  Button, 
+  Box, 
+  Typography, 
+  Container, 
+  Paper, 
+  Select, 
+  MenuItem, 
+  InputLabel, 
+  FormControl,
+  InputAdornment,
+  IconButton,
+  Alert,
+  Fade,
+  Zoom,Link 
+} from '@mui/material';
+import { 
+  Visibility, 
+  VisibilityOff,
+  Person,
+  Lock,
+  Phone,
+  Email,
+  Male,
+  Female,
+  Work,
+  PersonPin
+} from '@mui/icons-material';
 
 const Inscrire = () => {
   const [formData, setFormData] = useState({
@@ -11,8 +39,10 @@ const Inscrire = () => {
     email: '',
     password: '',
     gender: 'male',
-    role: 'voyageur',  // Default role
+    role: 'voyageur',
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -24,16 +54,14 @@ const Inscrire = () => {
     try {
       const response = await axios.post('http://localhost:5000/auth/register', formData);
       if (response.data.accessToken) {
-        // Store the access token in localStorage
         localStorage.setItem('accessToken', response.data.accessToken);
-        // Redirect to the login page after successful registration
         navigate('/seconnecter');
       } else {
-        alert(response.data.message);
+        setError(response.data.message || 'Erreur lors de l\'inscription');
       }
     } catch (error) {
       console.error('Error during registration:', error);
-      alert('Registration failed. Please try again.');
+      setError('Échec de l\'inscription. Veuillez réessayer.');
     }
   };
 
@@ -46,118 +74,262 @@ const Inscrire = () => {
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: '100vh',
+        background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
       }}
     >
-      <Paper elevation={3} sx={{ padding: 4, width: '100%' }}>
-        <Typography variant="h5" align="center" gutterBottom>
-          S'inscrire
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <Box mb={2}>
-            <TextField
-              label="First Name"
-              name="first_name"
-              value={formData.first_name}
-              onChange={handleChange}
-              fullWidth
-              required
-              variant="outlined"
-            />
-          </Box>
-          <Box mb={2}>
-            <TextField
-              label="Last Name"
-              name="last_name"
-              value={formData.last_name}
-              onChange={handleChange}
-              fullWidth
-              required
-              variant="outlined"
-            />
-          </Box>
-          <Box mb={2}>
-            <TextField
-              label="Phone Number"
-              name="phone_number"
-              value={formData.phone_number}
-              onChange={handleChange}
-              fullWidth
-              required
-              variant="outlined"
-            />
-          </Box>
-          <Box mb={2}>
-            <TextField
-              label="Email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              fullWidth
-              required
-              variant="outlined"
-            />
+      <Zoom in={true}>
+        <Paper 
+          elevation={6}
+          sx={{
+            padding: 4,
+            width: '100%',
+            borderRadius: 4,
+            transform: 'translateY(0)',
+            transition: 'transform 0.3s, box-shadow 0.3s',
+            '&:hover': {
+              transform: 'translateY(-5px)',
+              boxShadow: 8
+            }
+          }}
+        >
+          <Box textAlign="center" mb={4}>
+            <Person sx={{ 
+              fontSize: 50, 
+              color: 'primary.main', 
+              bgcolor: 'rgba(63, 81, 181, 0.1)', 
+              p: 1.5, 
+              borderRadius: '50%' 
+            }}/>
+            <Typography variant="h4" sx={{ mt: 2, fontWeight: 700 }}>
+              Créer un compte
+            </Typography>
           </Box>
 
+          {error && (
+            <Fade in={!!error}>
+              <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>
+                {error}
+              </Alert>
+            </Fade>
+          )}
 
-          <Box mb={2}>
-            <TextField
-              label="Password"
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-              fullWidth
-              required
-              variant="outlined"
-              inputProps={{ minLength: 8 }}
-              helperText="Password must be at least 8 characters long"
-
-            />
-          </Box>
-
-
-          <Box mb={2}>
-            <FormControl fullWidth required variant="outlined">
-              <InputLabel>Gender</InputLabel>
-              <Select
-                label="Gender"
-                name="gender"
-                value={formData.gender}
+          <form onSubmit={handleSubmit}>
+            <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+              <TextField
+                fullWidth
+                label="Prénom"
+                name="first_name"
+                value={formData.first_name}
                 onChange={handleChange}
-              >
-                <MenuItem value="male">Male</MenuItem>
-                <MenuItem value="female">Female</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-          <Box mb={2}>
-            <FormControl fullWidth required variant="outlined">
-              <InputLabel>Role</InputLabel>
-              <Select
-                label="Role"
-                name="role"
-                value={formData.role}
+                variant="outlined"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Person fontSize="small" color="action" />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    '& fieldset': { borderWidth: 2 },
+                  }
+                }}
+              />
+              <TextField
+                fullWidth
+                label="Nom"
+                name="last_name"
+                value={formData.last_name}
                 onChange={handleChange}
-              >
-                <MenuItem value="voyageur">Voyageur</MenuItem>
-                <MenuItem value="admin">Admin</MenuItem>
-                <MenuItem value="fournisseur">Fournisseur</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-          <Box mt={2}>
+                variant="outlined"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    '& fieldset': { borderWidth: 2 },
+                  }
+                }}
+              />
+            </Box>
+
+            <Box sx={{ mb: 3 }}>
+              <TextField
+                fullWidth
+                label="Téléphone"
+                name="phone_number"
+                value={formData.phone_number}
+                onChange={handleChange}
+                variant="outlined"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Phone fontSize="small" color="action" />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    '& fieldset': { borderWidth: 2 },
+                  }
+                }}
+              />
+            </Box>
+
+            <Box sx={{ mb: 3 }}>
+              <TextField
+                fullWidth
+                label="Email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                variant="outlined"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Email fontSize="small" color="action" />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    '& fieldset': { borderWidth: 2 },
+                  }
+                }}
+              />
+            </Box>
+
+            <Box sx={{ mb: 3 }}>
+              <TextField
+                fullWidth
+                label="Mot de passe"
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                value={formData.password}
+                onChange={handleChange}
+                variant="outlined"
+                inputProps={{ minLength: 8 }}
+                helperText="Minimum 8 caractères"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Lock fontSize="small" color="action" />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword(!showPassword)}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    '& fieldset': { borderWidth: 2 },
+                  }
+                }}
+              />
+            </Box>
+
+            <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+              <FormControl fullWidth variant="outlined" sx={{ borderRadius: 2 }}>
+                <InputLabel>Genre</InputLabel>
+                <Select
+                  label="Genre"
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                  startAdornment={
+                    <InputAdornment position="start">
+                      {formData.gender === 'male' ? <Male /> : <Female />}
+                    </InputAdornment>
+                  }
+                >
+                  <MenuItem value="male">
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Male fontSize="small" /> Homme
+                    </Box>
+                  </MenuItem>
+                  <MenuItem value="female">
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Female fontSize="small" /> Femme
+                    </Box>
+                  </MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl fullWidth variant="outlined" sx={{ borderRadius: 2 }}>
+                <InputLabel>Rôle</InputLabel>
+                <Select
+                  label="Rôle"
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <Work fontSize="small" />
+                    </InputAdornment>
+                  }
+                >
+                  <MenuItem value="voyageur">
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      Voyageur
+                    </Box>
+                  </MenuItem>
+                  <MenuItem value="fournisseur">Fournisseur</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+
             <Button
               type="submit"
-              variant="contained"
-              color="primary"
               fullWidth
+              variant="contained"
+              size="large"
+              sx={{
+                py: 1.5,
+                borderRadius: 2,
+                fontSize: '1.1rem',
+                fontWeight: 700,
+                textTransform: 'none',
+                transition: 'all 0.3s',
+                '&:hover': {
+                  transform: 'scale(1.02)',
+                  boxShadow: 3
+                }
+              }}
             >
               S'inscrire
             </Button>
+          </form>
+
+          <Box mt={3} textAlign="center">
+            <Typography variant="body2">
+              Déjà un compte?{' '}
+              <Link 
+                href="/seconnecter" 
+                sx={{ 
+                  fontWeight: 600, 
+                  color: 'primary.main',
+                  '&:hover': { 
+                    textDecoration: 'none',
+                    opacity: 0.9
+                  }
+                }}
+              >
+                Se connecter
+              </Link>
+            </Typography>
           </Box>
-        </form>
-      </Paper>
+        </Paper>
+      </Zoom>
     </Container>
   );
 };
