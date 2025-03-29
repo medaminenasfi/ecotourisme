@@ -139,10 +139,11 @@ const GestionUtilisateurs = () => {
       
       <div className="container">
         <h1 className="mb-3 display-5 fw-bold text-primary">Gestion Utilisateurs</h1>
+        <center>
         <p className="text-muted mb-4">
           Gérez les comptes utilisateurs, modifiez les informations et les rôles
         </p>
-
+        </center>
         <div className="dashboard-card bg-white p-4 rounded-3 shadow-sm">
           {error && <Alert variant="danger">{error}</Alert>}
           {success && <Alert variant="success">{success}</Alert>}
