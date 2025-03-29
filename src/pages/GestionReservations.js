@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Table, Modal, Form, Alert, Spinner, Badge } from 'react-bootstrap';
-import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { FaEdit, FaTrashAlt ,FaPlus} from 'react-icons/fa';
 import Navbar from '../Components/navbar';
 import jwtDecode from 'jwt-decode';
 
@@ -205,117 +205,126 @@ const GestionReservations = () => {
     setShowModal(true);
   };
 
+  
   return (
     <>
       <Navbar />
-      <div className="container mt-5" style={{ paddingTop: '70px' }}>
-        <div className="card shadow-sm">
-          <div className="card-header bg-white d-flex justify-content-between align-items-center">
-            <div>
-              <h2 className="mb-0">Reservation Management</h2>
-              <p className="text-muted mb-0">Manage all hiking reservations</p>
-            </div>
-            {isAdmin && (
-              <Button variant="primary" onClick={() => openModal()}>
-                New Reservation
+      <br/><br/><br/><br/>
+      
+      <div className="container">
+        <h1 className="mb-3 display-5 fw-bold text-primary">Gestion des Réservations</h1>
+        <p className="text-muted mb-4">
+          Gérez toutes les réservations de randonnée en cours
+        </p>
+
+        <div className="dashboard-card bg-white p-4 rounded-3 shadow-sm">
+          {error && <Alert variant="danger">{error}</Alert>}
+          {success && <Alert variant="success">{success}</Alert>}
+
+          {isAdmin && (
+            <div className="d-flex justify-content-end mb-4">
+              <Button 
+                variant="outline-primary" 
+                onClick={() => openModal()}
+                className="d-flex align-items-center"
+              >
+                <FaPlus className="me-2" /> Nouvelle Réservation
               </Button>
-            )}
-          </div>
+            </div>
+          )}
 
-          <div className="card-body">
-            {error && <Alert variant="danger">{error}</Alert>}
-            {success && <Alert variant="success">{success}</Alert>}
-
-            {loading ? (
-              <div className="text-center py-5">
-                <Spinner animation="border" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </Spinner>
-              </div>
-            ) : reservations.length === 0 ? (
-              <div className="text-center py-4 text-muted">No reservations found</div>
-            ) : (
-              <Table hover responsive className="mb-0">
-                <thead className="thead-light">
-                  <tr>
-                    <th>User</th>
-                    <th>Circuit</th>
-                    <th>Date</th>
-                    <th>People</th>
-                    <th>Price</th>
-                    <th>Status</th>
-                    <th className="text-center">Actions</th>
+          {loading ? (
+            <div className="text-center py-5">
+              <Spinner animation="border" role="status">
+                <span className="visually-hidden">Chargement...</span>
+              </Spinner>
+            </div>
+          ) : reservations.length === 0 ? (
+            <div className="text-center py-4 text-muted">Aucune réservation trouvée</div>
+          ) : (
+            <Table hover responsive className="align-middle">
+              <thead className="bg-light">
+                <tr>
+                  <th>Utilisateur</th>
+                  <th>Circuit</th>
+                  <th>Date</th>
+                  <th>Personnes</th>
+                  <th>Prix</th>
+                  <th>Statut</th>
+                  <th className="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reservations.map(reservation => (
+                  <tr key={reservation._id}>
+                    <td>
+                      {reservation.user 
+                        ? `${reservation.user.first_name} ${reservation.user.last_name}`
+                        : 'Utilisateur supprimé'}
+                    </td>
+                    <td>{reservation.circuit?.name || 'Circuit supprimé'}</td>
+                    <td>{new Date(reservation.date).toLocaleDateString('fr-FR')}</td>
+                    <td>{reservation.numberOfPeople}</td>
+                    <td>{reservation.totalPrice?.toFixed(2)} €</td>
+                    <td>
+                      <Badge 
+                        pill
+                        bg={
+                          reservation.status === 'confirmed' ? 'success' :
+                          reservation.status === 'cancelled' ? 'danger' : 'warning'
+                        }
+                      >
+                        {reservation.status === 'confirmed' ? 'Confirmée' :
+                         reservation.status === 'cancelled' ? 'Annulée' : 'En attente'}
+                      </Badge>
+                    </td>
+                    <td className="text-end">
+                      {isAdmin && (
+                        <>
+                          <Button
+                            variant="outline-primary"
+                            size="sm"
+                            className="me-2"
+                            onClick={() => openModal(reservation)}
+                          >
+                            <FaEdit className="me-1" /> Modifier
+                          </Button>
+                          <Button
+                            variant="outline-danger"
+                            size="sm"
+                            onClick={() => handleDelete(reservation._id)}
+                          >
+                            <FaTrashAlt className="me-1" /> Supprimer
+                          </Button>
+                        </>
+                      )}
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {reservations.map(reservation => (
-                    <tr key={reservation._id}>
-                      <td>
-                        {reservation.user 
-                          ? `${reservation.user.first_name} ${reservation.user.last_name}`
-                          : 'Deleted User'}
-                      </td>
-                      <td>{reservation.circuit?.name || 'Deleted Circuit'}</td>
-                      <td>{new Date(reservation.date).toLocaleDateString()}</td>
-                      <td>{reservation.numberOfPeople}</td>
-                      <td>€{reservation.totalPrice?.toFixed(2)}</td>
-                      <td>
-                        <Badge 
-                          bg={
-                            reservation.status === 'confirmed' ? 'success' :
-                            reservation.status === 'cancelled' ? 'danger' : 'warning'
-                          }
-                        >
-                          {reservation.status}
-                        </Badge>
-                      </td>
-                      <td className="text-center">
-                        {isAdmin && (
-                          <>
-                            <Button
-                              variant="link"
-                              className="text-primary me-2"
-                              onClick={() => openModal(reservation)}
-                            >
-                              <FaEdit size={20} />
-                            </Button>
-                            <Button
-                              variant="link"
-                              className="text-danger"
-                              onClick={() => handleDelete(reservation._id)}
-                            >
-                              <FaTrashAlt size={20} />
-                            </Button>
-                          </>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            )}
-          </div>
+                ))}
+              </tbody>
+            </Table>
+          )}
         </div>
       </div>
 
-      {/* Add/Edit Modal */}
+      {/* Modal Add/Edit */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            {selectedReservation ? 'Edit Reservation' : 'New Reservation'}
+        <Modal.Header closeButton className="bg-light">
+          <Modal.Title className="text-primary">
+            {selectedReservation ? 'Modifier Réservation' : 'Nouvelle Réservation'}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
-              <Form.Label>User</Form.Label>
+              <Form.Label>Utilisateur</Form.Label>
               <Form.Select
                 value={formData.user}
                 onChange={(e) => setFormData({ ...formData, user: e.target.value })}
                 required
-                disabled={!!selectedReservation} // Disable in edit mode
+                disabled={!!selectedReservation}
               >
-                <option value="">Select User</option>
+                <option value="">Sélectionner un utilisateur</option>
                 {users.map(user => (
                   <option key={user._id} value={user._id}>
                     {user.first_name} {user.last_name}
@@ -331,7 +340,7 @@ const GestionReservations = () => {
                 onChange={(e) => setFormData({ ...formData, circuit: e.target.value })}
                 required
               >
-                <option value="">Select Circuit</option>
+                <option value="">Sélectionner un circuit</option>
                 {circuits.map(circuit => (
                   <option key={circuit._id} value={circuit._id}>
                     {circuit.name}
@@ -351,7 +360,7 @@ const GestionReservations = () => {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Number of People</Form.Label>
+              <Form.Label>Nombre de personnes</Form.Label>
               <Form.Control
                 type="number"
                 min="1"
@@ -362,7 +371,7 @@ const GestionReservations = () => {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Total Price</Form.Label>
+              <Form.Label>Prix total</Form.Label>
               <Form.Control
                 type="number"
                 min="0"
@@ -373,25 +382,25 @@ const GestionReservations = () => {
               />
             </Form.Group>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Status</Form.Label>
+            <Form.Group className="mb-4">
+              <Form.Label>Statut</Form.Label>
               <Form.Select
                 value={formData.status}
                 onChange={(e) => setFormData({ ...formData, status: e.target.value })}
                 required
               >
-                <option value="pending">Pending</option>
-                <option value="confirmed">Confirmed</option>
-                <option value="cancelled">Cancelled</option>
+                <option value="pending">En attente</option>
+                <option value="confirmed">Confirmée</option>
+                <option value="cancelled">Annulée</option>
               </Form.Select>
             </Form.Group>
 
             <div className="d-flex justify-content-end gap-2">
-              <Button variant="secondary" onClick={() => setShowModal(false)}>
-                Cancel
+              <Button variant="outline-secondary" onClick={() => setShowModal(false)}>
+                Annuler
               </Button>
               <Button variant="primary" type="submit">
-                {selectedReservation ? 'Update' : 'Create'}
+                {selectedReservation ? 'Enregistrer' : 'Créer'}
               </Button>
             </div>
           </Form>

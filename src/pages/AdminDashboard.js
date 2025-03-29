@@ -1,95 +1,110 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import { FaUsers, FaBox, FaClipboardList, FaMapMarkedAlt } from "react-icons/fa";
 import Navbar from "../Components/navbar";
 
-const AdminSidebar = () => {
+const AdminDashboard = () => {
   return (
-    <div className="container-fluid p-0">
-      <Navbar /> {/* Keep Navbar at the top */}
+    <div className="admin-dashboard bg-light min-vh-100">
+      <Navbar />
       <br/><br/><br/>
-      <div className="row g-0 vh-100">
-        {/* Sidebar Column */}
-        <div className="col-md-3 bg-white shadow-sm" style={{minHeight: 'calc(100vh - 80px)'}}>
-          <div className="p-4">
-            {/* Sidebar Header */}
-            <div className="text-center mb-5">
-              <h2 className="text-primary fw-bold mb-3">Admin Dashboard</h2>
-              <p className="text-muted small">
-                Bienvenue, Admin !<br />
-                Gérez tous les utilisateurs, fournisseurs,<br />
-                réservations et circuits ici.
-              </p>
-            </div>
+      <div className="container-fluid px-4 pt-5">
+        <div className="d-flex flex-column gap-3 mb-5">
+          {/* Header Section */}
+          <div className="text-center mb-4">
+            <h1 className="display-5 fw-bold text-dark mb-3">
+              <span className="text-primary">Tableau de Bord</span> Administrateur
+            </h1>
+            <p className="text-muted fs-5">
+              Gérez l'ensemble des activités de votre plateforme
+            </p>
+          </div>
 
-            {/* Navigation Links */}
-            <nav className="d-flex flex-column gap-2">
+          {/* Navigation Cards */}
+          <div className="row g-4 mb-4">
+            <div className="col-12 col-md-6 col-xl-3">
               <NavLink
                 to="/admin/utilisateurs"
                 className={({ isActive }) => 
-                  `text-decoration-none p-3 rounded-3 d-flex align-items-center ${
-                    isActive 
-                      ? 'bg-primary text-white' 
-                      : 'bg-light text-dark hover-bg-primary-10'
+                  `card card-hover h-100 text-decoration-none ${
+                    isActive ? "border-primary bg-primary text-white" : "border"
                   }`
                 }
               >
-                <FaUsers className="me-3 fs-5" />
-                <span className="fw-medium">Gestion Utilisateurs</span>
+                <div className="card-body d-flex align-items-center">
+                  <FaUsers className="fs-2 me-3" />
+                  <div>
+                    <h5 className="mb-0">Utilisateurs</h5>
+                    <small className="opacity-75">Gestion des comptes</small>
+                  </div>
+                </div>
               </NavLink>
+            </div>
 
+            <div className="col-12 col-md-6 col-xl-3">
               <NavLink
                 to="/admin/circuits"
                 className={({ isActive }) => 
-                  `text-decoration-none p-3 rounded-3 d-flex align-items-center ${
-                    isActive 
-                      ? 'bg-primary text-white' 
-                      : 'bg-light text-dark hover-bg-primary-10'
+                  `card card-hover h-100 text-decoration-none ${
+                    isActive ? "border-primary bg-primary text-white" : "border"
                   }`
                 }
               >
-                <FaMapMarkedAlt className="me-3 fs-5" />
-                <span className="fw-medium">Gestion Circuits</span>
+                <div className="card-body d-flex align-items-center">
+                  <FaMapMarkedAlt className="fs-2 me-3" />
+                  <div>
+                    <h5 className="mb-0">Circuits</h5>
+                    <small className="opacity-75">Gestion des parcours</small>
+                  </div>
+                </div>
               </NavLink>
+            </div>
 
+            <div className="col-12 col-md-6 col-xl-3">
               <NavLink
                 to="/admin/reservations"
                 className={({ isActive }) => 
-                  `text-decoration-none p-3 rounded-3 d-flex align-items-center ${
-                    isActive 
-                      ? 'bg-primary text-white' 
-                      : 'bg-light text-dark hover-bg-primary-10'
+                  `card card-hover h-100 text-decoration-none ${
+                    isActive ? "border-primary bg-primary text-white" : "border"
                   }`
                 }
               >
-                <FaClipboardList className="me-3 fs-5" />
-                <span className="fw-medium">Gestion Réservations</span>
+                <div className="card-body d-flex align-items-center">
+                  <FaClipboardList className="fs-2 me-3" />
+                  <div>
+                    <h5 className="mb-0">Réservations</h5>
+                    <small className="opacity-75">Suivi des bookings</small>
+                  </div>
+                </div>
               </NavLink>
+            </div>
 
+            <div className="col-12 col-md-6 col-xl-3">
               <NavLink
                 to="/admin/fournisseurs"
                 className={({ isActive }) => 
-                  `text-decoration-none p-3 rounded-3 d-flex align-items-center ${
-                    isActive 
-                      ? 'bg-primary text-white' 
-                      : 'bg-light text-dark hover-bg-primary-10'
+                  `card card-hover h-100 text-decoration-none ${
+                    isActive ? "border-primary bg-primary text-white" : "border"
                   }`
                 }
               >
-                <FaBox className="me-3 fs-5" />
-                <span className="fw-medium">Gestion Fournisseurs</span>
+                <div className="card-body d-flex align-items-center">
+                  <FaBox className="fs-2 me-3" />
+                  <div>
+                    <h5 className="mb-0">Fournisseurs</h5>
+                    <small className="opacity-75">Partenaires services</small>
+                  </div>
+                </div>
               </NavLink>
-            </nav>
+            </div>
           </div>
-        </div>
 
-        {/* Main Content Column */}
-        <div className="col-md-9 bg-light p-4">
-          {/* Your main content will be injected here */}
+          {/* Content Section */}
+          
         </div>
       </div>
     </div>
   );
 };
 
-export default AdminSidebar;
+export default AdminDashboard;

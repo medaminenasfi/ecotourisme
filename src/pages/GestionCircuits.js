@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Table, Modal, Form, Alert, Spinner } from 'react-bootstrap';
-import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { FaEdit, FaTrashAlt,FaPlus } from 'react-icons/fa';
 import Navbar from '../Components/navbar';
 import jwtDecode from 'jwt-decode';
 
@@ -144,99 +144,103 @@ const GestionCircuits = () => {
     });
     setShowModal(true);
   };
-
   return (
     <>
       <Navbar />
-      <br/><br/><br/>
-      <div className="container mt-5">
-        <div className="card shadow-sm">
-          <div className="card-header bg-white d-flex justify-content-between align-items-center">
-            <div>
-              <h2 className="mb-0">Circuit Management</h2>
-              <p className="text-muted mb-0">Manage all hiking circuits and routes</p>
-            </div>
-            <Button variant="primary" onClick={() => openModal()}>
-              Add New Circuit
+      <br/><br/><br/><br/>
+      
+      <div className="container">
+        <h1 className="mb-3 display-5 fw-bold text-primary">Gestion des Circuits</h1>
+        <p className="text-muted mb-4">
+          Gérez l'ensemble des circuits de randonnée disponibles
+        </p>
+
+        <div className="dashboard-card bg-white p-4 rounded-3 shadow-sm">
+          {error && <Alert variant="danger">{error}</Alert>}
+          {success && <Alert variant="success">{success}</Alert>}
+
+          <div className="d-flex justify-content-end mb-4">
+            <Button 
+              variant="outline-primary" 
+              onClick={() => openModal()}
+              className="d-flex align-items-center"
+            >
+              <FaPlus className="me-2" /> Nouveau Circuit
             </Button>
           </div>
 
-          <div className="card-body">
-            {error && <Alert variant="danger">{error}</Alert>}
-            {success && <Alert variant="success">{success}</Alert>}
-
-            {loading ? (
-              <div className="text-center py-5">
-                <Spinner animation="border" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </Spinner>
-              </div>
-            ) : circuits.length === 0 ? (
-              <div className="text-center py-4 text-muted">No circuits found</div>
-            ) : (
-              <Table hover responsive className="mb-0">
-                <thead className="thead-light">
-                  <tr>
-                    <th>Name</th>
-                    <th>Location</th>
-                    <th>Duration</th>
-                    <th>Price</th>
-                    <th>Difficulty</th>
-                    <th className="text-center">Actions</th>
+          {loading ? (
+            <div className="text-center py-5">
+              <Spinner animation="border" role="status">
+                <span className="visually-hidden">Chargement...</span>
+              </Spinner>
+            </div>
+          ) : circuits.length === 0 ? (
+            <div className="text-center py-4 text-muted">Aucun circuit trouvé</div>
+          ) : (
+            <Table hover responsive className="align-middle">
+              <thead className="bg-light">
+                <tr>
+                  <th>Nom</th>
+                  <th>Localisation</th>
+                  <th>Durée</th>
+                  <th>Prix</th>
+                  <th>Difficulté</th>
+                  <th className="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {circuits.map(circuit => (
+                  <tr key={circuit._id}>
+                    <td className="fw-medium">{circuit.name}</td>
+                    <td>{circuit.location}</td>
+                    <td>{circuit.duration}h</td>
+                    <td>{circuit.price} €</td>
+                    <td>
+                      <span className={`badge rounded-pill ${
+                        circuit.difficulty === 'Facile' ? 'bg-success' :
+                        circuit.difficulty === 'Moyen' ? 'bg-warning text-dark' :
+                        'bg-danger'
+                      }`}>
+                        {circuit.difficulty}
+                      </span>
+                    </td>
+                    <td className="text-end">
+                      <Button
+                        variant="outline-primary"
+                        size="sm"
+                        className="me-2"
+                        onClick={() => openModal(circuit)}
+                      >
+                        <FaEdit className="me-1" /> Modifier
+                      </Button>
+                      <Button
+                        variant="outline-danger"
+                        size="sm"
+                        onClick={() => handleDelete(circuit._id)}
+                      >
+                        <FaTrashAlt className="me-1" /> Supprimer
+                      </Button>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {circuits.map(circuit => (
-                    <tr key={circuit._id}>
-                      <td>{circuit.name}</td>
-                      <td>{circuit.location}</td>
-                      <td>{circuit.duration}h</td>
-                      <td>${circuit.price}</td>
-                      <td>
-                        <span className={`badge ${
-                          circuit.difficulty === 'Facile' ? 'bg-success' :
-                          circuit.difficulty === 'Moyen' ? 'bg-warning text-dark' :
-                          'bg-danger'
-                        }`}>
-                          {circuit.difficulty}
-                        </span>
-                      </td>
-                      <td className="text-center">
-                        <Button
-                          variant="link"
-                          className="text-primary me-2"
-                          onClick={() => openModal(circuit)}
-                        >
-                          <FaEdit size={20} />
-                        </Button>
-                        <Button
-                          variant="link"
-                          className="text-danger"
-                          onClick={() => handleDelete(circuit._id)}
-                        >
-                          <FaTrashAlt size={20} />
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            )}
-          </div>
+                ))}
+              </tbody>
+            </Table>
+          )}
         </div>
       </div>
 
-      {/* Add/Edit Modal */}
+      {/* Modal Add/Edit */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            {selectedCircuit ? 'Edit Circuit' : 'New Circuit'}
+        <Modal.Header closeButton className="bg-light">
+          <Modal.Title className="text-primary">
+            {selectedCircuit ? 'Modifier Circuit' : 'Nouveau Circuit'}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
-              <Form.Label>Name</Form.Label>
+              <Form.Label>Nom du circuit</Form.Label>
               <Form.Control
                 type="text"
                 value={formData.name}
@@ -257,7 +261,7 @@ const GestionCircuits = () => {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Location</Form.Label>
+              <Form.Label>Localisation</Form.Label>
               <Form.Control
                 type="text"
                 value={formData.location}
@@ -269,7 +273,7 @@ const GestionCircuits = () => {
             <div className="row g-3">
               <div className="col-md-6">
                 <Form.Group className="mb-3">
-                  <Form.Label>Duration (hours)</Form.Label>
+                  <Form.Label>Durée (heures)</Form.Label>
                   <Form.Control
                     type="number"
                     value={formData.duration}
@@ -280,7 +284,7 @@ const GestionCircuits = () => {
               </div>
               <div className="col-md-6">
                 <Form.Group className="mb-3">
-                  <Form.Label>Price ($)</Form.Label>
+                  <Form.Label>Prix (€)</Form.Label>
                   <Form.Control
                     type="number"
                     value={formData.price}
@@ -292,7 +296,7 @@ const GestionCircuits = () => {
             </div>
 
             <Form.Group className="mb-4">
-              <Form.Label>Difficulty</Form.Label>
+              <Form.Label>Difficulté</Form.Label>
               <Form.Select
                 value={formData.difficulty}
                 onChange={(e) => setFormData({...formData, difficulty: e.target.value})}
@@ -304,11 +308,11 @@ const GestionCircuits = () => {
             </Form.Group>
 
             <div className="d-flex justify-content-end gap-2">
-              <Button variant="secondary" onClick={() => setShowModal(false)}>
-                Cancel
+              <Button variant="outline-secondary" onClick={() => setShowModal(false)}>
+                Annuler
               </Button>
               <Button variant="primary" type="submit">
-                {selectedCircuit ? 'Save Changes' : 'Create Circuit'}
+                {selectedCircuit ? 'Enregistrer' : 'Créer'}
               </Button>
             </div>
           </Form>

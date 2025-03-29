@@ -90,90 +90,88 @@ const GestionFournisseurs = () => {
   return (
     <>
       <Navbar />
-      <br/><br/><br/>
-      <div className="container mt-5">
-        <div className="card shadow-sm">
-          <div className="card-header bg-white d-flex justify-content-between align-items-center">
-            <div>
-              <h2 className="mb-0">Gestion des Services</h2>
-              <p className="text-muted mb-0">Gestion des services fournis par les partenaires</p>
+      <br/><br/><br/><br/>
+      
+      <div className="container">
+        <h1 className="mb-3 display-5 fw-bold text-primary">Gestion des Fournisseurs</h1>
+        <p className="text-muted mb-4">
+          Gérez les services proposés par nos partenaires fournisseurs
+        </p>
+
+        <div className="dashboard-card bg-white p-4 rounded-3 shadow-sm">
+          {error && <Alert variant="danger">{error}</Alert>}
+          {success && <Alert variant="success">{success}</Alert>}
+
+          {loading ? (
+            <div className="text-center py-5">
+              <Spinner animation="border" role="status">
+                <span className="visually-hidden">Chargement...</span>
+              </Spinner>
             </div>
-          </div>
-
-          <div className="card-body">
-            {error && <Alert variant="danger">{error}</Alert>}
-            {success && <Alert variant="success">{success}</Alert>}
-
-            {loading ? (
-              <div className="text-center py-5">
-                <Spinner animation="border" role="status">
-                  <span className="visually-hidden">Chargement...</span>
-                </Spinner>
-              </div>
-            ) : services.length === 0 ? (
-              <div className="text-center py-4 text-muted">Aucun service trouvé</div>
-            ) : (
-              <Table hover responsive className="mb-0">
-                <thead className="thead-light">
-                  <tr>
-                    <th>Type</th>
-                    <th>Description</th>
-                    <th>Fournisseur</th>
-                    <th>Téléphone</th>
-                    <th>Photo</th>
-                    <th className="text-center">Actions</th>
+          ) : services.length === 0 ? (
+            <div className="text-center py-4 text-muted">Aucun service enregistré</div>
+          ) : (
+            <Table hover responsive className="align-middle">
+              <thead className="bg-light">
+                <tr>
+                  <th>Type de service</th>
+                  <th>Description</th>
+                  <th>Fournisseur</th>
+                  <th>Téléphone</th>
+                  <th>Photo</th>
+                  <th className="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {services.map(service => (
+                  <tr key={service._id}>
+                    <td className="fw-medium">{service.type}</td>
+                    <td>{service.description}</td>
+                    <td>
+                      {service.fournisseur?.first_name} {service.fournisseur?.last_name}
+                    </td>
+                    <td>{service.phoneNumber}</td>
+                    <td>
+                      {service.photo && (
+                        <img 
+                          src={service.photo} 
+                          alt="Service" 
+                          className="img-thumbnail"
+                          style={{ width: "60px", height: "60px", objectFit: "cover" }}
+                        />
+                      )}
+                    </td>
+                    <td className="text-end">
+                      <Button
+                        variant="outline-danger"
+                        size="sm"
+                        onClick={() => confirmDelete(service)}
+                      >
+                        <FaTrashAlt className="me-1" /> Supprimer
+                      </Button>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {services.map(service => (
-                    <tr key={service._id}>
-                      <td>{service.type}</td>
-                      <td>{service.description}</td>
-                      <td>
-                        {service.fournisseur?.first_name} {service.fournisseur?.last_name}
-                      </td>
-                      <td>{service.phoneNumber}</td>
-                      <td>
-                        {service.photo && (
-                          <img 
-                            src={service.photo} 
-                            alt="Service" 
-                            style={{ width: "50px", height: "50px", objectFit: "cover" }}
-                          />
-                        )}
-                      </td>
-                      <td className="text-center">
-                        <Button
-                          variant="link"
-                          className="text-danger"
-                          onClick={() => confirmDelete(service)}
-                        >
-                          <FaTrashAlt size={20} />
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            )}
-          </div>
+                ))}
+              </tbody>
+            </Table>
+          )}
         </div>
       </div>
 
       {/* Confirmation Modal */}
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirmation de suppression</Modal.Title>
+        <Modal.Header closeButton className="bg-light">
+          <Modal.Title className="text-primary">Confirmation de suppression</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Êtes-vous sûr de vouloir supprimer ce service ?
+          Êtes-vous sûr de vouloir supprimer définitivement ce service ?
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+          <Button variant="outline-secondary" onClick={() => setShowDeleteModal(false)}>
             Annuler
           </Button>
           <Button variant="danger" onClick={deleteService}>
-            Supprimer
+            Confirmer la suppression
           </Button>
         </Modal.Footer>
       </Modal>

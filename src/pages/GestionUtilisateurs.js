@@ -135,92 +135,90 @@ const GestionUtilisateurs = () => {
   return (
     <>
       <Navbar />
-      <br/><br/><br/>
-      <div className="container mt-5">
-        <div className="card shadow-sm">
-          <div className="card-header bg-white d-flex justify-content-between align-items-center">
-            <div>
-              <h2 className="mb-0">User Management</h2>
-              <p className="text-muted mb-0">Manage system users and permissions</p>
+      <br/><br/><br/><br/>
+      
+      <div className="container">
+        <h1 className="mb-3 display-5 fw-bold text-primary">Gestion Utilisateurs</h1>
+        <p className="text-muted mb-4">
+          Gérez les comptes utilisateurs, modifiez les informations et les rôles
+        </p>
+
+        <div className="dashboard-card bg-white p-4 rounded-3 shadow-sm">
+          {error && <Alert variant="danger">{error}</Alert>}
+          {success && <Alert variant="success">{success}</Alert>}
+
+          {loading ? (
+            <div className="text-center py-5">
+              <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
             </div>
-          </div>
-
-          <div className="card-body">
-            {error && <Alert variant="danger">{error}</Alert>}
-            {success && <Alert variant="success">{success}</Alert>}
-
-            {loading ? (
-              <div className="text-center py-5">
-                <Spinner animation="border" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </Spinner>
-              </div>
-            ) : users.length === 0 ? (
-              <div className="text-center py-4 text-muted">No users found</div>
-            ) : (
-              <Table hover responsive className="mb-0">
-                <thead className="thead-light">
-                  <tr>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Gender</th>
-                    <th className="text-center">Actions</th>
+          ) : users.length === 0 ? (
+            <div className="text-center py-4 text-muted">Aucun utilisateur trouvé</div>
+          ) : (
+            <Table hover responsive className="align-middle">
+              <thead className="bg-light">
+                <tr>
+                  <th>Nom Complet</th>
+                  <th>Téléphone</th>
+                  <th>Email</th>
+                  <th>Rôle</th>
+                  <th>Genre</th>
+                  <th className="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map(user => (
+                  <tr key={user._id}>
+                    <td>{user.first_name} {user.last_name}</td>
+                    <td>{user.phone_number}</td>
+                    <td>{user.email}</td>
+                    <td>
+                      <span className={`badge rounded-pill ${
+                        user.role === 'Admin' ? 'bg-danger' :
+                        user.role === 'Manager' ? 'bg-warning text-dark' :
+                        'bg-primary'
+                      }`}>
+                        {user.role}
+                      </span>
+                    </td>
+                    <td>{user.gender}</td>
+                    <td className="text-end">
+                      <Button
+                        variant="outline-primary"
+                        size="sm"
+                        className="me-2"
+                        onClick={() => openModal(user)}
+                      >
+                        <FaEdit className="me-1" /> Modifier
+                      </Button>
+                      <Button
+                        variant="outline-danger"
+                        size="sm"
+                        onClick={() => deleteUser(user._id)}
+                      >
+                        <FaTrashAlt className="me-1" /> Supprimer
+                      </Button>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {users.map(user => (
-                    <tr key={user._id}>
-                      <td>{user.first_name} {user.last_name}</td>
-                      <td>{user.phone_number}</td>
-                      <td>{user.email}</td>
-                      <td>
-                        <span className={`badge ${
-                          user.role === 'Admin' ? 'bg-danger' :
-                          user.role === 'Manager' ? 'bg-warning text-dark' :
-                          'bg-primary'
-                        }`}>
-                          {user.role}
-                        </span>
-                      </td>
-                      <td>{user.gender}</td>
-                      <td className="text-center">
-                        <Button
-                          variant="link"
-                          className="text-primary me-2"
-                          onClick={() => openModal(user)}
-                        >
-                          <FaEdit size={20} />
-                        </Button>
-                        <Button
-                          variant="link"
-                          className="text-danger"
-                          onClick={() => deleteUser(user._id)}
-                        >
-                          <FaTrashAlt size={20} />
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            )}
-          </div>
+                ))}
+              </tbody>
+            </Table>
+          )}
         </div>
       </div>
 
       {/* Edit User Modal */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Edit User</Modal.Title>
+        <Modal.Header closeButton className="bg-light">
+          <Modal.Title className="text-primary">Modifier Utilisateur</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
             <div className="row g-3">
               <div className="col-md-6">
                 <Form.Group className="mb-3">
-                  <Form.Label>First Name</Form.Label>
+                  <Form.Label>Prénom</Form.Label>
                   <Form.Control
                     type="text"
                     value={formData.first_name}
@@ -231,7 +229,7 @@ const GestionUtilisateurs = () => {
               </div>
               <div className="col-md-6">
                 <Form.Group className="mb-3">
-                  <Form.Label>Last Name</Form.Label>
+                  <Form.Label>Nom</Form.Label>
                   <Form.Control
                     type="text"
                     value={formData.last_name}
@@ -242,8 +240,8 @@ const GestionUtilisateurs = () => {
               </div>
             </div>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Phone Number</Form.Label>
+            <Form.Group className="mb-4">
+              <Form.Label>Numéro de téléphone</Form.Label>
               <Form.Control
                 type="text"
                 value={formData.phone_number}
@@ -252,14 +250,12 @@ const GestionUtilisateurs = () => {
               />
             </Form.Group>
 
-    
-
             <div className="d-flex justify-content-end gap-2">
-              <Button variant="secondary" onClick={() => setShowModal(false)}>
-                Cancel
+              <Button variant="outline-secondary" onClick={() => setShowModal(false)}>
+                Annuler
               </Button>
               <Button variant="primary" type="submit">
-                Save Changes
+                Enregistrer
               </Button>
             </div>
           </Form>
