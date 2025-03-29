@@ -1,35 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { 
-  TextField, 
-  Button, 
-  Box, 
-  Typography, 
-  Container, 
-  Paper, 
-  Select, 
-  MenuItem, 
-  InputLabel, 
-  FormControl,
-  InputAdornment,
-  IconButton,
-  Alert,
-  Fade,
-  Zoom,Link 
+import { TextField, Button, Box, Typography, Container, Paper, Select, MenuItem, InputLabel, FormControl,InputAdornment,IconButton,Alert,Fade,Zoom,Link 
 } from '@mui/material';
-import { 
-  Visibility, 
-  VisibilityOff,
-  Person,
-  Lock,
-  Phone,
-  Email,
-  Male,
-  Female,
-  Work,
-  PersonPin
-} from '@mui/icons-material';
+import { Visibility, VisibilityOff,Person,Lock,Phone,Email,Male,Female,Work,} from '@mui/icons-material';
 
 const Inscrire = () => {
   const [formData, setFormData] = useState({
