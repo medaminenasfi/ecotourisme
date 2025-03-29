@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import { FaLeaf, FaUser, FaPlusCircle, FaChartLine,FaCommentDots,FaExclamationTriangle } from "react-icons/fa";
+import { FaLeaf, FaUser, FaPlusCircle, FaChartLine } from "react-icons/fa";
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
