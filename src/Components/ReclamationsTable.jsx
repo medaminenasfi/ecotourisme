@@ -16,6 +16,7 @@ const ReclamationsTable = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     const fetchReclamations = async () => {
@@ -36,7 +37,7 @@ const ReclamationsTable = () => {
       }
     };
     fetchReclamations();
-  }, []);
+  }, [refreshKey]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,10 +51,17 @@ const ReclamationsTable = () => {
       
       let dataToSend;
       if (selectedReclamation) {
-        dataToSend = user.role === "" 
-          ? { status: formData.status }
-          : { type: formData.type, message: formData.message };
+        // For existing reclamations
+        if (user.role === "admin") {
+          dataToSend = { status: formData.status };
+        } else {
+          dataToSend = { 
+            type: formData.type, 
+            message: formData.message 
+          };
+        }
       } else {
+        // For new reclamations
         dataToSend = { type: formData.type, message: formData.message };
       }
 
@@ -61,12 +69,20 @@ const ReclamationsTable = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      setReclamations(prev => selectedReclamation 
-        ? prev.map(r => r._id === response.data._id ? response.data : r) 
-        : [...prev, response.data]);
-      
+      setReclamations(prev => {
+        if (selectedReclamation) {
+          return prev.map(r => 
+            r._id === response.data._id 
+              ? { ...response.data, userId: r.userId } 
+              : r
+          );
+        }
+        return [...prev, response.data];
+      });
+
       setShowModal(false);
       setFormData({ type: "", message: "", status: "en cours" });
+      setRefreshKey(prev => prev + 1);
     } catch (err) {
       setError(err.response?.data?.error || "Operation failed");
     }
@@ -80,6 +96,7 @@ const ReclamationsTable = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
         setReclamations(prev => prev.filter(r => r._id !== id));
+        setRefreshKey(prev => prev + 1);
       } catch (err) {
         setError("Failed to delete reclamation");
       }
@@ -160,7 +177,7 @@ const ReclamationsTable = () => {
                       })}
                     </td>
                     <td className="pe-4">
-                      {(user?.role === "" || recl.userId?._id === user?._id) && (
+                      {(user?.role === "admin" || recl.userId?._id === user?._id) && (
                         <div className="d-flex gap-2">
                           <Button
                             variant="outline-primary"
@@ -168,7 +185,11 @@ const ReclamationsTable = () => {
                             className="rounded-circle p-2"
                             onClick={() => {
                               setSelectedReclamation(recl);
-                              setFormData(recl);
+                              setFormData({
+                                type: recl.type,
+                                message: recl.message,
+                                status: recl.status
+                              });
                               setShowModal(true);
                             }}
                           >
@@ -193,7 +214,10 @@ const ReclamationsTable = () => {
         </div>
       </div>
 
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+      <Modal show={showModal} onHide={() => {
+        setShowModal(false);
+        setFormData({ type: "", message: "", status: "en cours" });
+      }} centered>
         <Modal.Header closeButton className="bg-light border-bottom">
           <Modal.Title className="h5">
             {selectedReclamation ? "Edit Reclamation" : "Create New Reclamation"}
@@ -201,7 +225,7 @@ const ReclamationsTable = () => {
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
           <Modal.Body className="py-4">
-            {!selectedReclamation || user?.role !== "" ? (
+            {!selectedReclamation || user?.role !== "admin" ? (
               <>
                 <Form.Group className="mb-4">
                   <Form.Label>Reclamation Type</Form.Label>
@@ -212,12 +236,12 @@ const ReclamationsTable = () => {
                     required
                   >
                     <option value="">Select a type</option>
-                    <option value="fournisseur">fournisseur</option>
+                    <option value="fournisseur">Fournisseur</option>
                     <option value="artisan">Artisan</option>
                     <option value="circuit">Circuit</option>
-                    <option value="sécurité">sécurité</option>
-                    <option value="problème de financement">problème de financement</option>
-                    <option value="autre">autre</option>
+                    <option value="sécurité">Sécurité</option>
+                    <option value="problème de financement">Financement</option>
+                    <option value="autre">Autre</option>
                   </Form.Select>
                 </Form.Group>
 
