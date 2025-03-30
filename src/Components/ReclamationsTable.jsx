@@ -120,7 +120,7 @@ const ReclamationsTable = () => {
             setSelectedReclamation(null);
             setShowModal(true);
           }}
-          className="d-flex align-items-center"
+          className="d-flex align-items-center rounded-pill px-4"
         >
           <FaPlus className="me-2" /> New Reclamation
         </Button>
@@ -128,86 +128,84 @@ const ReclamationsTable = () => {
 
       {error && <Alert variant="danger" className="rounded-lg">{error}</Alert>}
 
-      <div className="card shadow-sm border-0">
-        <div className="card-body p-0">
-          <div className="table-responsive rounded-lg">
-            <table className="table table-hover align-middle mb-0">
-              <thead className="table-primary">
-                <tr>
-                  <th className="ps-4">User</th>
-                  <th>Type</th>
-                  <th>Message</th>
-                  <th>Status</th>
-                  <th>Date Created</th>
-                  <th className="pe-4">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {reclamations.map(recl => (
-                  <tr key={recl._id} className="cursor-pointer">
-                    <td className="ps-4">
-                      <div className="d-flex flex-column">
-                        <span className="fw-medium">
-                          {recl.userId?.firstName} {recl.userId?.lastName}
-                        </span>
-                        <small className="text-muted">{recl.userId?.email}</small>
-                      </div>
-                    </td>
-                    <td>
-                      <span className="badge bg-info text-dark">{recl.type}</span>
-                    </td>
-                    <td className="text-truncate" style={{ maxWidth: "300px" }}>
-                      {recl.message}
-                    </td>
-                    <td>
-                      <span className={`badge rounded-pill ${recl.status === "traité" ? "bg-success" : "bg-warning"}`}>
-                        {recl.status}
+      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {reclamations.map(recl => {
+          const isOwner = user && (
+            user.role === "admin" || 
+            (recl.userId && 
+              (typeof recl.userId === 'object' 
+                ? recl.userId._id === user._id 
+                : recl.userId === user._id))
+          );
+
+          return (
+            <div className="col" key={recl._id}>
+              <div className="card h-100 shadow-lg-hover">
+                <div className="card-header bg-transparent d-flex justify-content-between align-items-center">
+                  <div className="d-flex align-items-center">
+                    <i className="bi bi-person-circle me-2 text-primary"></i>
+                    <div>
+                      <span className="fw-medium">
+                        {typeof recl.userId === 'object' 
+                          ? `${recl.userId?.first_name || ''} ${recl.userId?.last_name || ''}`.trim() 
+                          : "Anonymous User"}
                       </span>
-                    </td>
-                    <td>
-                      {new Date(recl.createdAt).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric'
-                      })}
-                    </td>
-                    <td className="pe-4">
-                      {/* Fixed button visibility condition */}
-                      {(user?.role === "admin" || (recl.userId && recl.userId._id === user?._id)) && (
-                        <div className="d-flex gap-2">
-                          <Button
-                            variant="outline-primary"
-                            size="sm"
-                            className="rounded-circle p-2"
-                            onClick={() => {
-                              setSelectedReclamation(recl);
-                              setFormData({
-                                type: recl.type,
-                                message: recl.message,
-                                status: recl.status
-                              });
-                              setShowModal(true);
-                            }}
-                          >
-                            <FaEdit />
-                          </Button>
-                          <Button
-                            variant="outline-danger"
-                            size="sm"
-                            className="rounded-circle p-2"
-                            onClick={() => handleDelete(recl._id)}
-                          >
-                            <FaTrash />
-                          </Button>
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                      <small className="text-muted d-block">
+                        {typeof recl.userId === 'object' 
+                          ? recl.userId?.email 
+                          : "No email available"}
+                      </small>
+                    </div>
+                  </div>
+                  <span className={`badge rounded-pill ${recl.status === "traité" ? "bg-success" : "bg-warning"}`}>
+                    {recl.status}
+                  </span>
+                </div>
+                
+                <div className="card-body">
+                  <div className="mb-3">
+                    <span className="badge bg-info text-dark">{recl.type}</span>
+                  </div>
+                  <p className="card-text text-secondary">{recl.message}</p>
+                  <small className="text-muted">
+                    Created: {new Date(recl.createdAt).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric'
+                    })}
+                  </small>
+                </div>
+
+                {isOwner && (
+                  <div className="card-footer bg-transparent d-flex gap-2">
+                    <Button
+                      variant="outline-warning"
+                      className="rounded-pill px-3"
+                      onClick={() => {
+                        setSelectedReclamation(recl);
+                        setFormData({
+                          type: recl.type,
+                          message: recl.message,
+                          status: recl.status
+                        });
+                        setShowModal(true);
+                      }}
+                    >
+                      <FaEdit className="me-1" /> Edit
+                    </Button>
+                    <Button
+                      variant="outline-danger"
+                      className="rounded-pill px-3"
+                      onClick={() => handleDelete(recl._id)}
+                    >
+                      <FaTrash className="me-1" /> Delete
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       <Modal show={showModal} onHide={() => {
