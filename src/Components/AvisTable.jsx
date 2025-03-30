@@ -16,6 +16,7 @@ const AvisPage = () => {
   });
   const [loading, setLoading] = useState(true);
   const [circuits, setCircuits] = useState([]);
+  const [error, setError] = useState(null);
 
   const getAuthHeader = () => ({
     Authorization: `Bearer ${localStorage.getItem('accessToken')}`
@@ -26,16 +27,27 @@ const AvisPage = () => {
 
     const fetchData = async () => {
       try {
-        const [avisRes, circuitsRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/avis', { headers: getAuthHeader() }),
-          axios.get('http://localhost:5000/api/circuits', { headers: getAuthHeader() })
-        ]);
+        const token = localStorage.getItem('accessToken');
         
-        setAvis(avisRes.data?.avis || []);
-        setCircuits(circuitsRes.data?.circuits || []);
+        const [avisRes, circuitsRes] = await Promise.all([
+          axios.get('http://localhost:5000/api/avis', { 
+            headers: { Authorization: `Bearer ${token}` } 
+          }),
+          axios.get('http://localhost:5000/api/circuits', { 
+            headers: { Authorization: `Bearer ${token}` } 
+          })
+        ]);
+
+        // Handle both response formats
+        const avisData = Array.isArray(avisRes.data) ? avisRes.data : avisRes.data?.avis || [];
+        const circuitsData = Array.isArray(circuitsRes.data) ? circuitsRes.data : circuitsRes.data?.circuits || [];
+
+        setAvis(avisData);
+        setCircuits(circuitsData);
         setLoading(false);
       } catch (error) {
         console.error('Data loading failed:', error);
+        setError(error.message);
         setLoading(false);
         if (error.response?.status === 401) logout();
       }
@@ -55,11 +67,10 @@ const AvisPage = () => {
       const method = editingAvis ? 'put' : 'post';
       const response = await axios[method](url, formData, config);
 
-      // Update local state with new/modified review
       if (editingAvis) {
-        setAvis(prev => prev.map(a => a._id === editingAvis._id ? response.data.avis : a));
+        setAvis(prev => prev.map(a => a._id === editingAvis._id ? response.data : a));
       } else {
-        setAvis(prev => [...prev, response.data.avis]);
+        setAvis(prev => [...prev, response.data]);
       }
 
       closeModal();
@@ -88,93 +99,121 @@ const AvisPage = () => {
   };
 
   if (authLoading || loading) return (
-    <div className="container mt-4">
+    <div className="container mt-4 text-center">
       <div className="spinner-border text-primary" role="status">
         <span className="visually-hidden">Loading...</span>
       </div>
     </div>
   );
 
+  if (error) return (
+    <div className="container mt-4 alert alert-danger">
+      Error loading data: {error}
+      <button className="btn btn-link" onClick={() => window.location.reload()}>
+        Try Again
+      </button>
+    </div>
+  );
+
   return (
     <div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1>Circuit Reviews</h1>
+        <h1 className="text-gradient">Circuit Reviews</h1>
         {user && (
-          <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-            <i className="bi bi-plus-lg me-2"></i>Add Review
+          <button 
+            className="btn btn-primary rounded-pill px-4 py-2 shadow-sm"
+            onClick={() => setShowModal(true)}
+          >
+            <i className="bi bi-pencil-square me-2"></i>Add Review
           </button>
         )}
       </div>
 
+      
+
+      {/* Reviews List */}
+      <h3 className="mb-4">User Reviews</h3>
       <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        {avis.map(review => (
-          <div className="col" key={review._id}>
-            <div className="card h-100 shadow-sm">
-              <div className="card-header d-flex justify-content-between align-items-center">
-                <span className="fw-medium">
-                  {review.user?.firstName || 'Anonymous User'}
-                </span>
-                <span className="badge bg-warning text-dark">
-                  {review.rating}/5
-                </span>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title text-muted">
-                  {circuits.find(c => c._id === review.circuitId)?.name || 'Unknown Circuit'}
-                </h5>
-                <p className="card-text">{review.comment}</p>
-              </div>
-              {user?.id === review.user?._id && (
-                <div className="card-footer bg-transparent d-flex gap-2">
-                  <button 
-                    className="btn btn-sm btn-outline-warning"
-                    onClick={() => {
-                      setEditingAvis(review);
-                      setFormData({
-                        circuitId: review.circuitId,
-                        rating: review.rating,
-                        comment: review.comment
-                      });
-                      setShowModal(true);
-                    }}
-                  >
-                    Edit
-                  </button>
-                  <button 
-                    className="btn btn-sm btn-outline-danger"
-                    onClick={() => handleDelete(review._id)}
-                  >
-                    Delete
-                  </button>
+        {Array.isArray(avis) && avis.map(review => {
+          const circuit = circuits.find(c => c._id === review.circuitId) || {};
+          
+          return (
+            <div className="col" key={review._id}>
+              <div className="card h-100 shadow-lg-hover">
+                <div className="card-header bg-transparent d-flex justify-content-between align-items-center">
+                  <div className="d-flex align-items-center">
+                    <i className="bi bi-person-circle me-2 text-primary"></i>
+                    <span className="fw-medium">
+                      {review.user?.firstName || 'Anonymous User'}
+                    </span>
+                  </div>
+                  <span className="badge bg-warning text-dark">
+                    {review.rating}/5
+                  </span>
                 </div>
-              )}
+                <div className="card-body">
+                  <h5 className="card-title text-muted mb-3">
+                    <i className="bi bi-geo-alt me-2 text-success"></i>
+                    {circuit.name || 'Unknown Circuit'}
+                  </h5>
+                  <p className="card-text text-secondary">{review.comment}</p>
+                </div>
+                {user?.id === review.user?._id && (
+                  <div className="card-footer bg-transparent d-flex gap-2">
+                    <button 
+                      className="btn btn-sm btn-outline-warning rounded-pill"
+                      onClick={() => {
+                        setEditingAvis(review);
+                        setFormData({
+                          circuitId: review.circuitId,
+                          rating: review.rating,
+                          comment: review.comment
+                        });
+                        setShowModal(true);
+                      }}
+                    >
+                      <i className="bi bi-pencil me-1"></i>Edit
+                    </button>
+                    <button 
+                      className="btn btn-sm btn-outline-danger rounded-pill"
+                      onClick={() => handleDelete(review._id)}
+                    >
+                      <i className="bi bi-trash me-1"></i>Delete
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
+      {/* Review Modal */}
       {showModal && (
         <div className="modal fade show" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
-              <div className="modal-header">
+          <div className="modal-dialog modal-dialog-centered modal-lg">
+            <div className="modal-content border-0 shadow-lg">
+              <div className="modal-header bg-primary text-white rounded-top">
                 <h5 className="modal-title">
+                  <i className="bi bi-star-fill me-2"></i>
                   {editingAvis ? 'Edit Review' : 'Create New Review'}
                 </h5>
-                <button type="button" className="btn-close" onClick={closeModal}></button>
+                <button type="button" className="btn-close btn-close-white" onClick={closeModal}></button>
               </div>
-              <div className="modal-body">
+              <div className="modal-body py-4">
                 <form onSubmit={handleSubmit}>
-                  <div className="mb-3">
-                    <label className="form-label">Circuit</label>
+                  <div className="mb-4">
+                    <label className="form-label fw-bold text-secondary">
+                      <i className="bi bi-map me-2"></i>Select Circuit
+                    </label>
                     <select
-                      className="form-select"
+                      className="form-select form-select-lg rounded-pill border-primary"
                       value={formData.circuitId}
                       onChange={e => setFormData({...formData, circuitId: e.target.value})}
                       required
                     >
-                      <option value="">Select a circuit</option>
-                      {circuits.map(circuit => (
+                      <option value="">Choose a circuit...</option>
+                      {Array.isArray(circuits) && circuits.map(circuit => (
                         <option key={circuit._id} value={circuit._id}>
                           {circuit.name}
                         </option>
@@ -182,38 +221,52 @@ const AvisPage = () => {
                     </select>
                   </div>
 
-                  <div className="mb-3">
-                    <label className="form-label">Rating</label>
+                  <div className="mb-4">
+                    <label className="form-label fw-bold text-secondary">
+                      <i className="bi bi-star me-2"></i>Rating
+                    </label>
                     <select
-                      className="form-select"
+                      className="form-select form-select-lg rounded-pill border-warning"
                       value={formData.rating}
                       onChange={e => setFormData({...formData, rating: e.target.value})}
                       required
                     >
-                      <option value="">Select rating</option>
+                      <option value="">Select your rating...</option>
                       {[1, 2, 3, 4, 5].map(num => (
-                        <option key={num} value={num}>{num}</option>
+                        <option key={num} value={num}>
+                          {Array(num).fill('⭐').join('')} ({num})
+                        </option>
                       ))}
                     </select>
                   </div>
 
-                  <div className="mb-3">
-                    <label className="form-label">Comment</label>
+                  <div className="mb-4">
+                    <label className="form-label fw-bold text-secondary">
+                      <i className="bi bi-chat-text me-2"></i>Comment
+                    </label>
                     <textarea
-                      className="form-control"
+                      className="form-control border-info rounded-3"
                       value={formData.comment}
                       onChange={e => setFormData({...formData, comment: e.target.value})}
-                      rows="3"
+                      rows="4"
+                      placeholder="Share your experience..."
                       required
                     />
                   </div>
 
-                  <div className="modal-footer">
-                    <button type="button" className="btn btn-secondary" onClick={closeModal}>
+                  <div className="modal-footer border-0">
+                    <button 
+                      type="button" 
+                      className="btn btn-secondary rounded-pill px-4"
+                      onClick={closeModal}
+                    >
                       Cancel
                     </button>
-                    <button type="submit" className="btn btn-primary">
-                      {editingAvis ? 'Save Changes' : 'Create Review'}
+                    <button 
+                      type="submit" 
+                      className="btn btn-primary rounded-pill px-4"
+                    >
+                      {editingAvis ? 'Save Changes' : 'Post Review'}
                     </button>
                   </div>
                 </form>
