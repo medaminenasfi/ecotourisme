@@ -172,7 +172,8 @@ const ReclamationsTable = () => {
                       })}
                     </td>
                     <td className="pe-4">
-                      {(user?.role === "admin" || recl.userId?._id === user?._id) && (
+                      {/* Fixed button visibility condition */}
+                      {(user?.role === "admin" || (recl.userId && recl.userId._id === user?._id)) && (
                         <div className="d-flex gap-2">
                           <Button
                             variant="outline-primary"
