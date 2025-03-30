@@ -21,13 +21,20 @@ const ReclamationsTable = () => {
   useEffect(() => {
     const fetchReclamations = async () => {
       try {
+        setLoading(true);
         const token = localStorage.getItem("accessToken");
-        const response = await axios.get("http://localhost:5000/api/reclamations", {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        
+        const response = await axios.get(
+          "http://localhost:5000/api/reclamations", 
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
         setReclamations(response.data.reclamations);
+        setError("");
       } catch (err) {
-        setError("Failed to load reclamations");
+        console.error("Data loading error:", err);
+        setError(err.response?.data?.error || "Failed to load data. Please try again.");
+        
         if (err.response?.status === 401) {
           localStorage.removeItem("accessToken");
           window.location.reload();
@@ -51,7 +58,6 @@ const ReclamationsTable = () => {
       
       let dataToSend;
       if (selectedReclamation) {
-        // For existing reclamations
         if (user.role === "admin") {
           dataToSend = { status: formData.status };
         } else {
@@ -61,23 +67,11 @@ const ReclamationsTable = () => {
           };
         }
       } else {
-        // For new reclamations
         dataToSend = { type: formData.type, message: formData.message };
       }
 
-      const response = await axios[method](url, dataToSend, {
+      await axios[method](url, dataToSend, {
         headers: { Authorization: `Bearer ${token}` }
-      });
-
-      setReclamations(prev => {
-        if (selectedReclamation) {
-          return prev.map(r => 
-            r._id === response.data._id 
-              ? { ...response.data, userId: r.userId } 
-              : r
-          );
-        }
-        return [...prev, response.data];
       });
 
       setShowModal(false);
@@ -95,7 +89,6 @@ const ReclamationsTable = () => {
         await axios.delete(`http://localhost:5000/api/reclamations/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        setReclamations(prev => prev.filter(r => r._id !== id));
         setRefreshKey(prev => prev + 1);
       } catch (err) {
         setError("Failed to delete reclamation");
@@ -154,7 +147,9 @@ const ReclamationsTable = () => {
                   <tr key={recl._id} className="cursor-pointer">
                     <td className="ps-4">
                       <div className="d-flex flex-column">
-                        <span className="fw-medium">{recl.userId?.username || "Anonymous"}</span>
+                        <span className="fw-medium">
+                          {recl.userId?.firstName} {recl.userId?.lastName}
+                        </span>
                         <small className="text-muted">{recl.userId?.email}</small>
                       </div>
                     </td>
