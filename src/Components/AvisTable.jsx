@@ -6,9 +6,7 @@ const AvisPage = () => {
   const context = useContext(AuthContext) || {};
   const { user = null, logout = () => {}, loading: authLoading = true } = context;
 
-  // State initialization with empty arrays
   const [avis, setAvis] = useState([]);
-  const [circuits, setCircuits] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editingAvis, setEditingAvis] = useState(null);
   const [formData, setFormData] = useState({
@@ -17,13 +15,12 @@ const AvisPage = () => {
     comment: ''
   });
   const [loading, setLoading] = useState(true);
+  const [circuits, setCircuits] = useState([]);
 
-  // Auth header helper
   const getAuthHeader = () => ({
     Authorization: `Bearer ${localStorage.getItem('accessToken')}`
   });
 
-  // Data fetching with error handling
   useEffect(() => {
     if (authLoading) return;
 
@@ -34,14 +31,11 @@ const AvisPage = () => {
           axios.get('http://localhost:5000/api/circuits', { headers: getAuthHeader() })
         ]);
         
-        // Safe state updates with fallbacks
         setAvis(avisRes.data?.avis || []);
         setCircuits(circuitsRes.data?.circuits || []);
         setLoading(false);
       } catch (error) {
         console.error('Data loading failed:', error);
-        setAvis([]);
-        setCircuits([]);
         setLoading(false);
         if (error.response?.status === 401) logout();
       }
@@ -50,7 +44,6 @@ const AvisPage = () => {
     fetchData();
   }, [authLoading, logout]);
 
-  // Form submission handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -60,11 +53,15 @@ const AvisPage = () => {
         : 'http://localhost:5000/api/avis';
 
       const method = editingAvis ? 'put' : 'post';
-      await axios[method](url, formData, config);
+      const response = await axios[method](url, formData, config);
 
-      // Refresh data after submission
-      const res = await axios.get('http://localhost:5000/api/avis', config);
-      setAvis(res.data?.avis || []);
+      // Update local state with new/modified review
+      if (editingAvis) {
+        setAvis(prev => prev.map(a => a._id === editingAvis._id ? response.data.avis : a));
+      } else {
+        setAvis(prev => [...prev, response.data.avis]);
+      }
+
       closeModal();
     } catch (error) {
       console.error('Submission error:', error);
@@ -72,7 +69,6 @@ const AvisPage = () => {
     }
   };
 
-  // Delete review handler
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/api/avis/${id}`, {
@@ -85,115 +81,144 @@ const AvisPage = () => {
     }
   };
 
-  // Modal control
   const closeModal = () => {
     setShowModal(false);
     setEditingAvis(null);
     setFormData({ circuitId: '', rating: '', comment: '' });
   };
 
-  // Loading state
-  if (authLoading || loading) return <div className="container">Loading reviews...</div>;
+  if (authLoading || loading) return (
+    <div className="container mt-4">
+      <div className="spinner-border text-primary" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="container">
-      <h1>Circuit Reviews</h1>
-      
-      {user && (
-        <button className="btn-add" onClick={() => setShowModal(true)}>
-          Add New Review
-        </button>
-      )}
+    <div className="container mt-4">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h1>Circuit Reviews</h1>
+        {user && (
+          <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+            <i className="bi bi-plus-lg me-2"></i>Add Review
+          </button>
+        )}
+      </div>
 
-      <div className="reviews-list">
-        {(avis || []).map(review => (
-          <div key={review._id} className="review-card">
-            <div className="review-header">
-              <span className="user">
-                {user?.id === review.userId ? (
-                  `Your Review (${user.first_name || 'User'})`
-                ) : (
-                  `User: ${review.userId?.slice(-4) || 'Anonymous'}`
-                )}
-              </span>
-              <span className="rating">{review.rating}/5</span>
-            </div>
-            <p className="circuit">
-              {(circuits || []).find(c => c._id === review.circuitId)?.name || 'Unknown Circuit'}
-            </p>
-            <p className="comment">{review.comment}</p>
-            
-            {user?.id === review.userId && (
-              <div className="review-actions">
-                <button onClick={() => {
-                  setEditingAvis(review);
-                  setFormData({
-                    circuitId: review.circuitId,
-                    rating: review.rating,
-                    comment: review.comment
-                  });
-                  setShowModal(true);
-                }}>
-                  Edit
-                </button>
-                <button onClick={() => handleDelete(review._id)}>Delete</button>
+      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {avis.map(review => (
+          <div className="col" key={review._id}>
+            <div className="card h-100 shadow-sm">
+              <div className="card-header d-flex justify-content-between align-items-center">
+                <span className="fw-medium">
+                  {review.user?.firstName || 'Anonymous User'}
+                </span>
+                <span className="badge bg-warning text-dark">
+                  {review.rating}/5
+                </span>
               </div>
-            )}
+              <div className="card-body">
+                <h5 className="card-title text-muted">
+                  {circuits.find(c => c._id === review.circuitId)?.name || 'Unknown Circuit'}
+                </h5>
+                <p className="card-text">{review.comment}</p>
+              </div>
+              {user?.id === review.user?._id && (
+                <div className="card-footer bg-transparent d-flex gap-2">
+                  <button 
+                    className="btn btn-sm btn-outline-warning"
+                    onClick={() => {
+                      setEditingAvis(review);
+                      setFormData({
+                        circuitId: review.circuitId,
+                        rating: review.rating,
+                        comment: review.comment
+                      });
+                      setShowModal(true);
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button 
+                    className="btn btn-sm btn-outline-danger"
+                    onClick={() => handleDelete(review._id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         ))}
       </div>
 
       {showModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={closeModal}>&times;</span>
-            <h2>{editingAvis ? 'Edit Review' : 'New Review'}</h2>
-            <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label>Circuit:</label>
-                <select
-                  value={formData.circuitId}
-                  onChange={e => setFormData({...formData, circuitId: e.target.value})}
-                  required
-                >
-                  <option value="">Select Circuit</option>
-                  {(circuits || []).map(c => (
-                    <option key={c._id} value={c._id}>{c.name}</option>
-                  ))}
-                </select>
+        <div className="modal fade show" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">
+                  {editingAvis ? 'Edit Review' : 'Create New Review'}
+                </h5>
+                <button type="button" className="btn-close" onClick={closeModal}></button>
               </div>
+              <div className="modal-body">
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-3">
+                    <label className="form-label">Circuit</label>
+                    <select
+                      className="form-select"
+                      value={formData.circuitId}
+                      onChange={e => setFormData({...formData, circuitId: e.target.value})}
+                      required
+                    >
+                      <option value="">Select a circuit</option>
+                      {circuits.map(circuit => (
+                        <option key={circuit._id} value={circuit._id}>
+                          {circuit.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-              <div className="form-group">
-                <label>Rating:</label>
-                <select
-                  value={formData.rating}
-                  onChange={e => setFormData({...formData, rating: e.target.value})}
-                  required
-                >
-                  <option value="">Select Rating</option>
-                  {[1, 2, 3, 4, 5].map(n => (
-                    <option key={n} value={n}>{n}</option>
-                  ))}
-                </select>
-              </div>
+                  <div className="mb-3">
+                    <label className="form-label">Rating</label>
+                    <select
+                      className="form-select"
+                      value={formData.rating}
+                      onChange={e => setFormData({...formData, rating: e.target.value})}
+                      required
+                    >
+                      <option value="">Select rating</option>
+                      {[1, 2, 3, 4, 5].map(num => (
+                        <option key={num} value={num}>{num}</option>
+                      ))}
+                    </select>
+                  </div>
 
-              <div className="form-group">
-                <label>Comment:</label>
-                <textarea
-                  value={formData.comment}
-                  onChange={e => setFormData({...formData, comment: e.target.value})}
-                  required
-                  rows="4"
-                />
-              </div>
+                  <div className="mb-3">
+                    <label className="form-label">Comment</label>
+                    <textarea
+                      className="form-control"
+                      value={formData.comment}
+                      onChange={e => setFormData({...formData, comment: e.target.value})}
+                      rows="3"
+                      required
+                    />
+                  </div>
 
-              <div className="form-actions">
-                <button type="button" onClick={closeModal}>Cancel</button>
-                <button type="submit" className="btn-submit">
-                  {editingAvis ? 'Update' : 'Create'}
-                </button>
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" onClick={closeModal}>
+                      Cancel
+                    </button>
+                    <button type="submit" className="btn btn-primary">
+                      {editingAvis ? 'Save Changes' : 'Create Review'}
+                    </button>
+                  </div>
+                </form>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       )}
