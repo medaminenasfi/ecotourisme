@@ -38,9 +38,9 @@ const AvisPage = () => {
           })
         ]);
 
-        // Handle both response formats
-        const avisData = Array.isArray(avisRes.data) ? avisRes.data : avisRes.data?.avis || [];
-        const circuitsData = Array.isArray(circuitsRes.data) ? circuitsRes.data : circuitsRes.data?.circuits || [];
+        // Handle backend response structure
+        const avisData = avisRes.data?.avis || [];
+        const circuitsData = circuitsRes.data?.circuits || [];
 
         setAvis(avisData);
         setCircuits(circuitsData);
@@ -65,14 +65,12 @@ const AvisPage = () => {
         : 'http://localhost:5000/api/avis';
 
       const method = editingAvis ? 'put' : 'post';
-      const response = await axios[method](url, formData, config);
+      await axios[method](url, formData, config);
 
-      if (editingAvis) {
-        setAvis(prev => prev.map(a => a._id === editingAvis._id ? response.data : a));
-      } else {
-        setAvis(prev => [...prev, response.data]);
-      }
-
+      // Refresh data after submission
+      const avisRes = await axios.get('http://localhost:5000/api/avis', config);
+      setAvis(avisRes.data?.avis || []);
+      
       closeModal();
     } catch (error) {
       console.error('Submission error:', error);
@@ -129,12 +127,10 @@ const AvisPage = () => {
         )}
       </div>
 
-      
-
       {/* Reviews List */}
       <h3 className="mb-4">User Reviews</h3>
       <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        {Array.isArray(avis) && avis.map(review => {
+        {avis.map(review => {
           const circuit = circuits.find(c => c._id === review.circuitId) || {};
           
           return (
@@ -144,7 +140,7 @@ const AvisPage = () => {
                   <div className="d-flex align-items-center">
                     <i className="bi bi-person-circle me-2 text-primary"></i>
                     <span className="fw-medium">
-                      {review.user?.firstName || 'Anonymous User'}
+                      {review.userId?.first_name || 'Anonymous'} {review.userId?.last_name}
                     </span>
                   </div>
                   <span className="badge bg-warning text-dark">
@@ -158,7 +154,7 @@ const AvisPage = () => {
                   </h5>
                   <p className="card-text text-secondary">{review.comment}</p>
                 </div>
-                {user?.id === review.user?._id && (
+                {user?.id === review.userId?._id && (
                   <div className="card-footer bg-transparent d-flex gap-2">
                     <button 
                       className="btn btn-sm btn-outline-warning rounded-pill"
@@ -213,7 +209,7 @@ const AvisPage = () => {
                       required
                     >
                       <option value="">Choose a circuit...</option>
-                      {Array.isArray(circuits) && circuits.map(circuit => (
+                      {circuits.map(circuit => (
                         <option key={circuit._id} value={circuit._id}>
                           {circuit.name}
                         </option>
