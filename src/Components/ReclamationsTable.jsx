@@ -47,9 +47,15 @@ const ReclamationsTable = () => {
         : "http://localhost:5000/api/reclamations";
       
       const method = selectedReclamation ? "put" : "post";
-      const dataToSend = selectedReclamation
-        ? { status: formData.status }
-        : { type: formData.type, message: formData.message };
+      
+      let dataToSend;
+      if (selectedReclamation) {
+        dataToSend = user.role === "" 
+          ? { status: formData.status }
+          : { type: formData.type, message: formData.message };
+      } else {
+        dataToSend = { type: formData.type, message: formData.message };
+      }
 
       const response = await axios[method](url, dataToSend, {
         headers: { Authorization: `Bearer ${token}` }
@@ -98,18 +104,16 @@ const ReclamationsTable = () => {
           <FaInfoCircle className="me-2" />
           Reclamations Management
         </h2>
-        {user?.role === "admin" && (
-          <Button 
-            variant="success" 
-            onClick={() => {
-              setSelectedReclamation(null);
-              setShowModal(true);
-            }}
-            className="d-flex align-items-center"
-          >
-            <FaPlus className="me-2" /> New Reclamation
-          </Button>
-        )}
+        <Button 
+          variant="success" 
+          onClick={() => {
+            setSelectedReclamation(null);
+            setShowModal(true);
+          }}
+          className="d-flex align-items-center"
+        >
+          <FaPlus className="me-2" /> New Reclamation
+        </Button>
       </div>
 
       {error && <Alert variant="danger" className="rounded-lg">{error}</Alert>}
@@ -125,7 +129,7 @@ const ReclamationsTable = () => {
                   <th>Message</th>
                   <th>Status</th>
                   <th>Date Created</th>
-                  {user?.role === "admin" && <th className="pe-4">Actions</th>}
+                  <th className="pe-4">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -155,8 +159,8 @@ const ReclamationsTable = () => {
                         day: 'numeric'
                       })}
                     </td>
-                    {user?.role === "admin" && (
-                      <td className="pe-4">
+                    <td className="pe-4">
+                      {(user?.role === "" || recl.userId?._id === user?._id) && (
                         <div className="d-flex gap-2">
                           <Button
                             variant="outline-primary"
@@ -179,8 +183,8 @@ const ReclamationsTable = () => {
                             <FaTrash />
                           </Button>
                         </div>
-                      </td>
-                    )}
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -197,7 +201,7 @@ const ReclamationsTable = () => {
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
           <Modal.Body className="py-4">
-            {!selectedReclamation ? (
+            {!selectedReclamation || user?.role !== "" ? (
               <>
                 <Form.Group className="mb-4">
                   <Form.Label>Reclamation Type</Form.Label>
@@ -208,12 +212,12 @@ const ReclamationsTable = () => {
                     required
                   >
                     <option value="">Select a type</option>
-                    <option value="fournisseur">Supplier</option>
+                    <option value="fournisseur">fournisseur</option>
                     <option value="artisan">Artisan</option>
                     <option value="circuit">Circuit</option>
-                    <option value="sécurité">Security</option>
-                    <option value="problème de financement">Funding Issue</option>
-                    <option value="autre">Other</option>
+                    <option value="sécurité">sécurité</option>
+                    <option value="problème de financement">problème de financement</option>
+                    <option value="autre">autre</option>
                   </Form.Select>
                 </Form.Group>
 
