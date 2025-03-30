@@ -38,9 +38,9 @@ const AvisPage = () => {
           })
         ]);
 
-        // Handle backend response structure
-        const avisData = avisRes.data?.avis || [];
-        const circuitsData = circuitsRes.data?.circuits || [];
+        // Handle both possible backend response structures
+        const avisData = avisRes.data?.avis || avisRes.data || [];
+        const circuitsData = circuitsRes.data?.circuits || circuitsRes.data || [];
 
         setAvis(avisData);
         setCircuits(circuitsData);
@@ -69,7 +69,7 @@ const AvisPage = () => {
 
       // Refresh data after submission
       const avisRes = await axios.get('http://localhost:5000/api/avis', config);
-      setAvis(avisRes.data?.avis || []);
+      setAvis(avisRes.data?.avis || avisRes.data || []);
       
       closeModal();
     } catch (error) {
