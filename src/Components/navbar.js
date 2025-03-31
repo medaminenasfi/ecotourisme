@@ -55,7 +55,7 @@ const Navbar = () => {
               <li className="nav-item">
                 <NavLink to="/gestion" className="nav-link">
                   <FaChartLine className="me-1" />
-                  Gestion
+                  Avis & Reclamation
                 </NavLink>
               </li>
             )}
