@@ -112,7 +112,7 @@ const ReclamationsTable = () => {
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="text-primary mb-0">
           <FaInfoCircle className="me-2" />
-          Reclamations Management....
+          Reclamations Management.......
         </h2>
         <Button 
           variant="success" 
