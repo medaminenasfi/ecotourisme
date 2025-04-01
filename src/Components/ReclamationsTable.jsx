@@ -130,14 +130,13 @@ const ReclamationsTable = () => {
 
       <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         {reclamations.map(recl => {
-          const isOwner = user && (
-            user.role === "admin" || 
-            (recl.userId && 
-              (typeof recl.userId === 'object' 
-                ? recl.userId._id === user._id 
-                : recl.userId === user._id))
-          );
-
+        const isOwner = user && (
+          user.role === "admin" || 
+          (recl.userId && 
+            (typeof recl.userId === 'object' 
+              ? recl.userId._id === user.id  // Use user.id instead of user._id
+              : recl.userId === user.id))    // Use user.id here too
+        );
           return (
             <div className="col" key={recl._id}>
               <div className="card h-100 shadow-lg-hover">
