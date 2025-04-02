@@ -1,10 +1,5 @@
 import React, { useContext } from "react";
-import {
-  BrowserRouter as Route,
-  Routes,
-  Navigate,
-  Router,
-} from "react-router-dom";
+import {BrowserRouter as Route,Routes,Navigate,Router,} from "react-router-dom";
 import { AuthContext, AuthProvider } from "./context/AuthContext";
 import Accueil from "./pages/Accueil";
 import Artisan from "./pages/Artisan";
@@ -154,7 +149,6 @@ function App() {
               }
             />
 
-// Ajouter la route
 <Route
   path="/ServicesList"
   element={
@@ -172,12 +166,6 @@ function App() {
     </ProtectedRoute>
   }
 />
-
-
-
-
-
-
 <Route
   path="/gestion"
   element={
@@ -186,8 +174,6 @@ function App() {
     </ProtectedRoute>
   }
 />
-
-
 <Route
   path="/AvisTable"
   element={
