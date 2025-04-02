@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Table, Modal, Form, Alert, Spinner, Badge } from 'react-bootstrap';
-import { FaEdit, FaTrashAlt ,FaPlus} from 'react-icons/fa';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import Navbar from '../Components/navbar';
 import jwtDecode from 'jwt-decode';
 
@@ -222,17 +222,7 @@ const GestionReservations = () => {
           {error && <Alert variant="danger">{error}</Alert>}
           {success && <Alert variant="success">{success}</Alert>}
 
-          {isAdmin && (
-            <div className="d-flex justify-content-end mb-4">
-              <Button 
-                variant="outline-primary" 
-                onClick={() => openModal()}
-                className="d-flex align-items-center"
-              >
-                <FaPlus className="me-2" /> Nouvelle Réservation
-              </Button>
-            </div>
-          )}
+        
 
           {loading ? (
             <div className="text-center py-5">
@@ -317,23 +307,7 @@ const GestionReservations = () => {
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Label>Utilisateur</Form.Label>
-              <Form.Select
-                value={formData.user}
-                onChange={(e) => setFormData({ ...formData, user: e.target.value })}
-                required
-                disabled={!!selectedReservation}
-              >
-                <option value="">Sélectionner un utilisateur</option>
-                {users.map(user => (
-                  <option key={user._id} value={user._id}>
-                    {user.first_name} {user.last_name}
-                  </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-
+            
             <Form.Group className="mb-3">
               <Form.Label>Circuit</Form.Label>
               <Form.Select
