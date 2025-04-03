@@ -38,72 +38,71 @@ const Accueil = () => {
           </div>
           
         </section>
-        <section className="bg-black text-white p-5 shadow-lg">
-          <h1 classname="hell">Formulaire de Contact</h1>
-          
-
-
-<center>
+        <section className="contact-section">
           <Container>
-      <Row>
-        <Col>
-        
-        <div className="contact-info">
-        <h2>Let’s Talk</h2>
-        <p>
-          Have some big idea or brand to develop and need help? Then reach out,
-          we’d love to hear about your project and provide help.
-        </p>
-        <div className="contact-email">
-          <h3>Email</h3> 
-          <p>beebs@gmail.com</p>
-        </div>
-      </div>
-        
-        
-        </Col>
-        <Col>
-        
-        
-        
-        <div className="contact-form">
-        <form>
-          <label>Name</label><br/>
-          <input type="text" placeholder="Enter your name" />  <br/> <br/>         
-          <label>Email</label><br/>
-          <input type="email" placeholder="Enter your email" /><br/>
-          
-          <br/><br/>
-          
-          <label>Message</label><br/><br/>
-          <textarea placeholder="Write your message"></textarea><br/>
-          
-          <button type="submit">Submit</button>
-        </form>
-      </div>
-        
-        
-        
-        
-        
-        
-        </Col>
-      </Row>
-          
-    </Container> 
-    </center>
+            <h2 className="section-title">Formulaire de Contact</h2>
+            <Row className="g-4">
+              <Col lg={6} className="contact-info-col">
+                <div className="contact-info">
+                  <h3>Let’s Talk</h3>
+                  <p>
+                    Have some big idea or brand to develop and need help? Then reach out,
+                    we’d love to hear about your project and provide help.
+                  </p>
+                  <div className="contact-details">
+                    <div className="detail-item">
+                      <i className="bi bi-envelope me-2"></i>
+                      <span>beebs@gmail.com</span>
+                    </div>
+                    <div className="detail-item">
+                      <i className="bi bi-phone me-2"></i>
+                      <span>+216 12 345 678</span>
+                    </div>
+                  </div>
+                </div>
+              </Col>
 
+              <Col lg={6} className="form-col">
+                <form className="contact-form">
+                  <div className="form-group">
+                    <label>Nom Complet</label>
+                    <input 
+                      type="text" 
+                      className="form-control"
+                      placeholder="Entrez votre nom"
+                    />
+                  </div>
 
+                  <div className="form-group">
+                    <label>Email</label>
+                    <input
+                      type="email"
+                      className="form-control"
+                      placeholder="Entrez votre email"
+                    />
+                  </div>
 
+                  <div className="form-group">
+                    <label>Message</label>
+                    <textarea
+                      className="form-control"
+                      rows="5"
+                      placeholder="Écrivez votre message"
+                    ></textarea>
+                  </div>
 
-
-
+                  <button type="submit" className="submit-btn">
+                    Envoyer
+                    <i className="bi bi-send ms-2"></i>
+                  </button>
+                </form>
+              </Col>
+            </Row>
+          </Container>
         </section>
-      
       </main>
       <Footer />
     </>
   );
 };
-
 export default Accueil;
