@@ -10,11 +10,11 @@ import Col from "react-bootstrap/Col";
 import { init } from 'emailjs-com';
 import emailjs from 'emailjs-com';
 
-init("PpvCGv7Qe60PVbyR7"); // Remplacez par votre User ID EmailJS
+init("PpvCGv7Qe60PVbyR7"); 
 
 
 
-const Accueil = () => {
+const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -192,4 +192,4 @@ const Accueil = () => {
     </>
   );
 };
-export default Accueil;
+export default Contact;
