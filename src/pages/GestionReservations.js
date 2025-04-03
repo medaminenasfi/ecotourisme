@@ -256,7 +256,7 @@ const GestionReservations = () => {
                     <td>{reservation.circuit?.name || 'Circuit supprimé'}</td>
                     <td>{new Date(reservation.date).toLocaleDateString('fr-FR')}</td>
                     <td>{reservation.numberOfPeople}</td>
-                    <td>{reservation.totalPrice?.toFixed(2)} €</td>
+                    <td>{reservation.totalPrice?.toFixed(2)} TND</td>
                     <td>
                       <Badge 
                         pill
