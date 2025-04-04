@@ -99,7 +99,7 @@ const AvisPage = () => {
   if (authLoading || loading) return (
     <div className="container mt-4 text-center">
       <div className="spinner-border text-primary" role="status">
-        <span className="visually-hidden">Loading...</span>
+        <span className="visually-hidden">Chargement...</span>
       </div>
     </div>
   );
@@ -122,13 +122,13 @@ const AvisPage = () => {
             className="btn btn-primary rounded-pill px-4 py-2 shadow-sm"
             onClick={() => setShowModal(true)}
           >
-            <i className="bi bi-pencil-square me-2"></i>Add Review
+            <i className="bi bi-pencil-square me-2"></i>Ajouter un avis
           </button>
         )}
       </div>
 
       {/* Reviews List */}
-      <h3 className="mb-4">User Reviews</h3>
+      <h3 className="mb-4">Avis des utilisateurs</h3>
       <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         {avis.map(review => {
           const circuit = circuits.find(c => c._id === review.circuitId) || {};
@@ -168,13 +168,13 @@ const AvisPage = () => {
                         setShowModal(true);
                       }}
                     >
-                      <i className="bi bi-pencil me-1"></i>Edit
+                      <i className="bi bi-pencil me-1"></i>Modifier
                     </button>
                     <button 
                       className="btn btn-sm btn-outline-danger rounded-pill"
                       onClick={() => handleDelete(review._id)}
                     >
-                      <i className="bi bi-trash me-1"></i>Delete
+                      <i className="bi bi-trash me-1"></i>Supprimer
                     </button>
                   </div>
                 )}
@@ -200,7 +200,7 @@ const AvisPage = () => {
                 <form onSubmit={handleSubmit}>
                   <div className="mb-4">
                     <label className="form-label fw-bold text-secondary">
-                      <i className="bi bi-map me-2"></i>Select Circuit
+                      <i className="bi bi-map me-2"></i>Sélectionner un circuit
                     </label>
                     <select
                       className="form-select form-select-lg rounded-pill border-primary"
@@ -208,7 +208,7 @@ const AvisPage = () => {
                       onChange={e => setFormData({...formData, circuitId: e.target.value})}
                       required
                     >
-                      <option value="">Choose a circuit...</option>
+                      <option value="">Choisissez un circuit...</option>
                       {circuits.map(circuit => (
                         <option key={circuit._id} value={circuit._id}>
                           {circuit.name}
@@ -219,7 +219,7 @@ const AvisPage = () => {
 
                   <div className="mb-4">
                     <label className="form-label fw-bold text-secondary">
-                      <i className="bi bi-star me-2"></i>Rating
+                      <i className="bi bi-star me-2"></i>Notation
                     </label>
                     <select
                       className="form-select form-select-lg rounded-pill border-warning"
@@ -227,7 +227,7 @@ const AvisPage = () => {
                       onChange={e => setFormData({...formData, rating: e.target.value})}
                       required
                     >
-                      <option value="">Select your rating...</option>
+                      <option value="">Sélectionnez votre note...</option>
                       {[1, 2, 3, 4, 5].map(num => (
                         <option key={num} value={num}>
                           {Array(num).fill('⭐').join('')} ({num})
@@ -238,7 +238,7 @@ const AvisPage = () => {
 
                   <div className="mb-4">
                     <label className="form-label fw-bold text-secondary">
-                      <i className="bi bi-chat-text me-2"></i>Comment
+                      <i className="bi bi-chat-text me-2"></i>Commentaire
                     </label>
                     <textarea
                       className="form-control border-info rounded-3"
@@ -256,7 +256,7 @@ const AvisPage = () => {
                       className="btn btn-secondary rounded-pill px-4"
                       onClick={closeModal}
                     >
-                      Cancel
+                      Annuler
                     </button>
                     <button 
                       type="submit" 
