@@ -197,7 +197,7 @@ const GestionCircuits = () => {
                     <td className="fw-medium">{circuit.name}</td>
                     <td>{circuit.location}</td>
                     <td>{circuit.duration}h</td>
-                    <td>{circuit.price} €</td>
+                    <td>{circuit.price} TND</td>
                     <td>
                       <span className={`badge rounded-pill ${
                         circuit.difficulty === 'Facile' ? 'bg-success' :
@@ -286,7 +286,7 @@ const GestionCircuits = () => {
               </div>
               <div className="col-md-6">
                 <Form.Group className="mb-3">
-                  <Form.Label>Prix (€)</Form.Label>
+                  <Form.Label>Prix (TND)</Form.Label>
                   <Form.Control
                     type="number"
                     value={formData.price}
