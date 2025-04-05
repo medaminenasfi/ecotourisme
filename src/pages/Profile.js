@@ -23,6 +23,7 @@ const Profile = () => {
   const [error, setError] = useState("");
   const [reservations, setReservations] = useState([]);
   const [circuits, setCircuits] = useState([]);
+  const [circuitsLoading, setCircuitsLoading] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -35,6 +36,7 @@ const Profile = () => {
 
   const fetchCircuits = async () => {
     try {
+      setCircuitsLoading(true);
       const response = await fetch("http://localhost:5000/api/circuits", {
         headers: {
           "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
@@ -46,6 +48,8 @@ const Profile = () => {
       setCircuits(data);
     } catch (error) {
       console.error("Erreur de récupération des circuits:", error);
+    } finally {
+      setCircuitsLoading(false);
     }
   };
 
@@ -89,6 +93,7 @@ const Profile = () => {
   };
 
   const getCircuitName = (circuitId) => {
+    if (!circuitId) return "Circuit indisponible";
     const circuit = circuits.find(c => c._id === circuitId);
     return circuit ? circuit.name : "Circuit indisponible";
   };
@@ -147,14 +152,14 @@ const Profile = () => {
                   <ListGroup.Item>
                     <strong>Rôle:</strong>{" "}
                     <Badge bg={
-  user.role === 'admin' ? 'danger' : 
-  user.role === 'fournisseur' ? 'warning' : 
-  'primary'
-}>
-  {user.role === 'admin' ? 'Administrateur' : 
-   user.role === 'fournisseur' ? 'Fournisseur' : 
-   'Voyageur'}
-</Badge>
+                      user.role === 'admin' ? 'danger' : 
+                      user.role === 'fournisseur' ? 'warning' : 
+                      'primary'
+                    }>
+                      {user.role === 'admin' ? 'Administrateur' : 
+                       user.role === 'fournisseur' ? 'Fournisseur' : 
+                       'Voyageur'}
+                    </Badge>
                   </ListGroup.Item>
                 </ListGroup>
               </Col>
@@ -180,10 +185,10 @@ const Profile = () => {
             </div>
             <h4 className="mb-3">Vos Réservations</h4>
             
-            {reservationsLoading ? (
+            {reservationsLoading || circuitsLoading ? (
               <div className="text-center py-4">
                 <Spinner animation="border" />
-                <p className="mt-2">Chargement des réservations...</p>
+                <p className="mt-2">Chargement des données...</p>
               </div>
             ) : reservations.length === 0 ? (
               <Alert variant="info">
@@ -195,7 +200,7 @@ const Profile = () => {
                   <ListGroup.Item key={reservation._id}>
                     <div className="d-flex justify-content-between align-items-center">
                       <div>
-                        <h5>{getCircuitName(reservation.circuit)}</h5>
+                        <h5>{getCircuitName(reservation.circuit?._id || reservation.circuit)}</h5>
                         <div className="d-flex align-items-center mt-2">
                           <Badge bg="light" text="dark" className="me-2">
                             <i className="bi bi-calendar me-1"></i>
@@ -221,8 +226,6 @@ const Profile = () => {
                 ))}
               </ListGroup>
             )}
-
-        
           </Card.Body>
         </Card>
       </Container>
