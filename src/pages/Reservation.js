@@ -186,7 +186,7 @@ const Accueil = () => {
           <div className="text-center">
             <h1>Your Adventure Starts Here</h1>
             <p className="lead">
-              Discover breathtaking landscapes and unforgettable experiences
+              Discover breathtaking landscapes and unforgettable experiences.
             </p>
           </div>
         </section>
