@@ -115,7 +115,7 @@ const Contact = () => {
                   <div className="contact-details">
                     <div className="detail-item">
                       <i className="bi bi-envelope me-2"></i>
-                      <span>beebs@gmail.com</span>
+                      <span>tnecotourisle@gmail.com</span>
                     </div>
                     <div className="detail-item">
                       <i className="bi bi-phone me-2"></i>
