@@ -267,7 +267,7 @@ const Accueil = () => {
                 {isReserving ? (
                   <>
                     <span className="spinner-border spinner-border-sm me-2" role="status" />
-                    Processing...
+                    Processing.....
                   </>
                 ) : (
                   "Confirm Reservation"
