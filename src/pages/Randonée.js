@@ -43,16 +43,11 @@ const Accueil = () => {
         <section className="bg-black text-white p-5 shadow-lg">
           <h1 className="text-center">Explorer Nos Circuits en Carte</h1>
           <Container>
-            <Row>
-              <Col xs={12} md={6} className="text-center">
-                <CircuitMap center={position1} />
-              </Col>
-              <Col xs={12} md={6} className="text-center">
-                <p>Découvrez nos circuits et planifiez votre prochaine aventure.</p>
-              </Col>
-            </Row>
+          <CircuitMap center={position1} />
+
           </Container>
         </section>
+
 
         {/* Circuits Section */}
         <section className="bg-black text-white p-5 shadow-lg">

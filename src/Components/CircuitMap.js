@@ -3,9 +3,10 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useState } from "react";
 import "./Circuit.css";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
+import { Container, Row, Col, Form, Card, Button } from "react-bootstrap";
 
 const customIcon = new L.Icon({
   iconUrl: markerIconPng,
@@ -23,8 +24,8 @@ const circuitsByRegion = {
       name: "Circuit du Belvédère - Lac de Tunise",
       description: "Vue panoramique sur Tunis et le lac.",
       location: "Parc du Belvédère",
-      duration: 2, 
-      price: 30, 
+      duration: 2,
+      price: 30,
       difficulty: "Facile",
     },
     {
@@ -400,7 +401,6 @@ const circuitsByRegion = {
   ],
 };
 
-
 const regions = [
   {
     id: "Tunis",
@@ -533,7 +533,6 @@ const Circuit = () => {
   const [regionCircuits, setRegionCircuits] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [, setFilteredRegions] = useState(regions);
-  const [reviews, setReviews] = useState({});
 
   const handleRegionClick = (region) => {
     setSelectedRegion(region);
@@ -553,145 +552,110 @@ const Circuit = () => {
     }
   };
 
-
-  const handleReviewSubmit = (circuitName, reviewData) => {
-    setReviews((prevReviews) => ({
-      ...prevReviews,
-      [circuitName]: [...(prevReviews[circuitName] || []), reviewData],
-    }));
-  };
-
+  
+  
   return (
-    <div className="circuit-container">
-      <input
-        type="text"
-        placeholder="Search for a region..."
-        value={searchTerm}
-        onChange={handleSearchChange}
-        className="search-bar"
-      />
-      <MapContainer
-        center={tunisiaCenter}
-        zoom={zoomLevel}
-        style={{ height: "100vh", width: "100%" }}
-      >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        {regions.map((region) => (
-          <Marker
-            key={region.id}
-            position={region.coords}
-            icon={customIcon}
-            eventHandlers={{
-              click: () => handleRegionClick(region),
-            }}
-          >
-            <Popup>{region.name}</Popup>
-          </Marker>
-        ))}
-        {selectedRegion && <ChangeView coords={selectedRegion.coords} />}
-      </MapContainer>
+    <Container fluid className="p-0">
+      <section className="bg-dark text-white py-4 shadow">
+        <Container>
+          <h1 className="text-center mb-4 display-5">
+            🌿 Explorer Nos Circuits en Carte 🌿
+          </h1>
+          
+          <Form.Group className="mb-4">
+            <Form.Control
+              type="search"
+              placeholder="Rechercher une région..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="rounded-pill py-2"
+            />
+          </Form.Group>
 
-      {regionCircuits.length > 0 && (
-        <div className="circuit-list">
-          <h2>Circuits in {selectedRegion && selectedRegion.name}</h2>
-          <ul>
-            {regionCircuits.map((circuit, index) => (
-              <li key={index}>
-                <h3>{circuit.name}</h3>
-                <p>{circuit.description}</p>
-                <p>
-                  <strong>Départ :</strong> {circuit.location}
-                </p>
-                <p>
-                  <strong>Durée :</strong> {circuit.duration} heures
-                </p>
-                <p>
-                  <strong>Prix :</strong> {circuit.price} TND
-                </p>
-                <p>
-                  <strong>Difficulté :</strong> {circuit.difficulty}
-                </p>
+          <Row>
+            <Col lg={8} className="mb-4 mb-lg-0">
+              <div style={{ height: "60vh", borderRadius: "15px", overflow: "hidden" }}>
+                <MapContainer
+                  center={tunisiaCenter}
+                  zoom={zoomLevel}
+                  style={{ height: "100%", width: "100%" }}
+                >
+                  <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  />
+                  {regions.map((region) => (
+                    <Marker
+                      key={region.id}
+                      position={region.coords}
+                      icon={customIcon}
+                      eventHandlers={{
+                        click: () => handleRegionClick(region),
+                      }}
+                    >
+                      <Popup className="custom-popup">{region.name}</Popup>
+                    </Marker>
+                  ))}
+                  {selectedRegion && <ChangeView coords={selectedRegion.coords} />}
+                </MapContainer>
+              </div>
+            </Col>
 
-
-
-    <Link 
-  to="/Reservation" 
-  state={{ 
-    circuit: {
-      ...circuit,
-      _id: `${selectedRegion.id}-${index}`, 
-      region: selectedRegion.id
-    }
-  }}
->
-  <button className="reserve-button">
-    Reserver - {circuit.price} TND
-  </button>
-</Link>
-                {/* Review Form for Each Circuit */}
-                <div className="review-form">
-                  <h4>Leave a Review</h4>
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      const reviewData = {
-                        rating: parseInt(e.target.rating.value),
-                        comment: e.target.comment.value,
-                      };
-                      handleReviewSubmit(circuit.name, reviewData);
-                      e.target.reset(); 
-                    }}
-                  >
-                    <div>
-                      <label htmlFor="rating">Rating: </label>
-                      <select id="rating" name="rating">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label htmlFor="comment">Comment: </label>
-                      <textarea
-                        id="comment"
-                        name="comment"
-                        placeholder="Write your review here..."
-                        required
-                      />
-                    </div>
-                    <button type="submit">Submit Review</button>
-                  </form>
+            {regionCircuits.length > 0 && (
+              <Col lg={4}>
+                <div className="p-3 bg-light rounded-3 h-100">
+                  <h2 className="mb-4 text-dark">
+                    Circuits in {selectedRegion.name.split(",")[0]}
+                  </h2>
+                  <div className="overflow-auto" style={{ maxHeight: "50vh" }}>
+                    {regionCircuits.map((circuit, index) => (
+                      <Card key={index} className="mb-3 shadow-sm">
+                        <Card.Body>
+                          <Card.Title>{circuit.name}</Card.Title>
+                          <Card.Text className="text-muted small">
+                            {circuit.description}
+                          </Card.Text>
+                          <div className="mb-3">
+                            <p className="mb-1">
+                              <strong>📍 Départ:</strong> {circuit.location}
+                            </p>
+                            <p className="mb-1">
+                              <strong>⏳ Durée:</strong> {circuit.duration} heures
+                            </p>
+                            <p className="mb-1">
+                              <strong>💵 Prix:</strong> {circuit.price} TND
+                            </p>
+                            <p className="mb-3">
+                              <strong>🏔 Difficulté:</strong> {circuit.difficulty}
+                            </p>
+                            <Link
+                              to="/Reservation"
+                              state={{
+                                circuit: {
+                                  ...circuit,
+                                  _id: `${selectedRegion.id}-${index}`,
+                                  region: selectedRegion.id,
+                                },
+                              }}
+                              className="d-block"
+                            >
+                              <Button variant="success" className="w-100">
+                                Réserver - {circuit.price} TND
+                              </Button>
+                            </Link>
+                          </div>
+                        </Card.Body>
+                      </Card>
+                    ))}
+                  </div>
                 </div>
-
-                {/* Display Reviews */}
-                <div className="reviews">
-                  <h4>Reviews:</h4>
-                  {reviews[circuit.name] && reviews[circuit.name].length > 0 ? (
-                    <ul>
-                      {reviews[circuit.name].map((review, idx) => (
-                        <li key={idx}>
-                          <p>
-                            <strong>Rating:</strong> {review.rating} / 5
-                          </p>
-                          <p>
-                            <strong>Comment:</strong> {review.comment}
-                          </p>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>No reviews yet.</p>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
+              </Col>
+            )}
+          </Row>
+        </Container>
+      </section>
+    </Container>
   );
 };
+
 export default Circuit;
- 
