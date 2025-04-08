@@ -28,20 +28,14 @@ const Accueil = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isReserving, setIsReserving] = useState(false);
-
-  // Updated token validation
   const validateToken = (token) => {
     try {
       const decoded = jwtDecode(token);
       if (!decoded) throw new Error("Invalid token");
-      
-      // Check token expiration
-      if (decoded.exp && Date.now() >= decoded.exp * 1000) {
+            if (decoded.exp && Date.now() >= decoded.exp * 1000) {
         throw new Error("Token expired");
       }
-      
-      // Verify token structure
-      if (!decoded.UserInfo?.id) {
+            if (!decoded.UserInfo?.id) {
         throw new Error("Invalid token structure");
       }
       
@@ -53,7 +47,6 @@ const Accueil = () => {
       return null;
     }
   };
-
   useEffect(() => {
     const fetchCircuits = async () => {
       try {
@@ -107,19 +100,15 @@ const Accueil = () => {
         navigate("/Seconnecter");
         return;
       }
-
-      // Validate token
       const decoded = validateToken(token);
       if (!decoded) return;
 
-      // Corrected user ID extraction
       const userId = decoded.UserInfo?.id;
       if (!userId) throw new Error("User information not found in token");
 
       const circuit = circuits.find(c => c._id === selectedCircuit);
       if (!circuit?.price) throw new Error("Invalid circuit selection");
 
-      // Validate selected date
       const selectedDay = dayjs(selectedDate);
       if (!selectedDay.isValid() || selectedDay.isBefore(dayjs(), "day")) {
         throw new Error("Invalid date selection");

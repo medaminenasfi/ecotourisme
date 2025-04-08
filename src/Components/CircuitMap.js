@@ -693,6 +693,5 @@ const Circuit = () => {
     </div>
   );
 };
-
 export default Circuit;
  
