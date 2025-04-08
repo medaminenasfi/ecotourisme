@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
 import { Container, Row, Col, Form, Card, Button } from "react-bootstrap";
+import 'leaflet-routing-machine';
 
 const customIcon = new L.Icon({
   iconUrl: markerIconPng,
@@ -605,7 +606,7 @@ const Circuit = () => {
               <Col lg={4}>
                 <div className="p-3 bg-light rounded-3 h-100">
                   <h2 className="mb-4 text-dark">
-                    Circuits in {selectedRegion.name.split(",")[0]}
+                   {selectedRegion.name.split(",")[0]}🌿
                   </h2>
                   <div className="overflow-auto" style={{ maxHeight: "50vh" }}>
                     {regionCircuits.map((circuit, index) => (
