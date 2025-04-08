@@ -8,6 +8,10 @@ import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
 import { Container, Row, Col, Form, Card, Button } from "react-bootstrap";
 import 'leaflet-routing-machine';
+import React, { useEffect, useRef } from 'react';
+import 'leaflet/dist/leaflet.css';
+import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
+import 'leaflet-routing-machine';
 
 const customIcon = new L.Icon({
   iconUrl: markerIconPng,
@@ -554,7 +558,11 @@ const Circuit = () => {
   };
 
   
-  
+
+
+
+
+
   return (
     <Container fluid className="p-0">
       <section className="bg-dark text-white py-4 shadow">
