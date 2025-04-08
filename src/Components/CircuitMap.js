@@ -4,8 +4,6 @@ import L from "leaflet";
 import { useState } from "react";
 import "./Circuit.css";
 import { Link } from 'react-router-dom';
-
-// Fix Leaflet marker icon issue
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
 
@@ -17,23 +15,16 @@ const customIcon = new L.Icon({
   popupAnchor: [1, -34],
   shadowSize: [41, 41],
 });
-
 const tunisiaCenter = [33.8869, 9.5375];
 const zoomLevel = 6;
-
-
-
-
-
-// All circuits for the 24 regions in Tunisia
 const circuitsByRegion = {
   Tunis: [
     {
       name: "Circuit du Belvédère - Lac de Tunise",
       description: "Vue panoramique sur Tunis et le lac.",
       location: "Parc du Belvédère",
-      duration: 2, // Duration in hours
-      price: 30, // Price in TND
+      duration: 2, 
+      price: 30, 
       difficulty: "Facile",
     },
     {
@@ -532,13 +523,11 @@ const regions = [
     coords: [34.425, 8.7806],
   },
 ];
-
 function ChangeView({ coords }) {
   const map = useMap();
   map.setView(coords, 10);
   return null;
 }
-
 const Circuit = () => {
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [regionCircuits, setRegionCircuits] = useState([]);
@@ -560,14 +549,12 @@ const Circuit = () => {
     setFilteredRegions(filtered);
 
     if (filtered.length === 1) {
-      // If exactly one region matches, automatically zoom to it
       handleRegionClick(filtered[0]);
     }
   };
 
 
   const handleReviewSubmit = (circuitName, reviewData) => {
-    // Add or update the review for the selected circuit
     setReviews((prevReviews) => ({
       ...prevReviews,
       [circuitName]: [...(prevReviews[circuitName] || []), reviewData],
@@ -632,7 +619,7 @@ const Circuit = () => {
   state={{ 
     circuit: {
       ...circuit,
-      _id: `${selectedRegion.id}-${index}`, // Génère un ID unique
+      _id: `${selectedRegion.id}-${index}`, 
       region: selectedRegion.id
     }
   }}
@@ -652,7 +639,7 @@ const Circuit = () => {
                         comment: e.target.comment.value,
                       };
                       handleReviewSubmit(circuit.name, reviewData);
-                      e.target.reset(); // clear the form after submit
+                      e.target.reset(); 
                     }}
                   >
                     <div>
