@@ -1,17 +1,24 @@
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { useState } from "react";
+import { useState , useRef } from "react";
 import "./Circuit.css";
 import { Link } from "react-router-dom";
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
 import { Container, Row, Col, Form, Card, Button } from "react-bootstrap";
 import 'leaflet-routing-machine';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import 'leaflet-routing-machine';
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIconPng,
+  iconUrl: markerIconPng,
+  shadowUrl: markerShadowPng,
+});
 
 const customIcon = new L.Icon({
   iconUrl: markerIconPng,
@@ -528,16 +535,54 @@ const regions = [
     coords: [34.425, 8.7806],
   },
 ];
+
+
+function Routing({ map }) {
+  const routingControlRef = useRef(null);
+
+  useEffect(() => {
+    if (!map) return;
+
+    // Sample route coordinates (Tunis area)
+    const waypoints = [
+      L.latLng(36.8356, 10.2237),  // Start point
+      L.latLng(36.8003, 10.1907)   // End point
+    ];
+
+    routingControlRef.current = L.Routing.control({
+      waypoints: waypoints,
+      routeWhileDragging: true,
+      showAlternatives: false,
+      lineOptions: {
+        styles: [{ color: '#3388ff', weight: 5 }]
+      },
+      addWaypoints: false,
+      draggableWaypoints: false,
+      fitSelectedRoutes: true
+    }).addTo(map);
+
+    return () => {
+      if (routingControlRef.current) {
+        map.removeControl(routingControlRef.current);
+      }
+    };
+  }, [map]);
+
+  return null;
+}
+
 function ChangeView({ coords }) {
   const map = useMap();
   map.setView(coords, 10);
   return null;
 }
+
 const Circuit = () => {
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [regionCircuits, setRegionCircuits] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [, setFilteredRegions] = useState(regions);
+  const [filteredRegions, setFilteredRegions] = useState(regions);
+  const mapRef = useRef();
 
   const handleRegionClick = (region) => {
     setSelectedRegion(region);
@@ -547,21 +592,11 @@ const Circuit = () => {
   const handleSearchChange = (e) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
-    const filtered = regions.filter((region) =>
+    const filtered = regions.filter(region => 
       region.name.toLowerCase().includes(term)
     );
     setFilteredRegions(filtered);
-
-    if (filtered.length === 1) {
-      handleRegionClick(filtered[0]);
-    }
   };
-
-  
-
-
-
-
 
   return (
     <Container fluid className="p-0">
@@ -570,7 +605,7 @@ const Circuit = () => {
           <h1 className="text-center mb-4 display-5">
             🌿 Explorer Nos Circuits en Carte 🌿
           </h1>
-          
+
           <Form.Group className="mb-4">
             <Form.Control
               type="search"
@@ -588,11 +623,13 @@ const Circuit = () => {
                   center={tunisiaCenter}
                   zoom={zoomLevel}
                   style={{ height: "100%", width: "100%" }}
+                  ref={mapRef}
                 >
                   <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    attribution='&copy; OpenStreetMap contributors'
                   />
+                  <Routing map={mapRef.current} />
                   {regions.map((region) => (
                     <Marker
                       key={region.id}
@@ -614,7 +651,7 @@ const Circuit = () => {
               <Col lg={4}>
                 <div className="p-3 bg-light rounded-3 h-100">
                   <h2 className="mb-4 text-dark">
-                   {selectedRegion.name.split(",")[0]}🌿
+                    {selectedRegion.name.split(",")[0]}🌿
                   </h2>
                   <div className="overflow-auto" style={{ maxHeight: "50vh" }}>
                     {regionCircuits.map((circuit, index) => (
