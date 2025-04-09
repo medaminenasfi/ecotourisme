@@ -4,7 +4,7 @@ export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // 🔥 Add loading state
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     console.log("🔄 Checking localStorage for token...");
@@ -29,7 +29,7 @@ const AuthProvider = ({ children }) => {
         logout();
       }
     }
-    setLoading(false); // 🔥 Set loading to false when authentication is ready
+    setLoading(false); 
   }, []);
 
   const login = (token, userData = {}) => {

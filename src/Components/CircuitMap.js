@@ -543,10 +543,9 @@ function Routing({ map }) {
   useEffect(() => {
     if (!map) return;
 
-    // Sample route coordinates (Tunis area)
     const waypoints = [
-      L.latLng(36.8356, 10.2237),  // Start point
-      L.latLng(36.8003, 10.1907)   // End point
+      L.latLng(36.8356, 10.2237),  // deb
+      L.latLng(36.8003, 10.1907)   // fin
     ];
 
     routingControlRef.current = L.Routing.control({

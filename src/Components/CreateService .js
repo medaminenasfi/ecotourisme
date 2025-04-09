@@ -40,8 +40,8 @@ const CreateService = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
         
-        console.log("Tous les services de la DB:", response.data); // Pour voir les données brutes
-        setServices(response.data); // Affiche tous les services sans filtre
+        console.log("Tous les services de la DB:", response.data); 
+        setServices(response.data); 
         
       } catch (err) {
         setError(err.response?.data?.message || "Erreur de chargement des services");

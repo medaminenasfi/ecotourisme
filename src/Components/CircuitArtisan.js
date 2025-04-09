@@ -5,7 +5,6 @@ import { useState } from 'react';
 import './Circuit.css';
 import Bizert from "../assest/bizert.jpg";
 
-// Fix Leaflet marker icon issue
 import markerIconPng from 'leaflet/dist/images/marker-icon.png';
 import markerShadowPng from 'leaflet/dist/images/marker-shadow.png';
 
@@ -193,14 +192,12 @@ const Circuit = () => {
     setFilteredRegions(filtered);
 
     if (filtered.length === 1) {
-      // If exactly one region matches, automatically zoom to it
       handleRegionClick(filtered[0]);
     }
   };
 
   const handleReserveClick = (circuit) => {
     alert(`You have reserved: ${circuit.name}`);
-    // Add reservation functionality here, such as navigating to a confirmation page or saving the reservation
   };
 
   return (
