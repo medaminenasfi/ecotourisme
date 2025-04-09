@@ -108,7 +108,7 @@ function App() {
               }
             />
             <Route
-              path="/admin/edit/:id" // ✅ Added the missing Edit User route
+              path="/admin/edit/:id"
               element={
                 <AdminRoute>
                   <EditUser />
