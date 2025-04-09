@@ -591,10 +591,14 @@ const Circuit = () => {
   const handleSearchChange = (e) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
-    const filtered = regions.filter(region => 
+    const filtered = regions.filter((region) =>
       region.name.toLowerCase().includes(term)
     );
     setFilteredRegions(filtered);
+
+    if (filtered.length === 1) {
+      handleRegionClick(filtered[0]);
+    }
   };
 
   return (
@@ -629,18 +633,23 @@ const Circuit = () => {
                     attribution='&copy; OpenStreetMap contributors'
                   />
                   <Routing map={mapRef.current} />
-                  {regions.map((region) => (
-                    <Marker
-                      key={region.id}
-                      position={region.coords}
-                      icon={customIcon}
-                      eventHandlers={{
-                        click: () => handleRegionClick(region),
-                      }}
-                    >
-                      <Popup className="custom-popup">{region.name}</Popup>
-                    </Marker>
-                  ))}
+                    {regions.map((region) => (
+                            <Marker
+                              key={region.name}
+                              position={region.coords}
+                              icon={customIcon}
+                              eventHandlers={{
+                                click: () => handleRegionClick(region),
+                              }}
+                            >
+                              <Popup>
+                                <div>
+                                  <h3>{region.name}</h3>
+                                  <p>{region.description}</p>
+                                </div>
+                              </Popup>
+                            </Marker>
+                          ))}
                   {selectedRegion && <ChangeView coords={selectedRegion.coords} />}
                 </MapContainer>
               </div>
