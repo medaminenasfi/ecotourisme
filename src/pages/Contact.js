@@ -57,9 +57,8 @@ const Contact = () => {
     setLoading(true);
 
     emailjs.send(
-      'service_t688zch', // Remplacez par Service ID
-      'template_dgfpx5s', // Remplacez par Template ID
-      formData
+      'service_t688zch', 
+      'template_dgfpx5s', 
     )
     .then((response) => {
       setSuccess(true);

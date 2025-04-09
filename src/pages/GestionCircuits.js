@@ -13,7 +13,6 @@ const GestionCircuits = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Form state
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -23,7 +22,6 @@ const GestionCircuits = () => {
     difficulty: 'Facile'
   });
 
-  // Check token validity
   const validateToken = () => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
@@ -46,7 +44,6 @@ const GestionCircuits = () => {
     }
   };
 
-  // Fetch circuits from API
   const fetchCircuits = async () => {
     if (!validateToken()) return;
     
@@ -71,7 +68,6 @@ const GestionCircuits = () => {
     fetchCircuits();
   }, []);
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateToken()) return;
@@ -103,7 +99,6 @@ const GestionCircuits = () => {
     }
   };
 
-  // Handle delete
   const handleDelete = async (id) => {
     if (!validateToken()) return;
     
@@ -121,7 +116,6 @@ const GestionCircuits = () => {
     }
   };
 
-  // Error handling
   const handleError = (err) => {
     console.error(err);
     if (err.response?.status === 401 || err.response?.status === 403) {
@@ -131,7 +125,6 @@ const GestionCircuits = () => {
     setError(err.response?.data?.message || 'An error occurred');
   };
 
-  // Open modal for edit/add
   const openModal = (circuit = null) => {
     setSelectedCircuit(circuit);
     setFormData(circuit || {

@@ -16,7 +16,6 @@ const GestionReservations = () => {
   const [users, setUsers] = useState([]);
   const [circuits, setCircuits] = useState([]);
 
-  // Form state
   const [formData, setFormData] = useState({
     user: '',
     circuit: '',
@@ -26,7 +25,6 @@ const GestionReservations = () => {
     status: 'pending'
   });
 
-  // Check token validity
   const validateToken = () => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
@@ -51,7 +49,6 @@ const GestionReservations = () => {
     }
   };
 
-  // Fetch initial data
   const fetchInitialData = async () => {
     try {
       const token = localStorage.getItem('accessToken');
@@ -84,7 +81,6 @@ const GestionReservations = () => {
     }
   };
 
-  // Fetch reservations from API
   const fetchReservations = async () => {
     if (!validateToken()) return;
     
@@ -110,7 +106,6 @@ const GestionReservations = () => {
     loadData();
   }, []);
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateToken()) return;
@@ -148,7 +143,6 @@ const GestionReservations = () => {
     }
   };
 
-  // Handle delete
   const handleDelete = async (id) => {
     if (!validateToken()) return;
     
@@ -170,7 +164,6 @@ const GestionReservations = () => {
     }
   };
 
-  // Error handling
   const handleError = (err) => {
     console.error(err);
     if (err.response?.status === 401 || err.response?.status === 403) {
@@ -180,7 +173,6 @@ const GestionReservations = () => {
     setError(err.response?.data?.message || 'An error occurred');
   };
 
-  // Open modal for edit/add
   const openModal = (reservation = null) => {
     setSelectedReservation(reservation);
     if (reservation) {

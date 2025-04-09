@@ -8,7 +8,7 @@ function ProtectedRoute({ children }) {
   console.log("ProtectedRoute: User state is", user);
 
   if (loading) {
-    return <p className="text-center text-gray-500">Chargement...</p>; // 🔥 Show loading while checking auth state
+    return <p className="text-center text-gray-500">Chargement...</p>; 
   }
 
   return user ? children : <Navigate to="/Seconnecter" />;

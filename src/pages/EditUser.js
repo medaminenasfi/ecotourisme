@@ -23,7 +23,7 @@ const EditUser = () => {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
-                setUser(response.data);  // Set user data into state
+                setUser(response.data);  
             } catch (error) {
                 setError("Failed to fetch user data.");
             } finally {
