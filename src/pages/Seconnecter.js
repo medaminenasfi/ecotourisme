@@ -70,7 +70,7 @@ const Seconnecter = () => {
                     type={showPassword ? "text" : "password"}
                     className="email-input"
                     name="password"
-                    placeholder="••••••••"
+                    placeholder="********"
                     required
                     onChange={handleChange}
                   />
