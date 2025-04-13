@@ -12,7 +12,7 @@ const Gestion = () => {
             <Navbar />
 <br/><br/><br/><br/>
       <div className="container">
-        <h1 className="mb-4 display-4 fw-bold text-primary">Tableau de Bord de Gestion</h1>
+        <h1 className="mb-4 display-4 fw-bold text-primary">Avis & Reclamations</h1>
         
         <div className="d-flex gap-3 mb-4">
           <NavLink
