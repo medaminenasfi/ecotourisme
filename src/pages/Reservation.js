@@ -173,23 +173,22 @@ const Accueil = () => {
           }}
         >
           <div className="text-center">
-            <h1>Your Adventure Starts Here</h1>
+            <h1>Votre aventure commence ici</h1>
             <p className="lead">
-              Discover breathtaking landscapes and unforgettable experiences.
-            </p>
+            Découvrez des paysages à couper le souffle et des expériences inoubliables.            </p>
           </div>
         </section>
 
         <section className="bg-dark text-white p-5">
           <Container>
-            <h2 className="text-center mb-4">Make a Reservation</h2>
+            <h2 className="text-center mb-4">Faire une réservation</h2>
             {error && <div className="alert alert-danger">{error}</div>}
             
             <Row className="g-4">
               <Col md={6}>
                 <div className="bg-light p-4 rounded text-dark">
                   <div className="mb-3">
-                    <label className="form-label">Select Circuit</label>
+                    <label className="form-label">Sélectionner un circuit</label>
                     <select
                       className="form-select"
                       value={selectedCircuit}
@@ -206,7 +205,7 @@ const Accueil = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="form-label">Number of Participants</label>
+                    <label className="form-label">Nombre de participants</label>
                     <input
                       type="number"
                       className="form-control"
@@ -218,7 +217,7 @@ const Accueil = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="form-label">Total Price</label>
+                    <label className="form-label">Prix ​​total</label>
                     <div className="h4">
                       {circuits.find(c => c._id === selectedCircuit)?.price
                         ? `${totalPrice} TND`
