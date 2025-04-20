@@ -682,21 +682,21 @@ const Circuit = () => {
                             <p className="mb-3">
                               <strong>🏔 Difficulté:</strong> {circuit.difficulty}
                             </p>
-                            <Link
-                              to="/Reservation"
-                              state={{
-                                circuit: {
-                                  ...circuit,
-                                  _id: `${selectedRegion.id}-${index}`,
-                                  region: selectedRegion.id,
-                                },
-                              }}
-                              className="d-block"
-                            >
-                              <Button variant="success" className="w-100">
-                                Réserver - {circuit.price} TND
-                              </Button>
-                            </Link>
+<Link
+  to="/Reservation"
+  state={{
+    circuit: {
+      ...circuit,
+      _id: `${selectedRegion.id}-${index}`,
+      isTemp: true, // Add this flag
+      region: selectedRegion.id,
+    },
+  }}
+>
+  <Button variant="success" className="w-100">
+    Réserver - {circuit.price} TND
+  </Button>
+</Link>
                           </div>
                         </Card.Body>
                       </Card>

@@ -28,6 +28,22 @@ const Accueil = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isReserving, setIsReserving] = useState(false);
+  const [tempCircuit, setTempCircuit] = useState(null);
+const [combinedCircuits, setCombinedCircuits] = useState([]);
+
+useEffect(() => {
+  if (passedCircuit?.isTemp) {
+    setCircuits(prev => [...prev, passedCircuit]);
+    setSelectedCircuit(passedCircuit._id);
+  }
+}, [passedCircuit]);
+
+useEffect(() => {
+  setCombinedCircuits([
+    ...circuits,
+    ...(tempCircuit ? [tempCircuit] : [])
+  ]);
+}, [circuits, tempCircuit]);
   const validateToken = (token) => {
     try {
       const decoded = jwtDecode(token);
@@ -47,6 +63,7 @@ const Accueil = () => {
       return null;
     }
   };
+  
   useEffect(() => {
     const fetchCircuits = async () => {
       try {
@@ -106,21 +123,33 @@ const Accueil = () => {
       const userId = decoded.UserInfo?.id;
       if (!userId) throw new Error("User information not found in token");
 
-      const circuit = circuits.find(c => c._id === selectedCircuit);
-      if (!circuit?.price) throw new Error("Invalid circuit selection");
-
+  
       const selectedDay = dayjs(selectedDate);
       if (!selectedDay.isValid() || selectedDay.isBefore(dayjs(), "day")) {
         throw new Error("Invalid date selection");
       }
 
+      const circuit = circuits.find(c => c._id === selectedCircuit);
+  
       const reservationData = {
         user: userId,
-        circuit: selectedCircuit,
         date: selectedDay.format("YYYY-MM-DD"),
         numberOfPeople: participants,
         totalPrice: circuit.price * participants,
+        isTempCircuit: circuit.isTemp || false,
       };
+    
+      if (circuit.isTemp) {
+        reservationData.circuitDetails = {
+          name: circuit.name,
+          price: circuit.price,
+          duration: circuit.duration,
+          difficulty: circuit.difficulty,
+          location: circuit.location
+        };
+      } else {
+        reservationData.circuit = selectedCircuit;
+      }
 
       const { data } = await axios.post(
         "http://localhost:5000/api/reservations",
@@ -151,6 +180,7 @@ const Accueil = () => {
   };
 
   if (loading) {
+    
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
         <div className="spinner-border text-primary" role="status">
@@ -190,18 +220,19 @@ const Accueil = () => {
                   <div className="mb-3">
                     <label className="form-label">Sélectionner un circuit</label>
                     <select
-                      className="form-select"
-                      value={selectedCircuit}
-                      onChange={(e) => setSelectedCircuit(e.target.value)}
-                      required
-                    >
-                      <option value="">Choose a circuit...</option>
-                      {circuits.map(circuit => (
-                        <option key={circuit._id} value={circuit._id}>
-                          {circuit.name} ({circuit.price} TND)
-                        </option>
-                      ))}
-                    </select>
+  className="form-select"
+  value={selectedCircuit}
+  onChange={(e) => setSelectedCircuit(e.target.value)}
+  required
+>
+  <option value="">Choose a circuit...</option>
+  {combinedCircuits.map(circuit => (
+    <option key={circuit._id} value={circuit._id}>
+      {circuit.name} ({circuit.price} TND)
+      {circuit.isTemp && " (Custom)"}
+    </option>
+  ))}
+</select>
                   </div>
 
                   <div className="mb-3">
