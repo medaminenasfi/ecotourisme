@@ -220,23 +220,22 @@ useEffect(() => {
             <Row className="g-4">
               <Col md={6}>
                 <div className="bg-light p-4 rounded text-dark">
-                  <div className="mb-3">
-                    <label className="form-label">Sélectionner un circuit</label>
-                    <select
-  className="form-select"
-  value={selectedCircuit}
-  onChange={(e) => setSelectedCircuit(e.target.value)}
-  required
->
-  <option value="">Choose a circuit...</option>
-  {combinedCircuits.map(circuit => (
-    <option key={circuit._id} value={circuit._id}>
-      {circuit.name} ({circuit.price} TND)
-      {circuit.isTemp && " (Custom)"}
-    </option>
-  ))}
-</select>
-                  </div>
+                <div className="mb-3">
+  <label className="form-label">Sélectionner un circuit</label>
+  <select
+    className="form-select"
+    value={selectedCircuit}
+    onChange={(e) => setSelectedCircuit(e.target.value)}
+    required
+  >
+    <option value="">Choisir un circuit...</option>
+    {combinedCircuits.map(circuit => (
+      <option key={circuit._id} value={circuit._id}>
+        {circuit.name}
+      </option>
+    ))}
+  </select>
+</div>
 
                   <div className="mb-3">
                     <label className="form-label">Nombre de participants</label>
