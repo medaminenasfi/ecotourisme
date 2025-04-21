@@ -125,13 +125,11 @@ const GestionReservations = () => {
       };
 
       if (formData.circuit.startsWith('temp-')) {
-        payload.circuitDetails = reservations.find(
+        const originalReservation = reservations.find(
           r => r._id === formData.circuit.split('-')[1]
-        )?.circuitDetails;
-        payload.circuit = null;
-      } else {
-        payload.circuit = formData.circuit;
-        payload.circuitDetails = null;
+        );
+        payload.circuitDetails = originalReservation?.circuitDetails;
+        payload.circuit = originalReservation?.circuit?._id || null;
       }
 
       const method = selectedReservation ? 'put' : 'post';
@@ -328,7 +326,7 @@ const GestionReservations = () => {
                       key={`temp-${reservation._id}`} 
                       value={`temp-${reservation._id}`}
                     >
-                      {reservation.circuitDetails.name} (Personnalisé)
+                      {reservation.circuitDetails.name} 
                     </option>
                   ))}
               </Form.Select>
