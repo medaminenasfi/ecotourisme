@@ -22,7 +22,6 @@ const Profile = () => {
   const [reservationsLoading, setReservationsLoading] = useState(false);
   const [error, setError] = useState("");
   const [reservations, setReservations] = useState([]);
-  const [circuits, setCircuits] = useState([]);
   const [circuitsLoading, setCircuitsLoading] = useState(false);
 
   useEffect(() => {
@@ -30,28 +29,8 @@ const Profile = () => {
       navigate("/Seconnecter");
     } else if (user) {
       fetchUserReservations();
-      fetchCircuits();
     }
   }, [user, authLoading]);
-
-  const fetchCircuits = async () => {
-    try {
-      setCircuitsLoading(true);
-      const response = await fetch("http://localhost:5000/api/circuits", {
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
-          "Content-Type": "application/json"
-        }
-      });
-      if (!response.ok) throw new Error("Échec du chargement des circuits");
-      const data = await response.json();
-      setCircuits(data);
-    } catch (error) {
-      console.error("Erreur de récupération des circuits:", error);
-    } finally {
-      setCircuitsLoading(false);
-    }
-  };
 
   const fetchUserReservations = async () => {
     try {
@@ -89,13 +68,32 @@ const Profile = () => {
   };
 
   const formatDate = (dateString) => {
-    return format(new Date(dateString), 'dd MMMM yyyy', { locale: frLocale });
+    try {
+      return format(new Date(dateString), 'dd MMMM yyyy', { locale: frLocale });
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      return "Date inconnue";
+    }
   };
 
-  const getCircuitName = (circuitId) => {
-    if (!circuitId) return "Circuit indisponible";
-    const circuit = circuits.find(c => c._id === circuitId);
-    return circuit ? circuit.name : "Circuit indisponible";
+  const getCircuitInfo = (reservation) => {
+    // Handle custom circuits
+    if (reservation.circuitDetails) {
+      return {
+        name: reservation.circuitDetails.name || "Circuit personnalisé",
+        isCustom: true
+      };
+    }
+    
+    // Handle database circuits
+    if (reservation.circuit) {
+      return {
+        name: reservation.circuit.name || "Circuit indisponible",
+        isCustom: false
+      };
+    }
+
+    return { name: "Circuit indisponible", isCustom: false };
   };
 
   if (authLoading) {
@@ -185,7 +183,7 @@ const Profile = () => {
             </div>
             <h4 className="mb-3">Vos Réservations</h4>
             
-            {reservationsLoading || circuitsLoading ? (
+            {reservationsLoading ? (
               <div className="text-center py-4">
                 <Spinner animation="border" />
                 <p className="mt-2">Chargement des données...</p>
@@ -196,34 +194,44 @@ const Profile = () => {
               </Alert>
             ) : (
               <ListGroup variant="flush">
-                {reservations.map((reservation) => (
-                  <ListGroup.Item key={reservation._id}>
-                    <div className="d-flex justify-content-between align-items-center">
-                      <div>
-                        <h5>{getCircuitName(reservation.circuit?._id || reservation.circuit)}</h5>
-                        <div className="d-flex align-items-center mt-2">
-                          <Badge bg="light" text="dark" className="me-2">
-                            <i className="bi bi-calendar me-1"></i>
-                            {formatDate(reservation.date)}
-                          </Badge>
-                          <Badge bg="secondary" className="me-2">
-                            <i className="bi bi-people me-1"></i>
-                            {reservation.numberOfPeople} pers.
-                          </Badge>
-                          <Badge bg={reservation.status === 'confirmed' ? 'success' : 
-                                   reservation.status === 'cancelled' ? 'danger' : 'warning'}>
-                            {reservation.status === 'confirmed' ? 'Confirmée' :
-                             reservation.status === 'cancelled' ? 'Annulée' : 'En attente'}
-                          </Badge>
+                {reservations.map((reservation) => {
+                  const circuitInfo = getCircuitInfo(reservation);
+                  
+                  return (
+                    <ListGroup.Item key={reservation._id}>
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div>
+                          <h5>
+                            {circuitInfo.name}
+                            {circuitInfo.isCustom && (
+                              <Badge bg="info" className="ms-2">
+                              </Badge>
+                            )}
+                          </h5>
+                          <div className="d-flex align-items-center mt-2">
+                            <Badge bg="light" text="dark" className="me-2">
+                              <i className="bi bi-calendar me-1"></i>
+                              {formatDate(reservation.date)}
+                            </Badge>
+                            <Badge bg="secondary" className="me-2">
+                              <i className="bi bi-people me-1"></i>
+                              {reservation.numberOfPeople} pers.
+                            </Badge>
+                            <Badge bg={reservation.status === 'confirmed' ? 'success' : 
+                                     reservation.status === 'cancelled' ? 'danger' : 'warning'}>
+                              {reservation.status === 'confirmed' ? 'Confirmée' :
+                               reservation.status === 'cancelled' ? 'Annulée' : 'En attente'}
+                            </Badge>
+                          </div>
+                        </div>
+                        <div className="text-end">
+                          <h5 className="text-primary">{reservation.totalPrice?.toFixed(2)} TND</h5>
+                          <small className="text-muted">Ref: {reservation._id.slice(-6)}</small>
                         </div>
                       </div>
-                      <div className="text-end">
-                        <h5 className="text-primary">{reservation.totalPrice?.toFixed(2)} TND</h5>
-                        <small className="text-muted">Ref: {reservation._id.slice(-6)}</small>
-                      </div>
-                    </div>
-                  </ListGroup.Item>
-                ))}
+                    </ListGroup.Item>
+                  );
+                })}
               </ListGroup>
             )}
           </Card.Body>
