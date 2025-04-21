@@ -132,11 +132,14 @@ useEffect(() => {
       const circuit = circuits.find(c => c._id === selectedCircuit);
   
       const reservationData = {
+        
         user: userId,
         date: selectedDay.format("YYYY-MM-DD"),
         numberOfPeople: participants,
         totalPrice: circuit.price * participants,
         isTempCircuit: circuit.isTemp || false,
+        name: circuit.name, // Add circuit name directly to reservation
+
       };
     
       if (circuit.isTemp) {

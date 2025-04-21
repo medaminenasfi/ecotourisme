@@ -687,9 +687,14 @@ const Circuit = () => {
   state={{
     circuit: {
       ...circuit,
-      _id: `${selectedRegion.id}-${index}`,
-      isTemp: true, // Add this flag
+      _id: `${selectedRegion.id}-${index}-${Date.now()}`, // Add unique ID
+      isTemp: true,
       region: selectedRegion.id,
+      name: circuit.name, // Ensure name is included
+      price: circuit.price,
+      duration: circuit.duration,
+      difficulty: circuit.difficulty,
+      location: circuit.location
     },
   }}
 >
