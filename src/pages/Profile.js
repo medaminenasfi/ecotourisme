@@ -15,6 +15,7 @@ import {
 import Navbar from "../Components/navbar";
 import { format } from 'date-fns';
 import frLocale from 'date-fns/locale/fr';
+import { toast } from 'react-toastify';
 
 const Profile = () => {
   const { user, logout, loading: authLoading } = useContext(AuthContext);
@@ -22,7 +23,7 @@ const Profile = () => {
   const [reservationsLoading, setReservationsLoading] = useState(false);
   const [error, setError] = useState("");
   const [reservations, setReservations] = useState([]);
-  const [circuitsLoading, setCircuitsLoading] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -62,6 +63,37 @@ const Profile = () => {
     }
   };
 
+  const handleDeleteReservation = async (reservationId) => {
+    if (!window.confirm("Êtes-vous sûr de vouloir annuler cette réservation ?")) return;
+    
+    try {
+      setDeletingId(reservationId);
+      setError("");
+
+      const response = await fetch(`http://localhost:5000/api/reservations/${reservationId}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+        }
+      });
+
+      if (!response.ok) {
+        if (response.status === 403) {
+          throw new Error("Vous n'êtes pas autorisé à supprimer cette réservation");
+        }
+        throw new Error("Échec de la suppression de la réservation");
+      }
+
+      setReservations(prev => prev.filter(r => r._id !== reservationId));
+      toast.success("Réservation annulée avec succès");
+    } catch (error) {
+      console.error("Erreur de suppression:", error);
+      toast.error(error.message);
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   const handleLogout = () => {
     logout();
     navigate("/Seconnecter");
@@ -77,7 +109,6 @@ const Profile = () => {
   };
 
   const getCircuitInfo = (reservation) => {
-    // Handle custom circuits
     if (reservation.circuitDetails) {
       return {
         name: reservation.circuitDetails.name || "Circuit personnalisé",
@@ -85,7 +116,6 @@ const Profile = () => {
       };
     }
     
-    // Handle database circuits
     if (reservation.circuit) {
       return {
         name: reservation.circuit.name || "Circuit indisponible",
@@ -225,8 +255,28 @@ const Profile = () => {
                           </div>
                         </div>
                         <div className="text-end">
-                          <h5 className="text-primary">{reservation.totalPrice?.toFixed(2)} TND</h5>
-                          <small className="text-muted">Ref: {reservation._id.slice(-6)}</small>
+                          <div className="d-flex flex-column align-items-end">
+                            <h5 className="text-primary mb-2">{reservation.totalPrice?.toFixed(2)} TND</h5>
+                            <div className="d-flex gap-2 align-items-center">
+                              <small className="text-muted">Ref: {reservation._id.slice(-6)}</small>
+                              <Button 
+                                variant="outline-danger" 
+                                size="sm" 
+                                onClick={() => handleDeleteReservation(reservation._id)}
+                                disabled={deletingId === reservation._id}
+                                className="ms-2"
+                              >
+                                {deletingId === reservation._id ? (
+                                  <Spinner animation="border" size="sm" />
+                                ) : (
+                                  <>
+                                    <i className="bi bi-trash me-1"></i>
+                                    Supprimer
+                                  </>
+                                )}
+                              </Button>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </ListGroup.Item>
