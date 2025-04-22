@@ -106,10 +106,9 @@ const Contact = () => {
             <Row className="g-4">
               <Col lg={6} className="contact-info-col">
               <div className="contact-info">
-                  <h3>Let’s Talk</h3>
+                  <h3>Parlons-en</h3>
                   <p>
-                    Have some big idea or brand to develop and need help? Then reach out,
-                    we’d love to hear about your project and provide help.
+                  Vous avez une idée ou une marque à développer et avez besoin d'aide ? Contactez-nous ! Nous serions ravis d'en savoir plus sur votre projet et de vous aider.
                   </p>
                   <div className="contact-details">
                     <div className="detail-item">

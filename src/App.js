@@ -27,31 +27,23 @@ import Gestion  from "./Components/gestion.jsx";
 import ReclamationsTable from "./Components/ReclamationsTable.jsx"
 function ProtectedRoute({ children }) {
   const { user } = useContext(AuthContext);
-
   if (user === undefined) {
     return <p className="text-center text-gray-500">Chargement...</p>;
   }
-
   return user ? children : <Navigate to="/Seconnecter" />;
 }
-
 function AdminRoute({ children }) {
   const { user } = useContext(AuthContext);
-
   if (user === undefined) {
     return <p className="text-center text-gray-500">Chargement...</p>;
   }
-
   return user && user.role === "admin" ? children : <Navigate to="/" />;
 }
-
 function AuthRedirectRoute({ children }) {
   const { user } = useContext(AuthContext);
-
   if (user === undefined) {
     return <p className="text-center text-gray-500">Chargement...</p>;
   }
-
   return user ? <Navigate to="/" /> : children;
 }
 
@@ -115,7 +107,6 @@ function App() {
                 </AdminRoute>
               }
             />
-
             <Route
               path="/admin/utilisateurs"
               element={
@@ -148,7 +139,6 @@ function App() {
                 </AdminRoute>
               }
             />
-
 <Route
   path="/ServicesList"
   element={
@@ -157,7 +147,6 @@ function App() {
     </ProtectedRoute>
   }
 />
-
 <Route
   path="/create-service"
   element={
@@ -190,7 +179,6 @@ function App() {
     </ProtectedRoute>
   }
 />
-
           </Routes>
         </div>
         <Footer />
@@ -198,5 +186,4 @@ function App() {
     </AuthProvider>
   );
 }
-
 export default App;

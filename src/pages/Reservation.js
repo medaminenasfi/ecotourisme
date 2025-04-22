@@ -248,7 +248,7 @@ useEffect(() => {
                     <div className="h4">
                       {circuits.find(c => c._id === selectedCircuit)?.price
                         ? `${totalPrice} TND`
-                        : "Select a circuit"}
+                        : "Sélectionnez un circuit"}
                     </div>
                   </div>
                 </div>
@@ -265,7 +265,7 @@ useEffect(() => {
                     />
                   </LocalizationProvider>
                   <div className="text-center mt-3 text-dark">
-                    Selected Date: {selectedDate.format("DD/MM/YYYY")}
+                  Date sélectionnée: {selectedDate.format("DD/MM/YYYY")}
                   </div>
                 </div>
               </Col>
@@ -282,10 +282,10 @@ useEffect(() => {
                 {isReserving ? (
                   <>
                     <span className="spinner-border spinner-border-sm me-2" role="status" />
-                    Processing.....
+                    Traitement.....
                   </>
                 ) : (
-                  "Confirm Reservation"
+                  "Confirmer la réservation"
                 )}
               </Button>
             </div>

@@ -28,9 +28,6 @@ import Gestion  from "./Components/gestion.jsx";
 import { Navigate } from "react-router-dom";
 import ReclamationsTable from "./Components/ReclamationsTable.jsx"
 
-
-
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -84,7 +81,6 @@ const router = createBrowserRouter([
         <AdminDashboard />
       </ProtectedRoute>
     ),
-    
   },
   {
     path: "/admin/edit/:id", // Add this route for editing users
@@ -94,7 +90,6 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
-
   {
     path: "/admin/fournisseurs",
     element: (
@@ -127,7 +122,6 @@ const router = createBrowserRouter([
       </AdminRoute>
     ),
   },
-
   {
     path: "/create-service",
     element: (
@@ -136,8 +130,6 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
-
-
   {
     path: "/ServicesList",
   element :( 
@@ -146,9 +138,6 @@ const router = createBrowserRouter([
     </ProtectedRoute>
 )
   },
-
-
-
   {
     path: "gestion",
     element: (
@@ -171,13 +160,7 @@ const router = createBrowserRouter([
       }
     ]
   },
-
-
-
-
-
 ]);
-
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
