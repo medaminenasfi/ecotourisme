@@ -233,7 +233,7 @@ const circuitsByRegion = {
     {
       name: "Circuit du mausolée de Bourguiba",
       description: "Visitez le mausolée de Bourguiba à Monastir.",
-      location: "..",
+      location: "Monastir",
       duration: 1,
       price: 10,
       difficulty: "Facile",
