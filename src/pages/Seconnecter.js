@@ -24,7 +24,7 @@ const Seconnecter = () => {
         navigate('/');
       }
     } catch (error) {
-      setError('Échec de la connexion. Veuillez réessayer.');
+      setError('Email ou mot de passe incorrect. Veuillez réessayer.');
     }
   };
 
