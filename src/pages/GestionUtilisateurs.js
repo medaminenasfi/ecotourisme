@@ -20,8 +20,7 @@ const GestionUtilisateurs = () => {
     last_name: "",
     phone_number: "",
     email: "",
-    role: "User",
-    gender: "Male"
+    password: ""
   });
 
   const validateToken = () => {
@@ -83,9 +82,18 @@ const GestionUtilisateurs = () => {
         }
       };
 
+      const updates = { ...formData };
+      if (!updates.password) {
+        delete updates.password;
+      }
+
       if (selectedUser) {
-        await axios.put(`http://localhost:5000/users/${selectedUser._id}`, formData, config);
-        setSuccess("User updated successfully");
+        await axios.put(
+          `http://localhost:5000/users/${selectedUser._id}`,
+          updates,
+          config
+        );
+        setSuccess("Utilisateur mis à jour avec succès");
       }
 
       setShowModal(false);
@@ -96,14 +104,14 @@ const GestionUtilisateurs = () => {
   };
 
   const deleteUser = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this user?")) return;
+    if (!window.confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur?")) return;
     
     try {
       const token = localStorage.getItem("accessToken");
       await axios.delete(`http://localhost:5000/users/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setSuccess("User deleted successfully");
+      setSuccess("Utilisateur supprimé avec succès");
       setUsers(prev => prev.filter(user => user._id !== id));
     } catch (error) {
       handleError(error);
@@ -116,18 +124,23 @@ const GestionUtilisateurs = () => {
       localStorage.removeItem("accessToken");
       navigate("/login");
     }
-    setError(err.response?.data?.message || "An error occurred");
+    setError(err.response?.data?.message || "Une erreur est survenue");
   };
 
   const openModal = (user = null) => {
     setSelectedUser(user);
-    setFormData(user || {
+    setFormData(user ? { 
+      first_name: user.first_name,
+      last_name: user.last_name,
+      phone_number: user.phone_number,
+      email: user.email,
+      password: ""
+    } : {
       first_name: "",
       last_name: "",
       phone_number: "",
       email: "",
-      role: "User",
-      gender: "Male"
+      password: ""
     });
     setShowModal(true);
   };
@@ -239,17 +252,46 @@ const GestionUtilisateurs = () => {
                   />
                 </Form.Group>
               </div>
-            </div>
 
-            <Form.Group className="mb-4">
-              <Form.Label>Numéro de téléphone</Form.Label>
-              <Form.Control
-                type="text"
-                value={formData.phone_number}
-                onChange={(e) => setFormData({...formData, phone_number: e.target.value})}
-                required
-              />
-            </Form.Group>
+              <div className="col-md-6">
+                <Form.Group className="mb-3">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    required
+                  />
+                </Form.Group>
+              </div>
+
+              <div className="col-md-6">
+                <Form.Group className="mb-3">
+                  <Form.Label>Téléphone</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={formData.phone_number}
+                    onChange={(e) => setFormData({...formData, phone_number: e.target.value})}
+                    required
+                  />
+                </Form.Group>
+              </div>
+
+              <div className="col-12">
+                <Form.Group className="mb-4">
+                  <Form.Label>Nouveau Mot de Passe</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Laisser vide pour ne pas modifier"
+                    value={formData.password}
+                    onChange={(e) => setFormData({...formData, password: e.target.value})}
+                  />
+                  <Form.Text className="text-muted">
+                    Minimum 6 caractères. Laisser vide pour conserver le mot de passe actuel
+                  </Form.Text>
+                </Form.Group>
+              </div>
+            </div>
 
             <div className="d-flex justify-content-end gap-2">
               <Button variant="outline-secondary" onClick={() => setShowModal(false)}>
