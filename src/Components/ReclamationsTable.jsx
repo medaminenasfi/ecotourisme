@@ -83,7 +83,7 @@ const ReclamationsTable = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this reclamation?")) {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer cette réclamation ?")) {
       try {
         const token = localStorage.getItem("accessToken");
         await axios.delete(`http://localhost:5000/api/reclamations/${id}`, {
@@ -112,8 +112,7 @@ const ReclamationsTable = () => {
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="text-primary mb-0">
           <FaInfoCircle className="me-2" />
-          Reclamations Management.......
-        </h2>
+          Gestion des réclamations     </h2>
         <Button 
           variant="success" 
           onClick={() => {
@@ -122,7 +121,7 @@ const ReclamationsTable = () => {
           }}
           className="d-flex align-items-center rounded-pill px-4"
         >
-          <FaPlus className="me-2" /> New Reclamation
+          <FaPlus className="me-2" /> Nouvelle Reclamation
         </Button>
       </div>
 
@@ -190,14 +189,14 @@ const ReclamationsTable = () => {
                         setShowModal(true);
                       }}
                     >
-                      <FaEdit className="me-1" /> Edit
+                      <FaEdit className="me-1" /> Modifier
                     </Button>
                     <Button
                       variant="outline-danger"
                       className="rounded-pill px-3"
                       onClick={() => handleDelete(recl._id)}
                     >
-                      <FaTrash className="me-1" /> Delete
+                      <FaTrash className="me-1" /> Supprimer
                     </Button>
                   </div>
                 )}
@@ -221,14 +220,14 @@ const ReclamationsTable = () => {
             {!selectedReclamation || user?.role !== "admin" ? (
               <>
                 <Form.Group className="mb-4">
-                  <Form.Label>Reclamation Type</Form.Label>
+                  <Form.Label>Type de récupération</Form.Label>
                   <Form.Select
                     value={formData.type}
                     onChange={(e) => setFormData({ ...formData, type: e.target.value })}
                     className="rounded-pill"
                     required
                   >
-                    <option value="">Select a type</option>
+                    <option value="">Sélectionnez un type</option>
                     <option value="fournisseur">Fournisseur</option>
                     <option value="artisan">Artisan</option>
                     <option value="circuit">Circuit</option>
@@ -239,7 +238,7 @@ const ReclamationsTable = () => {
                 </Form.Group>
 
                 <Form.Group className="mb-4">
-                  <Form.Label>Detailed Message</Form.Label>
+                  <Form.Label>Message détaillé</Form.Label>
                   <Form.Control
                     as="textarea"
                     rows={4}
@@ -253,14 +252,14 @@ const ReclamationsTable = () => {
               </>
             ) : (
               <Form.Group className="mb-4">
-                <Form.Label>Update Status</Form.Label>
+                <Form.Label>Mettre à jour le statut</Form.Label>
                 <Form.Select
                   value={formData.status}
                   onChange={(e) => setFormData({ ...formData, status: e.target.value })}
                   className="form-select-lg rounded-pill"
                 >
-                  <option value="en cours">In Progress</option>
-                  <option value="traité">Resolved</option>
+                  <option value="en cours">En cours</option>
+                  <option value="traité">Résolue</option>
                 </Form.Select>
               </Form.Group>
             )}
@@ -271,7 +270,7 @@ const ReclamationsTable = () => {
               onClick={() => setShowModal(false)}
               className="rounded-pill px-4"
             >
-              Cancel
+              Annuler
             </Button>
             <Button 
               variant="primary" 
