@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
 import Navbar from "../Components/navbar";
 import backgroundImage from "../assest/Accueil.jpg";
 
 const Seconnecter = () => {
-  const [credentials, setCredentials] = useState({ email: '', password: '' });
-  const [error, setError] = useState('');
+  const { login } = useContext(AuthContext);
+  const [credentials, setCredentials] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
@@ -16,15 +18,15 @@ const Seconnecter = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     try {
-      const response = await axios.post('http://localhost:5000/auth/login', credentials);
+      const response = await axios.post("http://localhost:5000/auth/login", credentials);
       if (response.data.accessToken) {
-        localStorage.setItem('accessToken', response.data.accessToken);
-        navigate('/');
+        login(response.data.accessToken, response.data.user);
+        navigate("/");
       }
     } catch (error) {
-      setError('Email ou mot de passe incorrect. Veuillez réessayer.');
+      setError("Email ou mot de passe incorrect. Veuillez réessayer.");
     }
   };
 
@@ -52,7 +54,7 @@ const Seconnecter = () => {
                 <h2 className="forgot-password-title">Connexion à votre compte</h2>
               </div>
               {error && <div className="alert alert-danger">{error}</div>}
-              
+
               <form className="password-recovery-form" onSubmit={handleSubmit}>
                 <label className="email-label">Adresse e-mail</label>
                 <input

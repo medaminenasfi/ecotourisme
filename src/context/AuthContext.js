@@ -1,70 +1,16 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useCallback } from "react";
 
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    console.log("🔄 Checking localStorage for token...");
-
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      const decodedUser = decodeToken(token);
-      console.log("🧑‍💻 Decoded User from Token:", decodedUser);
-
-      if (decodedUser?.UserInfo && !isTokenExpired(decodedUser)) {
-        setUser({
-          id: decodedUser.UserInfo.id,
-          email: decodedUser.UserInfo.email,
-          first_name: decodedUser.UserInfo.first_name,
-          last_name: decodedUser.UserInfo.last_name,
-          phone_number: decodedUser.UserInfo.phone_number,
-          gender: decodedUser.UserInfo.gender,
-          role: decodedUser.UserInfo.role,
-        });
-      } else {
-
-        logout();
-      }
-    }
-    setLoading(false); 
-  }, []);
-
-  const login = (token, userData = {}) => {
-    if (!token) {
-      console.error("❌ Token is missing");
-      return;
-    }
-
-    localStorage.setItem("accessToken", token);
-    const decodedUser = decodeToken(token);
-
-    if (decodedUser?.UserInfo && !isTokenExpired(decodedUser)) {
-      setUser({
-        id: decodedUser.UserInfo.id,
-        email: decodedUser.UserInfo.email,
-        first_name: decodedUser.UserInfo.first_name,
-        last_name: decodedUser.UserInfo.last_name,
-        phone_number: decodedUser.UserInfo.phone_number,
-        gender: decodedUser.UserInfo.gender,
-        role: decodedUser.UserInfo.role,
-        ...userData,
-      });
-      setTimeout(() => setUser((prevUser) => ({ ...prevUser })), 100);
-      console.log("✅ User logged in:", decodedUser.UserInfo);
-
-    } else {
-      logout();
-    }
-  };
-
-  const logout = () => {
+  const logout = useCallback(() => {
     setUser(null);
     localStorage.removeItem("accessToken");
     window.location.reload(); // 🔥 Force a refresh to clear state
-  };
+  }, []);
 
   const decodeToken = (token) => {
     try {
@@ -88,10 +34,60 @@ const AuthProvider = ({ children }) => {
     return now >= decodedToken.exp;
   };
 
+  const login = (token, userData = {}) => {
+    if (!token) {
+      console.error("❌ Token is missing");
+      return;
+    }
+
+    localStorage.setItem("accessToken", token);
+    const decodedUser = decodeToken(token);
+
+    if (decodedUser?.UserInfo && !isTokenExpired(decodedUser)) {
+      setUser({
+        id: decodedUser.UserInfo.id,
+        email: decodedUser.UserInfo.email,
+        first_name: decodedUser.UserInfo.first_name,
+        last_name: decodedUser.UserInfo.last_name,
+        phone_number: decodedUser.UserInfo.phone_number,
+        gender: decodedUser.UserInfo.gender,
+        role: decodedUser.UserInfo.role,
+        ...userData,
+      });
+      console.log("✅ User logged in:", decodedUser.UserInfo);
+    } else {
+      logout();
+    }
+  };
+
+  useEffect(() => {
+    console.log("🔄 Checking localStorage for token...");
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      const decodedUser = decodeToken(token);
+      console.log("🧑‍💻 Decoded User from Token:", decodedUser);
+
+      if (decodedUser?.UserInfo && !isTokenExpired(decodedUser)) {
+        setUser({
+          id: decodedUser.UserInfo.id,
+          email: decodedUser.UserInfo.email,
+          first_name: decodedUser.UserInfo.first_name,
+          last_name: decodedUser.UserInfo.last_name,
+          phone_number: decodedUser.UserInfo.phone_number,
+          gender: decodedUser.UserInfo.gender,
+          role: decodedUser.UserInfo.role,
+        });
+      } else {
+        logout();
+      }
+    }
+    setLoading(false);
+  }, [logout]);
+
   return (
     <AuthContext.Provider value={{ user, login, logout, loading }}>
       {!loading && children}
-      </AuthContext.Provider>
+    </AuthContext.Provider>
   );
 };
 
