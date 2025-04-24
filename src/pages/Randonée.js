@@ -11,7 +11,11 @@ import Sidi from "../assest/sidi.jpg";
 import tozeur from "../assest/Tozeur.jpg";
 import Oriental from "../assest/oriental.jpg";
 import CircuitMap from "../Components/CircuitMap";
-
+import Card from '@mui/joy/Card';
+import CardCover from '@mui/joy/CardCover';
+import CardContent from '@mui/joy/CardContent';
+import Typography from '@mui/joy/Typography';
+import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
 const Accueil = () => {
   const position1 = [36.806389, 10.181667]; // Coordinates for CircuitMap
 
@@ -47,6 +51,48 @@ const Accueil = () => {
 
           </Container>
         </section>
+
+
+
+<section  className="bg-black text-white p-5 shadow-lg">
+  <center>
+        <Container>
+      <Row>
+        <Col xs>
+        
+        <Card sx={{ minHeight: '280px', width: 320 }}>
+      <CardCover>
+        <img
+          src={tozeur}
+          loading="lazy"
+          alt=""
+        />
+      </CardCover>
+      <CardCover
+    
+      />
+      <CardContent sx={{ justifyContent: 'flex-end' }}>
+        <Typography level="title-lg" textColor="#fff">
+        Circuit de l’Oasis de Tozeur        </Typography>
+        <Typography
+          startDecorator={<LocationOnRoundedIcon />}
+          textColor="neutral.300"
+        >
+          Tozeur, Tunisia
+        </Typography>
+      </CardContent>
+    </Card>
+        
+        
+        </Col>
+        <Col xs={{ order: 5 }}>Second, but last</Col>
+        <Col xs={{ order: 0 }}>Third, but second</Col>
+      </Row>
+    </Container>
+    </center>
+    </section>
+
+
 
 
         {/* Circuits Section */}
