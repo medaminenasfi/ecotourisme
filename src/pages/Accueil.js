@@ -11,6 +11,10 @@ import myImage from "../assest/matmata.webp";
 import tozeur from "../assest/Tozeur.jpg";
 import tata from "../assest/tatouine.jpg";
 import { Link } from "react-router-dom";
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import CardGroup from 'react-bootstrap/CardGroup';
+
 
 const Accueil = () => {
   console.log("Rendering Accueil page");
@@ -35,6 +39,8 @@ const Accueil = () => {
             <h1>
               Explorer <br /> la nature autrement
             </h1>
+            <Button variant="secondary">Commencer votre aventure</Button>
+
             <p className="lead">
               Explorez des paysages enchanteurs, des déserts aux plages
               superbes.
@@ -55,6 +61,173 @@ const Accueil = () => {
             </p>
           </div>
         </section>
+
+
+
+
+
+
+
+
+        <br></br>
+<h1 className="hell">Les meilleures destinations</h1>
+          <div style={{ textAlign: "center" }}>
+            <p>
+              Partez à la découverte de paysages incroyables, des déserts aux
+              plages superbes.
+            </p>
+            <br />
+          </div>
+<CardGroup>
+      <Card>
+        <Card.Img variant="top" src={tozeur} />
+        <Card.Body>
+          <Card.Title>Matmata, Gabes</Card.Title>
+          <Card.Text>
+            This is a wider card with supporting text below as a natural lead-in
+            to additional content. This content is a little bit longer.
+          </Card.Text>
+        </Card.Body>
+        <Card.Footer>
+          <small className="text-muted">Last updated 3 mins ago</small>
+        </Card.Footer>
+      </Card>
+      <Card>
+        <Card.Img variant="top" src={tozeur}/>
+        <Card.Body>
+          <Card.Title>Tataouine</Card.Title>
+          <Card.Text>
+            This card has supporting text below as a natural lead-in to
+            additional content.
+          </Card.Text>
+        </Card.Body>
+        <Card.Footer>
+          <small className="text-muted">Last updated 3 mins ago</small>
+        </Card.Footer>
+      </Card>
+      <Card>
+        <Card.Img variant="top" src={tata} />
+        <Card.Body>
+          <Card.Title>Tozeur, Tunisia</Card.Title>
+          <Card.Text>
+            This is a wider card with supporting text below as a natural lead-in
+            to additional content. This card has even longer content than the
+            first to show that equal height action.
+          </Card.Text>
+        </Card.Body>
+        <Card.Footer>
+          <small className="text-muted">Last updated 3 mins ago</small>
+        </Card.Footer>
+      </Card>
+    </CardGroup>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br></br>
+<section>
+<Container>
+      <Row>
+        <Col sm>
+        <Card style={{ width: '18rem' }}>
+      <Card.Img variant="top" src={tozeur} />
+      <Card.Body>
+        <Card.Title>Carte interactive </Card.Title>
+        <Card.Text>
+        Parcourez des circuits écologiques selon la région, le niveau de difficulté ou vos intérêts.
+        </Card.Text>
+        <Button variant="primary">Go somewhere</Button>
+      </Card.Body>
+    </Card>
+        </Col>
+        <Col sm>
+        
+        <Card style={{ width: '18rem' }}>
+      <Card.Img variant="top" src={tozeur} />
+      <Card.Body>
+        <Card.Title>Espaces personnalisés</Card.Title>
+        <Card.Text>
+        Voyageur : consulter, réserver, laisser des avis.
+
+Fournisseur : publier des services, suivre les réservations.
+
+Administrateur : gérer les utilisateurs, circuits et services.
+        </Card.Text>
+        <Button variant="primary">Go somewhere</Button>
+      </Card.Body>
+    </Card></Col>
+        <Col sm>  <Card style={{ width: '18rem' }}>
+      <Card.Img variant="top" src={tozeur} />
+      <Card.Body>
+        <Card.Title>Réservation en ligne</Card.Title>
+        <Card.Text>
+          Some quick example text to build on the card title and make up the
+          bulk of the card's content.
+        </Card.Text>
+        <Button variant="primary">Go somewhere</Button>
+      </Card.Body>
+    </Card></Col>
+      </Row>
+    </Container><br></br>
+    <Container>
+      <Row>
+        <Col sm>  <Card style={{ width: '18rem' }}>
+      <Card.Img variant="top" src={tozeur} />
+      <Card.Body>
+        <Card.Title>Artisans locaux</Card.Title>
+        <Card.Text>
+        Explorez les produits du terroir et soutenez l’économie locale.
+        </Card.Text>
+        <Button variant="primary">Go somewhere</Button>
+      </Card.Body>
+    </Card></Col>
+        <Col sm>  <Card style={{ width: '18rem' }}>
+      <Card.Img variant="top" src={tozeur} />
+      <Card.Body>
+        <Card.Title> Tableau de bord</Card.Title>
+        <Card.Text>
+        Suivi des performances, statistiques en temps réel.
+        </Card.Text>
+        <Button variant="primary">Go somewhere</Button>
+      </Card.Body>
+    </Card></Col>
+        <Col sm>  <Card style={{ width: '18rem' }}>
+      <Card.Img variant="top" src={tozeur} />
+      <Card.Body>
+        <Card.Title>Avis et réclamations</Card.Title>
+        <Card.Text>
+        Exprimez votre expérience, aidez-nous à améliorer.
+        </Card.Text>
+        <Button variant="primary">Go somewhere</Button>
+      </Card.Body>
+    </Card></Col>
+      </Row>
+    </Container>
+</section>
+
+
+
+
+
+
 
         {/* Destinations Section */}
         <section className="bg-black text-white p-5 shadow-lg">
@@ -160,28 +333,7 @@ const Accueil = () => {
           </div>
         </section>
 
-        {/* Explore Tunisia Section at the Bottom */}
-        <section className="bg-black text-white p-5 shadow-lg" style={{ position: "relative", bottom: 0 }}>
-          <div style={{ textAlign: "center" }}>
-            <section className="image-section d-flex justify-content-center align-items-center">
-              <div className="main-container">
-                <div className="mask-group" />
-                <span className="explore-tunisia">
-                  Explorez
-                  <br />
-                  la Tunisie autrement
-                </span>
-                <Link
-                  to="/Randonée"
-                  className="frame-1"
-                  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                >
-                  {/* You can add some content here */}
-                </Link>
-              </div>
-            </section>
-          </div>
-        </section>
+  
       </main>
       <Footer />
     </>
