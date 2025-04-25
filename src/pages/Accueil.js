@@ -70,113 +70,129 @@ const Accueil = () => {
 
 
 
-
-<section  className="bg-black text-white p-5 shadow-lg">
-  <h1>🌿 Pourquoi choisir EcoTourisme TN ?</h1>
-<br></br>
-<center>
-
-          <Container>
-      <Row>
-        <Col sm>
-        <Card style={{ width: '18rem' }}>
-      <Card.Img variant="top" src={tozeur} />
-      <Card.Body>
-        <Card.Title>🗺️ Carte interactive </Card.Title>
-        <Card.Text>
-        Visualisez rapidement les circuits disponibles partout en Tunisie grâce à une carte interactive intuitive.        </Card.Text>
-        <center>
-        <Link to="/Randonée">
-        <Button variant="primary">Explorer la carte</Button>
-        </Link>
-        </center>
-      </Card.Body>
-    </Card>
-        </Col>
-        <Col sm>
-        
-        <Card style={{ width: '18rem' }}>
-      <Card.Img variant="top" src={tozeur} />
-      <Card.Body>
-        <Card.Title>👥 Profils personnalisés</Card.Title>
-        <Card.Text>
-        Voyageurs, fournisseurs ou administrateurs : chacun dispose d’un espace adapté à ses besoins.
-        </Card.Text>
-        <center>      
-        <Link to="./profile">
-            <Button variant="primary">Voir mon espace</Button>
+<section className="bg-black text-white py-5 px-3 px-md-5">
+  <div className="container">
+    <h1 className="text-center mb-5 display-4">🌿 Pourquoi choisir EcoTourisme TN ?</h1>
+    
+    <div className="row g-4">
+      {/* First Row */}
+      <div className="col-12 col-md-6 col-lg-4">
+        <Card className="h-100 bg-dark text-light border-light hover-shadow">
+          <Card.Img 
+            variant="top" 
+            src={tozeur} 
+            style={{ height: '200px', objectFit: 'cover' }}
+          />
+          <Card.Body className="d-flex flex-column">
+            <Card.Title className="fs-5 mb-3">🗺️ Carte interactive</Card.Title>
+            <Card.Text className="flex-grow-1">
+              Visualisez rapidement les circuits disponibles partout en Tunisie grâce à une carte interactive intuitive.
+            </Card.Text>
+            <Link to="/Randonée" className="mt-2">
+              <Button variant="outline-light" className="w-100">Explorer la carte</Button>
             </Link>
-        </center>
-      </Card.Body>
-    </Card></Col>
-        <Col sm>  <Card style={{ width: '18rem' }}>
-      <Card.Img variant="top" src={tozeur} />
-      <Card.Body>
-        <Card.Title>🕒 Réservation rapide</Card.Title>
-        <Card.Text>
-        Réservez votre randonnée ou votre activité en quelques clics, en toute sécurité.
+          </Card.Body>
+        </Card>
+      </div>
 
-</Card.Text>
-<center>
-<Link to="./Reservation">
-<Button variant="primary">Réserver un circuit</Button>
-</Link>
-</center>
-      </Card.Body>
-    </Card></Col>
-      </Row>
-    </Container><br></br>
-    <Container>
-      <Row>
-        <Col sm>  <Card style={{ width: '18rem' }}>
-      <Card.Img variant="top" src={tozeur} />
-      <Card.Body>
-        <Card.Title>🛍️ Artisans locaux</Card.Title>
-        <Card.Text>
-        Explorez les produits du terroir et soutenez l’économie locale.
-        </Card.Text>
-        <center>    
-        <Link to="./Artisan">
-              <Button variant="primary">Découvrir les artisans</Button>
-              </Link>
-        </center>
-      </Card.Body>
-    </Card></Col>
-        <Col sm>  <Card style={{ width: '18rem' }}>
-      <Card.Img variant="top" src={tozeur} />
-      <Card.Body>
-        <Card.Title>💬  Avis</Card.Title>
-        <Card.Text>
-        Laissez un commentaire sur votre expérience. </Card.Text>
-        <center>   
-        <Link to="../gestion/avis">  
-            <Button variant="primary">Donner un avis</Button>
-            </Link> 
-        </center>
-        
-      </Card.Body>
-    </Card></Col>
-        <Col sm>  <Card style={{ width: '18rem' }}>
-      <Card.Img variant="top" src={tozeur} />
-      <Card.Body>
-        <Card.Title>💬   Réclamations</Card.Title>
-        <Card.Text>
-        Rencontrez un souci ?Notre équipe vous répond rapidement.
-</Card.Text>
-<center>      
-<Link to="../gestion/reclamations">  
-
-            <Button variant="primary">Faire une réclamation</Button>
+      <div className="col-12 col-md-6 col-lg-4">
+        <Card className="h-100 bg-dark text-light border-light hover-shadow">
+          <Card.Img 
+            variant="top" 
+            src={tozeur} 
+            style={{ height: '200px', objectFit: 'cover' }}
+          />
+          <Card.Body className="d-flex flex-column">
+            <Card.Title className="fs-5 mb-3">👥 Profils personnalisés</Card.Title>
+            <Card.Text className="flex-grow-1">
+              Voyageurs, fournisseurs ou administrateurs : chacun dispose d'un espace adapté à ses besoins.
+            </Card.Text>
+            <Link to="./profile" className="mt-2">
+              <Button variant="outline-light" className="w-100">Voir mon espace</Button>
             </Link>
-        </center>      </Card.Body>
-    </Card></Col>
-      </Row>
-    </Container>
-    </center>
+          </Card.Body>
+        </Card>
+      </div>
 
-    </section>
+      <div className="col-12 col-md-6 col-lg-4">
+        <Card className="h-100 bg-dark text-light border-light hover-shadow">
+          <Card.Img 
+            variant="top" 
+            src={tozeur} 
+            style={{ height: '200px', objectFit: 'cover' }}
+          />
+          <Card.Body className="d-flex flex-column">
+            <Card.Title className="fs-5 mb-3">🕒 Réservation rapide</Card.Title>
+            <Card.Text className="flex-grow-1">
+              Réservez votre randonnée ou votre activité en quelques clics, en toute sécurité.
+            </Card.Text>
+            <Link to="./Reservation" className="mt-2">
+              <Button variant="outline-light" className="w-100">Réserver un circuit</Button>
+            </Link>
+          </Card.Body>
+        </Card>
+      </div>
 
+      {/* Second Row */}
+      <div className="col-12 col-md-6 col-lg-4">
+        <Card className="h-100 bg-dark text-light border-light hover-shadow">
+          <Card.Img 
+            variant="top" 
+            src={tozeur} 
+            style={{ height: '200px', objectFit: 'cover' }}
+          />
+          <Card.Body className="d-flex flex-column">
+            <Card.Title className="fs-5 mb-3">🛍️ Artisans locaux</Card.Title>
+            <Card.Text className="flex-grow-1">
+              Explorez les produits du terroir et soutenez l'économie locale.
+            </Card.Text>
+            <Link to="./Artisan" className="mt-2">
+              <Button variant="outline-light" className="w-100">Découvrir les artisans</Button>
+            </Link>
+          </Card.Body>
+        </Card>
+      </div>
 
+      <div className="col-12 col-md-6 col-lg-4">
+        <Card className="h-100 bg-dark text-light border-light hover-shadow">
+          <Card.Img 
+            variant="top" 
+            src={tozeur} 
+            style={{ height: '200px', objectFit: 'cover' }}
+          />
+          <Card.Body className="d-flex flex-column">
+            <Card.Title className="fs-5 mb-3">💬 Avis</Card.Title>
+            <Card.Text className="flex-grow-1">
+              Laissez un commentaire sur votre expérience.
+            </Card.Text>
+            <Link to="../gestion/avis" className="mt-2">
+              <Button variant="outline-light" className="w-100">Donner un avis</Button>
+            </Link>
+          </Card.Body>
+        </Card>
+      </div>
+
+      <div className="col-12 col-md-6 col-lg-4">
+        <Card className="h-100 bg-dark text-light border-light hover-shadow">
+          <Card.Img 
+            variant="top" 
+            src={tozeur} 
+            style={{ height: '200px', objectFit: 'cover' }}
+          />
+          <Card.Body className="d-flex flex-column">
+            <Card.Title className="fs-5 mb-3">💬 Réclamations</Card.Title>
+            <Card.Text className="flex-grow-1">
+              Rencontrez un souci ? Notre équipe vous répond rapidement.
+            </Card.Text>
+            <Link to="../gestion/reclamations" className="mt-2">
+              <Button variant="outline-light" className="w-100">Faire une réclamation</Button>
+            </Link>
+          </Card.Body>
+        </Card>
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
