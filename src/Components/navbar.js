@@ -172,11 +172,7 @@ const Navbar = () => {
                       <FaUser className="me-2" /> Profil
                     </Link>
                   </li>
-                  <li>
-                    <Link to="/settings" className="dropdown-item d-flex align-items-center">
-                      <FaCog className="me-2" /> Paramètres
-                    </Link>
-                  </li>
+                
                   <li><hr className="dropdown-divider" /></li>
                   <li>
                     <button 
