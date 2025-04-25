@@ -14,7 +14,12 @@ import { Link } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import CardGroup from 'react-bootstrap/CardGroup';
-import Carousel from 'react-bootstrap/Carousel';
+import Carousel from "react-bootstrap/Carousel";
+
+// Images (replace with your actual paths)
+import bg1 from "../assest/Accueil.jpg";
+import bg2 from "../assest/bizert.jpg";
+import bg3 from "../assest/3.jpg";
 
 
 const Accueil = () => {
@@ -23,49 +28,45 @@ const Accueil = () => {
     <>
       <Navbar />
       <main>
-        {/* Main Content Section */}
+
+<section>
+
+      <Carousel fade controls={true} indicators={true} interval={5000}>
+  {[bg1, bg2, bg3].map((bg, index) => (
+    <Carousel.Item key={index}>
+      <div
+        style={{
+          backgroundImage: `url(${bg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          height: "100vh",
+          width: "100%",
+          position: "relative",
+        }}
+      >
+        <div className="overlay"></div>
+        <div className="content text-white text-center">
+          <center>
+          <h1>Explorer <br /> la nature autrement</h1>
+          <Link to="/Randonée">
+            <Button variant="light">Commencer votre aventure</Button>
+          </Link>
+          <p className="lead mt-3">
+            Explorez des paysages enchanteurs, des déserts aux plages superbes.
+          </p>
+          </center>
+        </div>
+      </div>
+    </Carousel.Item>
+  ))}
+</Carousel>
+
+
+</section>
 
 
 
-        <section
-          className="d-flex align-items-center justify-content-center text-white"
-          style={{
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            height: "100vh",
-            width: "100%",
-          }}
-        >
-          <div className="overlay"></div>
-          <div className="content text-center">
-            <h1>
-              Explorer <br /> la nature autrement
-            </h1>
-            <Link to="/Randonée">
-  <Button variant="secondary">Commencer votre aventure</Button>
-</Link>
-            <p className="lead">
-              Explorez des paysages enchanteurs, des déserts aux plages
-              superbes.
-            </p>
-          </div>
-          {/* Citations en bas */}
-          <div className="quotes">
-            <p className="quote left">
-              "Regardez profondément dans la nature, et vous comprendrez mieux
-              tout."
-              <br />
-              <strong>— Albert Einstein</strong>
-            </p>
-            <p className="quote right">
-              "Quand un homme s’éloigne de la nature, son cœur devient dur."
-              <br />
-              <strong>— Proverbe Lakota</strong>
-            </p>
-          </div>
-        </section>
+    
 
 
 
