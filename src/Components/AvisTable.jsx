@@ -1,11 +1,29 @@
-import { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import { Button, Modal, Form, Alert, Spinner, Card, Row, Col, Badge } from 'react-bootstrap';
+import { FaEdit, FaTrash, FaPlus, FaStar, FaRegStar, FaStarHalfAlt } from 'react-icons/fa';
+
+const renderStars = (rating) => {
+  const fullStars = Math.floor(rating);
+  const halfStar = rating % 1 >= 0.5 ? 1 : 0;
+  const emptyStars = 5 - fullStars - halfStar;
+  
+  return (
+    <div className="d-flex align-items-center">
+      {[...Array(fullStars)].map((_, i) => (
+        <FaStar key={`full-${i}`} className="text-warning" />
+      ))}
+      {halfStar ? <FaStarHalfAlt className="text-warning" /> : null}
+      {[...Array(emptyStars)].map((_, i) => (
+        <FaRegStar key={`empty-${i}`} className="text-secondary" />
+      ))}
+    </div>
+  );
+};
 
 const AvisPage = () => {
-  const context = useContext(AuthContext) || {};
-  const { user = null, logout = () => {}, loading: authLoading = true } = context;
-
+  const { user = null, logout = () => {}, loading: authLoading = false } = useContext(AuthContext) || {};
   const [avis, setAvis] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editingAvis, setEditingAvis] = useState(null);
@@ -38,12 +56,8 @@ const AvisPage = () => {
           })
         ]);
 
-        // Handle both possible backend response structures
-        const avisData = avisRes.data?.avis || avisRes.data || [];
-        const circuitsData = circuitsRes.data?.circuits || circuitsRes.data || [];
-
-        setAvis(avisData);
-        setCircuits(circuitsData);
+        setAvis(avisRes.data?.avis || avisRes.data || []);
+        setCircuits(circuitsRes.data?.circuits || circuitsRes.data || []);
         setLoading(false);
       } catch (error) {
         console.error('Data loading failed:', error);
@@ -67,10 +81,8 @@ const AvisPage = () => {
       const method = editingAvis ? 'put' : 'post';
       await axios[method](url, formData, config);
 
-      // Refresh data after submission
       const avisRes = await axios.get('http://localhost:5000/api/avis', config);
       setAvis(avisRes.data?.avis || avisRes.data || []);
-      
       closeModal();
     } catch (error) {
       console.error('Submission error:', error);
@@ -97,180 +109,200 @@ const AvisPage = () => {
   };
 
   if (authLoading || loading) return (
-    <div className="container mt-4 text-center">
-      <div className="spinner-border text-primary" role="status">
-        <span className="visually-hidden">Chargement...</span>
-      </div>
+    <div className="text-center py-5">
+      <Spinner animation="border" variant="light" />
     </div>
   );
 
   if (error) return (
     <div className="container mt-4 alert alert-danger">
       Error loading data: {error}
-      <button className="btn btn-link" onClick={() => window.location.reload()}>
+      <button className="btn btn-link text-light" onClick={() => window.location.reload()}>
         Try Again
       </button>
     </div>
   );
 
   return (
-    <div className="container mt-4">
+    <div>
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1 className="text-gradient">Circuit Reviews</h1>
+        <h2 className="text-white mb-0">
+          <FaStar className="me-2" />
+          Avis des Utilisateurs
+        </h2>
         {user && (
-          <button 
-            className="btn btn-primary rounded-pill px-4 py-2 shadow-sm"
+          <Button 
+            variant="primary" 
             onClick={() => setShowModal(true)}
+            className="rounded-pill px-4 py-2 d-flex align-items-center"
           >
-            <i className="bi bi-pencil-square me-2"></i>Ajouter un avis
-          </button>
+            <FaPlus className="me-2" /> Ajouter un avis
+          </Button>
         )}
       </div>
 
-      {/* Reviews List */}
-      <h3 className="mb-4">Avis des utilisateurs</h3>
-      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        {avis.map(review => {
-          const circuit = circuits.find(c => c._id === review.circuitId) || {};
-          
-          return (
-            <div className="col" key={review._id}>
-              <div className="card h-100 shadow-lg-hover">
-                <div className="card-header bg-transparent d-flex justify-content-between align-items-center">
-                  <div className="d-flex align-items-center">
-                    <i className="bi bi-person-circle me-2 text-primary"></i>
-                    <span className="fw-medium">
-                      {review.userId?.first_name || 'Anonymous'} {review.userId?.last_name}
-                    </span>
-                  </div>
-                  <span className="badge bg-warning text-dark">
-                    {review.rating}/5
-                  </span>
-                </div>
-                <div className="card-body">
-                  <h5 className="card-title text-muted mb-3">
-                    <i className="bi bi-geo-alt me-2 text-success"></i>
-                    {circuit.name || 'Unknown Circuit'}
-                  </h5>
-                  <p className="card-text text-secondary">{review.comment}</p>
-                </div>
-                {user?.id === review.userId?._id && (
-                  <div className="card-footer bg-transparent d-flex gap-2">
-                    <button 
-                      className="btn btn-sm btn-outline-warning rounded-pill"
-                      onClick={() => {
-                        setEditingAvis(review);
-                        setFormData({
-                          circuitId: review.circuitId,
-                          rating: review.rating,
-                          comment: review.comment
-                        });
-                        setShowModal(true);
-                      }}
-                    >
-                      <i className="bi bi-pencil me-1"></i>Modifier
-                    </button>
-                    <button 
-                      className="btn btn-sm btn-outline-danger rounded-pill"
-                      onClick={() => handleDelete(review._id)}
-                    >
-                      <i className="bi bi-trash me-1"></i>Supprimer
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          )
-        })}
-      </div>
+      {error && <Alert variant="danger" className="rounded">{error}</Alert>}
 
-      {/* Review Modal */}
-      {showModal && (
-        <div className="modal fade show" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog modal-dialog-centered modal-lg">
-            <div className="modal-content border-0 shadow-lg">
-              <div className="modal-header bg-primary text-white rounded-top">
-                <h5 className="modal-title">
-                  <i className="bi bi-star-fill me-2"></i>
-                  {editingAvis ? 'Edit Review' : 'Create New Review'}
-                </h5>
-                <button type="button" className="btn-close btn-close-white" onClick={closeModal}></button>
-              </div>
-              <div className="modal-body py-4">
-                <form onSubmit={handleSubmit}>
-                  <div className="mb-4">
-                    <label className="form-label fw-bold text-secondary">
-                      <i className="bi bi-map me-2"></i>Sélectionner un circuit
-                    </label>
-                    <select
-                      className="form-select form-select-lg rounded-pill border-primary"
-                      value={formData.circuitId}
-                      onChange={e => setFormData({...formData, circuitId: e.target.value})}
-                      required
-                    >
-                      <option value="">Choisissez un circuit...</option>
-                      {circuits.map(circuit => (
-                        <option key={circuit._id} value={circuit._id}>
-                          {circuit.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="mb-4">
-                    <label className="form-label fw-bold text-secondary">
-                      <i className="bi bi-star me-2"></i>Notation
-                    </label>
-                    <select
-                      className="form-select form-select-lg rounded-pill border-warning"
-                      value={formData.rating}
-                      onChange={e => setFormData({...formData, rating: e.target.value})}
-                      required
-                    >
-                      <option value="">Sélectionnez votre note...</option>
-                      {[1, 2, 3, 4, 5].map(num => (
-                        <option key={num} value={num}>
-                          {Array(num).fill('⭐').join('')} ({num})
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="mb-4">
-                    <label className="form-label fw-bold text-secondary">
-                      <i className="bi bi-chat-text me-2"></i>Commentaire
-                    </label>
-                    <textarea
-                      className="form-control border-info rounded-3"
-                      value={formData.comment}
-                      onChange={e => setFormData({...formData, comment: e.target.value})}
-                      rows="4"
-                      placeholder="Share your experience..."
-                      required
-                    />
-                  </div>
-
-                  <div className="modal-footer border-0">
-                    <button 
-                      type="button" 
-                      className="btn btn-secondary rounded-pill px-4"
-                      onClick={closeModal}
-                    >
-                      Annuler
-                    </button>
-                    <button 
-                      type="submit" 
-                      className="btn btn-primary rounded-pill px-4"
-                    >
-                      {editingAvis ? 'Save Changes' : 'Post Review'}
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
+      {avis.length === 0 ? (
+        <Alert variant="info" style={{
+          background: 'rgba(32, 201, 151, 0.15)',
+          borderColor: 'rgba(32, 201, 151, 0.3)',
+          color: '#20c997'
+        }}>
+          Aucun avis trouvé
+        </Alert>
+      ) : (
+        <Row xs={1} md={2} lg={3} className="g-4">
+          {avis.map(review => {
+            const circuit = circuits.find(c => c._id === review.circuitId) || {};
+            
+            return (
+              <Col key={review._id}>
+                <Card className="h-100" style={{
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  color: 'white'
+                }}>
+                  <Card.Header style={{
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+                  }}>
+                    <div className="d-flex justify-content-between align-items-center">
+                      <div className="d-flex align-items-center">
+                        <span className="fw-medium">
+                          {review.userId?.first_name || 'Anonymous'} {review.userId?.last_name}
+                        </span>
+                      </div>
+                      <div className="d-flex align-items-center">
+                        {renderStars(review.rating)}
+                        <Badge bg="warning" text="dark" className="ms-2">
+                          {review.rating}/5
+                        </Badge>
+                      </div>
+                    </div>
+                  </Card.Header>
+                  <Card.Body>
+                    <h5 className="text-primary mb-3">
+                      {circuit.name || 'Unknown Circuit'}
+                    </h5>
+                    <p className="text-white-50">{review.comment}</p>
+                  </Card.Body>
+                  {user?.id === review.userId?._id && (
+                    <Card.Footer style={{
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+                    }} className="d-flex justify-content-end gap-2">
+                      <Button
+                        variant="outline-warning"
+                        size="sm"
+                        onClick={() => {
+                          setEditingAvis(review);
+                          setFormData({
+                            circuitId: review.circuitId,
+                            rating: review.rating,
+                            comment: review.comment
+                          });
+                          setShowModal(true);
+                        }}
+                      >
+                        <FaEdit /> Modifier
+                      </Button>
+                      <Button
+                        variant="outline-danger"
+                        size="sm"
+                        onClick={() => handleDelete(review._id)}
+                      >
+                        <FaTrash /> Supprimer
+                      </Button>
+                    </Card.Footer>
+                  )}
+                </Card>
+              </Col>
+            )
+          })}
+        </Row>
       )}
+
+      <Modal show={showModal} onHide={closeModal} centered>
+        <Modal.Header closeButton style={{
+          background: 'rgba(0, 0, 0, 0.7)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          color: 'white'
+        }}>
+          <Modal.Title>
+            {editingAvis ? 'Modifier Avis' : 'Nouvel Avis'}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{
+          background: 'rgba(0, 0, 0, 0.7)',
+          color: 'white'
+        }}>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3">
+              <Form.Label>Circuit</Form.Label>
+              <Form.Select
+                className="bg-dark text-white border-secondary"
+                value={formData.circuitId}
+                onChange={e => setFormData({...formData, circuitId: e.target.value})}
+                required
+              >
+                <option value="">Choisissez un circuit...</option>
+                {circuits.map(circuit => (
+                  <option key={circuit._id} value={circuit._id}>
+                    {circuit.name}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Notation</Form.Label>
+              <Form.Select
+                className="bg-dark text-white border-secondary"
+                value={formData.rating}
+                onChange={e => setFormData({...formData, rating: e.target.value})}
+                required
+              >
+                <option value="">Sélectionnez votre note...</option>
+                {[1, 2, 3, 4, 5].map(num => (
+                  <option key={num} value={num}>
+                    {num} étoiles
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Commentaire</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={4}
+                className="bg-dark text-white border-secondary"
+                value={formData.comment}
+                onChange={e => setFormData({...formData, comment: e.target.value})}
+                required
+              />
+            </Form.Group>
+
+            <div className="d-flex justify-content-end gap-2">
+              <Button 
+                variant="secondary" 
+                onClick={closeModal}
+                className="rounded-pill"
+              >
+                Annuler
+              </Button>
+              <Button 
+                variant="primary" 
+                type="submit"
+                className="rounded-pill"
+              >
+                {editingAvis ? 'Enregistrer' : 'Publier'}
+              </Button>
+            </div>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };
