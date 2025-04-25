@@ -27,7 +27,7 @@ const Seconnecter = () => {
         navigate("/");
       }
     } catch (error) {
-      setError("Email ou mot de passe incorrect. Veuillez réessayer.");
+      setError("Email ou mot de passe incorrect. ");
     }
   };
 
@@ -83,6 +83,12 @@ const Seconnecter = () => {
         </button>
       </div>
     </div>
+ {/* ✅ Error Message Block */}
+ {error && (
+    <div className="alert alert-danger text-center py-2" role="alert">
+      {error}
+    </div>
+  )}
 
     {/* Bouton de connexion */}
     <button 
