@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { Button, Card, Alert, Spinner, Row, Col, Badge, Modal, Form } from 'react-bootstrap';
+import { Button, Card, Alert, Spinner, Row, Col, Badge, Modal, Form, Container } from 'react-bootstrap';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import axios from 'axios';
-import "./service.css";
 import { useNavigate } from 'react-router-dom';
 import Navbar from "../Components/navbar";
+import backgroundImage from "../assest/Accueil.jpg";
 
 const ServicesList = () => {
   const { user } = useContext(AuthContext);
@@ -95,156 +95,151 @@ const ServicesList = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div style={{
+      background: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${backgroundImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      minHeight: '100vh',
+      paddingTop: '80px'
+    }}>
       <Navbar />
-      <br/><br/><br/><br/>
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2>Gestion des Services</h2><br/><br/>
-        {user?.role === 'fournisseur' && (
-          <Button variant="primary" href="/create-service">
-            + Nouveau Service
-          </Button>
-        )}
-      </div>
+      
+      <Container className="py-5" style={{ maxWidth: '1200px' }}>
+        <Card className="shadow" style={{
+          background: 'rgba(0, 0, 0, 0.7)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '15px'
+        }}>
+          <Card.Header style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            <div className="d-flex justify-content-between align-items-center">
+            <center>
+              <h2 style={{ 
+                color: '#FFFFFF', 
+                margin: 0,
+                fontWeight: '600',
+                letterSpacing: '0.5px'
+              }}>
+                Liste  des Services
+              </h2> </center>
+            </div>
+          </Card.Header>
 
-      {error && <Alert variant="danger">{error}</Alert>}
+          <Card.Body>
+            {error && <Alert variant="danger">{error}</Alert>}
 
-      {loading ? (
-        <div className="text-center py-5">
-          <Spinner animation="border" />
-        </div>
-      ) : services.length === 0 ? (
-        <Alert variant="info">Aucun service trouvé</Alert>
-      ) : (
-        <>
-          <Row xs={1} md={2} lg={3} className="g-4">
-            {services.map(service => {
-              const discount = Math.floor(Math.random() * 20) + 1;
-              return (
-                <Col key={service._id}>
-                  <Card className="h-100 shadow-sm">
-                    <div className="position-relative">
-                      <Card.Img
-                        variant="top"
-                        src={service.photo || '/placeholder.jpg'}
-                        style={{ height: '200px', objectFit: 'cover' }}
-                        onError={(e) => e.target.src = '/placeholder.jpg'}
-                      />
-                      <div className="discount-badge">
-                        -{discount}%
-                      </div>
-                    </div>
-                    <Card.Body>
-                      <div className="d-flex justify-content-between align-items-start">
-                        <Card.Title>{service.type}</Card.Title>
-                        <Badge bg="info">{service.phoneNumber}</Badge>
-                      </div>
-                      <Card.Text>{service.description}</Card.Text>
-                      <small className="text-muted">
-                        Fournisseur: {service.fournisseur?.first_name} {service.fournisseur?.last_name}
-                      </small>
-                    </Card.Body>
-
-                    <Card.Footer className="d-flex justify-content-end gap-2">
-                      {user?.role === 'fournisseur' && user?._id === service.fournisseur?._id && (
-                        <>
-                          <Button
-                            variant="outline-primary"
-                            size="sm"
-                            onClick={() => openEditModal(service)}
+            {loading ? (
+              <div className="text-center py-5">
+                <Spinner animation="border" variant="light" />
+              </div>
+            ) : services.length === 0 ? (
+              <Alert variant="info" style={{
+                background: 'rgba(32, 201, 151, 0.15)',
+                borderColor: 'rgba(32, 201, 151, 0.3)',
+                color: '#20c997'
+              }}>
+                Aucun service trouvé
+              </Alert>
+            ) : (
+              <Row xs={1} md={2} lg={3} className="g-4">
+                {services.map(service => {
+                  const discount = Math.floor(Math.random() * 20) + 1;
+                  return (
+                    <Col key={service._id}>
+                      <Card className="h-100" style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        color: 'white',
+                        transition: 'transform 0.3s ease'
+                      }} >
+                        <div className="position-relative">
+                          <Card.Img
+                            variant="top"
+                            src={service.photo || '/placeholder.jpg'}
+                            style={{ 
+                              height: '200px', 
+                              objectFit: 'cover',
+                              borderTopLeftRadius: 'calc(0.25rem - 1px)',
+                              borderTopRightRadius: 'calc(0.25rem - 1px)'
+                            }}
+                            onError={(e) => e.target.src = '/placeholder.jpg'}
+                          />
+                          <Badge 
+                            bg="danger"
+                            style={{
+                              position: 'absolute',
+                              top: '10px',
+                              right: '10px',
+                              fontSize: '0.9rem',
+                              padding: '5px 10px',
+                              borderRadius: '20px',
+                              boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+                              animation: 'slideIn 0.3s ease-out'
+                            }}
                           >
-                            <FaEdit />
-                          </Button>
-                          <Button
-                            variant="outline-danger"
-                            size="sm"
-                            onClick={() => handleDelete(service._id)}
-                          >
-                            <FaTrash />
-                          </Button>
-                        </>
-                      )}
-                      {user?.role === 'admin' && (
-                        <Button
-                          variant="outline-danger"
-                          size="sm"
-                          onClick={() => handleDelete(service._id)}
-                        >
-                          <FaTrash />
-                        </Button>
-                      )}
-                    </Card.Footer>
-                  </Card>
-                </Col>
-              );
-            })}
-          </Row>
+                            -{discount}%
+                          </Badge>
+                        </div>
+                        <Card.Body>
+                          <div className="d-flex justify-content-between align-items-start">
+                            <Card.Title style={{ color: '#20c997' }}>{service.type}</Card.Title>
+                            <Badge bg="secondary">{service.phoneNumber}</Badge>
+                          </div>
+                          <Card.Text>{service.description}</Card.Text>
+                          <small className="text-white">
+                            Fournisseur: {service.fournisseur?.first_name} {service.fournisseur?.last_name}
+                          </small>
+                        </Card.Body>
 
-          <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-          <Modal.Header closeButton>
-              <Modal.Title>Modifier le Service</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form onSubmit={handleSubmit}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Type de service</Form.Label>
-                  <Form.Select
-                    name="type"
-                    value={formData.type}
-                    onChange={(e) => setFormData({...formData, type: e.target.value})}
-                    required
-                  >
-                    {serviceTypes.map(type => (
-                      <option key={type} value={type}>{type}</option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
+                        <Card.Footer style={{
+                          background: 'rgba(255, 255, 255, 0.05)',
+                          borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+                        }} className="d-flex justify-content-end gap-2">
+                          {user?.role === 'fournisseur' && user?._id === service.fournisseur?._id && (
+                            <>
+                              <Button
+                                variant="outline-primary"
+                                size="sm"
+                                onClick={() => openEditModal(service)}
+                                style={{ borderRadius: '20px' }}
+                              >
+                                <FaEdit />
+                              </Button>
+                              <Button
+                                variant="outline-danger"
+                                size="sm"
+                                onClick={() => handleDelete(service._id)}
+                                style={{ borderRadius: '20px' }}
+                              >
+                                <FaTrash />
+                              </Button>
+                            </>
+                          )}
+                          {user?.role === 'admin' && (
+                            <Button
+                              variant="outline-danger"
+                              size="sm"
+                              onClick={() => handleDelete(service._id)}
+                              style={{ borderRadius: '20px' }}
+                            >
+                              <FaTrash />
+                            </Button>
+                          )}
+                        </Card.Footer>
+                      </Card>
+                    </Col>
+                  );
+                })}
+              </Row>
+            )}
+          </Card.Body>
+        </Card>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Description</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    name="description"
-                    value={formData.description}
-                    onChange={(e) => setFormData({...formData, description: e.target.value})}
-                    required
-                  />
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>URL de la photo</Form.Label>
-                  <Form.Control
-                    type="url"
-                    name="photo"
-                    value={formData.photo}
-                    onChange={(e) => setFormData({...formData, photo: e.target.value})}
-                  />
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Numéro de téléphone</Form.Label>
-                  <Form.Control
-                    type="tel"
-                    name="phoneNumber"
-                    value={formData.phoneNumber}
-                    onChange={(e) => setFormData({...formData, phoneNumber: e.target.value})}
-                    required
-                  />
-                </Form.Group>
-
-                <div className="d-flex justify-content-end gap-2">
-                  <Button variant="secondary" onClick={() => setShowModal(false)}>
-                    Annuler
-                  </Button>
-                  <Button variant="primary" type="submit">
-                    Enregistrer
-                  </Button>
-                </div>
-              </Form>
-            </Modal.Body>          </Modal>
-        </>
-      )}
+        
+      </Container>
     </div>
   );
 };
