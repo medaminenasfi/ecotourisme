@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Table, Modal, Form, Alert, Spinner, Badge } from 'react-bootstrap';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
-import Navbar from '../Components/navbar';
 import jwtDecode from 'jwt-decode';
+import backgroundImage from '../assest/Accueil.jpg';
+import  Navbar from "../Components/navbar";
 
 const GestionReservations = () => {
   const [reservations, setReservations] = useState([]);
@@ -25,7 +26,6 @@ const GestionReservations = () => {
     status: 'pending'
   });
 
-  // Validation du token
   const validateToken = () => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
@@ -50,7 +50,6 @@ const GestionReservations = () => {
     }
   };
 
-  // Récupération des données initiales
   const fetchInitialData = async () => {
     try {
       const token = localStorage.getItem('accessToken');
@@ -70,7 +69,6 @@ const GestionReservations = () => {
     }
   };
 
-  // Récupération des réservations
   const fetchReservations = async () => {
     if (!validateToken()) return;
     
@@ -105,7 +103,6 @@ const GestionReservations = () => {
     loadData();
   }, []);
 
-  // Gestion de la soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateToken()) return;
@@ -149,7 +146,6 @@ const GestionReservations = () => {
     }
   };
 
-  // Gestion de la suppression
   const handleDelete = async (id) => {
     if (!validateToken()) return;
     
@@ -169,7 +165,6 @@ const GestionReservations = () => {
     }
   };
 
-  // Gestion des erreurs
   const handleError = (err) => {
     console.error(err);
     if (err.response?.status === 401) {
@@ -179,7 +174,6 @@ const GestionReservations = () => {
     setError(err.response?.data?.message || 'Erreur de communication');
   };
 
-  // Ouverture du modal
   const openModal = (reservation = null) => {
     setSelectedReservation(reservation);
     const initialData = reservation ? {
@@ -203,115 +197,138 @@ const GestionReservations = () => {
   };
 
   return (
+
+
     <>
-      <Navbar />
-      <br/><br/><br/><br/>
-      
-      <div className="container">
-        <h1 className="mb-3 display-5 fw-bold text-primary">Gestion des Réservations</h1>
-        <center>
-          <p className="text-muted mb-4">
-            Gérez toutes les réservations de randonnée en cours
-          </p>
-        </center>
-        <div className="dashboard-card bg-white p-4 rounded-3 shadow-sm">
-          {error && <Alert variant="danger">{error}</Alert>}
-          {success && <Alert variant="success">{success}</Alert>}
+          <Navbar />
 
-          {loading ? (
-            <div className="text-center py-5">
-              <Spinner animation="border" role="status">
-                <span className="visually-hidden">Chargement...</span>
-              </Spinner>
+    <div style={{
+      background: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${backgroundImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      minHeight: '100vh',
+      paddingTop: '80px'
+    }}>
+      <div className="container py-5" style={{ maxWidth: '1400px' }}>
+        <div className="card shadow" style={{
+          background: 'rgba(0, 0, 0, 0.7)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '15px'
+        }}>
+          <div className="card-header" style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            <h1 className="text-white mb-0 text-center">
+              <span className="text-primary">Gestion</span> des Réservations
+            </h1>
+            <div className="text-center mt-2">
+              <p className="text-white mb-0">
+                Gérez toutes les réservations de randonnée en cours
+              </p>
             </div>
-          ) : reservations.length === 0 ? (
-            <div className="text-center py-4 text-muted">Aucune réservation trouvée</div>
-          ) : (
-            <Table hover responsive className="align-middle">
-              <thead className="bg-light">
-                <tr>
-                  <th>Utilisateur</th>
-                  <th>Circuit</th>
-                  <th>Date</th>
-                  <th>Personnes</th>
-                  <th>Prix</th>
-                  <th>Statut</th>
-                  <th className="text-end">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {reservations.map(reservation => (
-                  <tr key={reservation._id}>
-                    <td>{reservation.userDisplay}</td>
-                    <td>
-                      {reservation.circuitDisplay}
-                      {reservation.circuitDetails && (
-                        <Badge bg="info" className="ms-2"></Badge>
-                      )}
-                    </td>
-                    <td>{new Date(reservation.date).toLocaleDateString('fr-FR')}</td>
-                    <td>{reservation.numberOfPeople}</td>
-                    <td>{reservation.totalPrice?.toFixed(2)} TND</td>
-                    <td>
-                      <Badge 
-                        pill
-                        bg={
-                          reservation.status === 'confirmed' ? 'success' :
-                          reservation.status === 'cancelled' ? 'danger' : 'warning'
-                        }
-                      >
-                        {reservation.status === 'confirmed' ? 'Confirmée' :
-                         reservation.status === 'cancelled' ? 'Annulée' : 'En attente'}
-                      </Badge>
-                    </td>
-                    <td className="text-end">
-                      {isAdmin && (
-                        <>
-                          <Button
-                            variant="outline-primary"
-                            size="sm"
-                            className="me-2"
-                            onClick={() => openModal(reservation)}
-                          >
-                            <FaEdit className="me-1" /> Modifier
-                          </Button>
-                          <Button
-                            variant="outline-danger"
-                            size="sm"
-                            onClick={() => handleDelete(reservation._id)}
-                          >
-                            <FaTrashAlt className="me-1" /> Supprimer
-                          </Button>
-                        </>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          )}
+          </div>
 
-    
+          <div className="card-body">
+            {error && <Alert variant="danger" className="rounded-3">{error}</Alert>}
+            {success && <Alert variant="success" className="rounded-3">{success}</Alert>}
+
+            {loading ? (
+              <div className="text-center py-5">
+                <Spinner animation="border" variant="primary" />
+              </div>
+            ) : reservations.length === 0 ? (
+              <div className="text-center py-4 text-muted">Aucune réservation trouvée</div>
+            ) : (
+              <div className="table-responsive">
+                <Table hover responsive className="align-middle text-white mb-0">
+                  <thead style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
+                    <tr>
+                      <th>Utilisateur</th>
+                      <th>Circuit</th>
+                      <th>Date</th>
+                      <th>Personnes</th>
+                      <th>Prix</th>
+                      <th>Statut</th>
+                      <th className="text-end">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {reservations.map(reservation => (
+                      <tr key={reservation._id} style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}>
+                        <td>{reservation.userDisplay}</td>
+                        <td>
+                          {reservation.circuitDisplay}
+                          {reservation.circuitDetails && (
+                            <Badge bg="info" className="ms-2"></Badge>
+                          )}
+                        </td>
+                        <td>{new Date(reservation.date).toLocaleDateString('fr-FR')}</td>
+                        <td>{reservation.numberOfPeople}</td>
+                        <td>{reservation.totalPrice?.toFixed(2)} TND</td>
+                        <td>
+                          <Badge 
+                            pill
+                            className="text-uppercase"
+                            bg={
+                              reservation.status === 'confirmed' ? 'success' :
+                              reservation.status === 'cancelled' ? 'danger' : 'warning'
+                            }
+                          >
+                            {reservation.status === 'confirmed' ? 'Confirmée' :
+                             reservation.status === 'cancelled' ? 'Annulée' : 'En attente'}
+                          </Badge>
+                        </td>
+                        <td className="text-end">
+                          {isAdmin && (
+                            <>
+                              <Button
+                                variant="outline-primary"
+                                size="sm"
+                                className="me-2"
+                                onClick={() => openModal(reservation)}
+                              >
+                                <FaEdit className="me-1" /> Modifier
+                              </Button>
+                              <Button
+                                variant="outline-danger"
+                                size="sm"
+                                onClick={() => handleDelete(reservation._id)}
+                              >
+                                <FaTrashAlt className="me-1" /> Supprimer
+                              </Button>
+                            </>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Modal Add/Edit */}
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Header closeButton className="bg-light">
+      {/* Edit Modal */}
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered 
+        contentClassName="bg-dark text-white"
+        backdrop="static">
+        <Modal.Header closeButton closeVariant="white" className="border-secondary">
           <Modal.Title className="text-primary">
             {selectedReservation ? 'Modifier Réservation' : 'Nouvelle Réservation'}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
-          
-
             <Form.Group className="mb-3">
               <Form.Label>Circuit</Form.Label>
               <Form.Select
                 value={formData.circuit}
                 onChange={(e) => setFormData({...formData, circuit: e.target.value})}
                 required
+                className="bg-dark text-white border-secondary"
               >
                 <option value="">Sélectionner un circuit</option>
                 {circuits.map(circuit => (
@@ -339,6 +356,7 @@ const GestionReservations = () => {
                 value={formData.date}
                 onChange={(e) => setFormData({...formData, date: e.target.value})}
                 required
+                className="bg-dark text-white border-secondary"
               />
             </Form.Group>
 
@@ -350,6 +368,7 @@ const GestionReservations = () => {
                 value={formData.numberOfPeople}
                 onChange={(e) => setFormData({...formData, numberOfPeople: e.target.value})}
                 required
+                className="bg-dark text-white border-secondary"
               />
             </Form.Group>
 
@@ -362,6 +381,7 @@ const GestionReservations = () => {
                 value={formData.totalPrice}
                 onChange={(e) => setFormData({...formData, totalPrice: e.target.value})}
                 required
+                className="bg-dark text-white border-secondary"
               />
             </Form.Group>
 
@@ -371,6 +391,7 @@ const GestionReservations = () => {
                 value={formData.status}
                 onChange={(e) => setFormData({...formData, status: e.target.value})}
                 required
+                className="bg-dark text-white border-secondary"
               >
                 <option value="pending">En attente</option>
                 <option value="confirmed">Confirmée</option>
@@ -389,6 +410,7 @@ const GestionReservations = () => {
           </Form>
         </Modal.Body>
       </Modal>
+    </div>
     </>
   );
 };

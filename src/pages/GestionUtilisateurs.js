@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { Button, Table, Alert, Spinner, Modal, Form } from "react-bootstrap";
-import Navbar from "../Components/navbar";
 import jwtDecode from "jwt-decode";
+import backgroundImage from "../assest/Accueil.jpg"; // Fix import path
+import Navbar from "../Components/navbar";
 
 const GestionUtilisateurs = () => {
   const [users, setUsers] = useState([]);
@@ -147,84 +148,107 @@ const GestionUtilisateurs = () => {
 
   return (
     <>
-      <Navbar />
-      <br/><br/><br/><br/>
-      
-      <div className="container">
-        <h1 className="mb-3 display-5 fw-bold text-primary">Gestion Utilisateurs</h1>
-        <center>
-        <p className="text-muted mb-4">
-          Gérez les comptes utilisateurs, modifiez les informations et les rôles
-        </p>
-        </center>
-        <div className="dashboard-card bg-white p-4 rounded-3 shadow-sm">
-          {error && <Alert variant="danger">{error}</Alert>}
-          {success && <Alert variant="success">{success}</Alert>}
+    <Navbar />
 
-          {loading ? (
-            <div className="text-center py-5">
-              <Spinner animation="border" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
+    <div style={{
+      background: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${backgroundImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      minHeight: '100vh',
+      paddingTop: '80px'
+    }}>
+      <div className="container py-5" style={{ maxWidth: '1400px' }}>
+        <div className="card shadow" style={{
+          background: 'rgba(0, 0, 0, 0.7)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '15px'
+        }}>
+          <div className="card-header" style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            <h1 className="text-white mb-0 text-center">
+              <span className="text-primary">Gestion</span> des Utilisateurs
+            </h1>
+            <div className="text-center mt-2">
+              <p className="text-white mb-0">
+                Gérez les comptes utilisateurs, modifiez les informations et les rôles
+              </p>
             </div>
-          ) : users.length === 0 ? (
-            <div className="text-center py-4 text-muted">Aucun utilisateur trouvé</div>
-          ) : (
-            <Table hover responsive className="align-middle">
-              <thead className="bg-light">
-                <tr>
-                  <th>Nom Complet</th>
-                  <th>Téléphone</th>
-                  <th>Email</th>
-                  <th>Rôle</th>
-                  <th>Genre</th>
-                  <th className="text-end">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map(user => (
-                  <tr key={user._id}>
-                    <td>{user.first_name} {user.last_name}</td>
-                    <td>{user.phone_number}</td>
-                    <td>{user.email}</td>
-                    <td>
-                      <span className={`badge rounded-pill ${
-                        user.role === 'Admin' ? 'bg-danger' :
-                        user.role === 'Manager' ? 'bg-warning text-dark' :
-                        'bg-primary'
-                      }`}>
-                        {user.role}
-                      </span>
-                    </td>
-                    <td>{user.gender}</td>
-                    <td className="text-end">
-                      <Button
-                        variant="outline-primary"
-                        size="sm"
-                        className="me-2"
-                        onClick={() => openModal(user)}
-                      >
-                        <FaEdit className="me-1" /> Modifier
-                      </Button>
-                      <Button
-                        variant="outline-danger"
-                        size="sm"
-                        onClick={() => deleteUser(user._id)}
-                      >
-                        <FaTrashAlt className="me-1" /> Supprimer
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          )}
+          </div>
+
+          <div className="card-body">
+            {error && <Alert variant="danger" className="rounded-3">{error}</Alert>}
+            {success && <Alert variant="success" className="rounded-3">{success}</Alert>}
+
+            {loading ? (
+              <div className="text-center py-5">
+                <Spinner animation="border" variant="primary" />
+              </div>
+            ) : users.length === 0 ? (
+              <div className="text-center py-4 text-muted">Aucun utilisateur trouvé</div>
+            ) : (
+              <div className="table-responsive">
+                <Table hover responsive className="align-middle text-white mb-0">
+                  <thead style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
+                    <tr>
+                      <th>Nom Complet</th>
+                      <th>Téléphone</th>
+                      <th>Email</th>
+                      <th>Rôle</th>
+                      <th>Genre</th>
+                      <th className="text-end">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {users.map(user => (
+                      <tr key={user._id} style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}>
+                        <td>{user.first_name} {user.last_name}</td>
+                        <td>{user.phone_number || '-'}</td>
+                        <td>{user.email}</td>
+                        <td>
+                          <span className={`badge rounded-pill ${
+                            user.role === 'Admin' ? 'bg-danger' :
+                            user.role === 'Manager' ? 'bg-warning text-dark' :
+                            'bg-primary'
+                          }`}>
+                            {user.role}
+                          </span>
+                        </td>
+                        <td>{user.gender || '-'}</td>
+                        <td className="text-end">
+                          <Button
+                            variant="outline-primary"
+                            size="sm"
+                            className="me-2"
+                            onClick={() => openModal(user)}
+                          >
+                            <FaEdit className="me-1" /> Modifier
+                          </Button>
+                          <Button
+                            variant="outline-danger"
+                            size="sm"
+                            onClick={() => deleteUser(user._id)}
+                          >
+                            <FaTrashAlt className="me-1" /> Supprimer
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Edit User Modal */}
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Header closeButton className="bg-light">
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered 
+        contentClassName="bg-dark text-white"
+        backdrop="static">
+        <Modal.Header closeButton closeVariant="white" className="border-secondary">
           <Modal.Title className="text-primary">Modifier Utilisateur</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -238,6 +262,7 @@ const GestionUtilisateurs = () => {
                     value={formData.first_name}
                     onChange={(e) => setFormData({...formData, first_name: e.target.value})}
                     required
+                    className="bg-dark text-white border-secondary"
                   />
                 </Form.Group>
               </div>
@@ -249,6 +274,7 @@ const GestionUtilisateurs = () => {
                     value={formData.last_name}
                     onChange={(e) => setFormData({...formData, last_name: e.target.value})}
                     required
+                    className="bg-dark text-white border-secondary"
                   />
                 </Form.Group>
               </div>
@@ -261,6 +287,7 @@ const GestionUtilisateurs = () => {
                     value={formData.email}
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
                     required
+                    className="bg-dark text-white border-secondary"
                   />
                 </Form.Group>
               </div>
@@ -269,10 +296,10 @@ const GestionUtilisateurs = () => {
                 <Form.Group className="mb-3">
                   <Form.Label>Téléphone</Form.Label>
                   <Form.Control
-                    type="text"
+                    type="tel"
                     value={formData.phone_number}
                     onChange={(e) => setFormData({...formData, phone_number: e.target.value})}
-                    required
+                    className="bg-dark text-white border-secondary"
                   />
                 </Form.Group>
               </div>
@@ -285,6 +312,8 @@ const GestionUtilisateurs = () => {
                     placeholder="Laisser vide pour ne pas modifier"
                     value={formData.password}
                     onChange={(e) => setFormData({...formData, password: e.target.value})}
+                    className="bg-dark text-white border-secondary"
+                    minLength="6"
                   />
                   <Form.Text className="text-muted">
                     Minimum 6 caractères. Laisser vide pour conserver le mot de passe actuel
@@ -304,7 +333,7 @@ const GestionUtilisateurs = () => {
           </Form>
         </Modal.Body>
       </Modal>
-    </>
+    </div></>
   );
 };
 

@@ -2,105 +2,68 @@ import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { FaUsers, FaBox, FaClipboardList, FaMapMarkedAlt } from "react-icons/fa";
 import Navbar from "../Components/navbar";
+import backgroundImage from "../assest/Accueil.jpg";
 
 const AdminDashboard = () => {
   return (
-    <div className="admin-dashboard bg-light min-vh-100">
+    <div style={{
+      background: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${backgroundImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      minHeight: '100vh',
+      paddingTop: '80px'
+    }}>
       <Navbar />
-      <br/><br/><br/>
-      <div className="container-fluid px-4 pt-5">
-        <div className="d-flex flex-column gap-3 mb-5">
-          {/* Header Section */}
-          <div className="text-center mb-4">
-            <h1 className="display-5 fw-bold text-dark mb-3">
+      
+      <div className="container py-5" style={{ maxWidth: '1400px' }}>
+        <div className="card shadow" style={{
+          background: 'rgba(0, 0, 0, 0.7)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '15px'
+        }}>
+          <div className="card-header" style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            <h1 className="text-white mb-0 text-center">
               <span className="text-primary">Tableau de Bord</span> Administrateur
             </h1>
-            <p className="text-muted fs-5">
-              Gérez l'ensemble des activités de votre plateforme
-            </p>
           </div>
-
-          {/* Navigation Cards */}
-          <div className="row g-4 mb-4">
-            <div className="col-12 col-md-6 col-xl-3">
-              <NavLink
-                to="/admin/utilisateurs"
-                className={({ isActive }) => 
-                  `card card-hover h-100 text-decoration-none ${
-                    isActive ? "border-primary bg-primary text-white" : "border"
-                  }`
-                }
-              >
-                <div className="card-body d-flex align-items-center">
-                  <FaUsers className="fs-2 me-3" />
-                  <div>
-                    <h5 className="mb-0">Utilisateurs</h5>
-                    <small className="opacity-75">Gestion des comptes</small>
-                  </div>
+<br></br>
+          <div className="card-body">
+            <div className="row g-4">
+              {[
+                { to: "utilisateurs", icon: <FaUsers />, title: "Utilisateurs", subtitle: "Gestion des comptes" },
+                { to: "circuits", icon: <FaMapMarkedAlt />, title: "Circuits", subtitle: "Gestion des parcours" },
+                { to: "reservations", icon: <FaClipboardList />, title: "Réservations", subtitle: "Suivi des bookings" },
+                { to: "fournisseurs", icon: <FaBox />, title: "Fournisseurs", subtitle: "Partenaires services" }
+              ].map((item, index) => (
+                <div key={index} className="col-12 col-md-6 col-xl-3">
+                  <NavLink
+                    to={`/admin/${item.to}`}
+                    className={({ isActive }) => 
+                      `btn btn-lg h-100 text-start p-4 d-flex align-items-center ${
+                        isActive ? "btn-primary" : "btn-outline-primary"
+                      } rounded-4 border-2`
+                    }
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)'
+                    }}
+                  >
+                    <span className="fs-2 me-3">{item.icon}</span>
+                    <div>
+                      <h5 className="mb-1">{item.title}</h5>
+                      <small className="opacity-75">{item.subtitle}</small>
+                    </div>
+                  </NavLink>
                 </div>
-              </NavLink>
+              ))}
             </div>
 
-            <div className="col-12 col-md-6 col-xl-3">
-              <NavLink
-                to="/admin/circuits"
-                className={({ isActive }) => 
-                  `card card-hover h-100 text-decoration-none ${
-                    isActive ? "border-primary bg-primary text-white" : "border"
-                  }`
-                }
-              >
-                <div className="card-body d-flex align-items-center">
-                  <FaMapMarkedAlt className="fs-2 me-3" />
-                  <div>
-                    <h5 className="mb-0">Circuits</h5>
-                    <small className="opacity-75">Gestion des parcours</small>
-                  </div>
-                </div>
-              </NavLink>
-            </div>
-
-            <div className="col-12 col-md-6 col-xl-3">
-              <NavLink
-                to="/admin/reservations"
-                className={({ isActive }) => 
-                  `card card-hover h-100 text-decoration-none ${
-                    isActive ? "border-primary bg-primary text-white" : "border"
-                  }`
-                }
-              >
-                <div className="card-body d-flex align-items-center">
-                  <FaClipboardList className="fs-2 me-3" />
-                  <div>
-                    <h5 className="mb-0">Réservations</h5>
-                    <small className="opacity-75">Suivi des bookings</small>
-                  </div>
-                </div>
-              </NavLink>
-            </div>
-
-            <div className="col-12 col-md-6 col-xl-3">
-              <NavLink
-                to="/admin/fournisseurs"
-                className={({ isActive }) => 
-                  `card card-hover h-100 text-decoration-none ${
-                    isActive ? "border-primary bg-primary text-white" : "border"
-                  }`
-                }
-              >
-                <div className="card-body d-flex align-items-center">
-                  <FaBox className="fs-2 me-3" />
-                  <div>
-                    <h5 className="mb-0">Fournisseurs</h5>
-                    <small className="opacity-75">Partenaires services</small>
-                  </div>
-                </div>
-              </NavLink>
-            </div>
-          </div>
-
-          {/* Content Section */}
           
+          </div>
         </div>
       </div>
     </div>
