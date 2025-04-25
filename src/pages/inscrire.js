@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Box, Typography,MenuItem, Container, InputAdornment, IconButton, Alert, Fade, Zoom, Link } from '@mui/material';
+import { TextField, Button, Box, Typography, IconButton, Alert, Fade, Zoom, Link, MenuItem } from '@mui/material';
 import { Visibility, VisibilityOff, Person, Lock, Phone, Email, Male, Female, Work } from '@mui/icons-material';
+import Navbar from "../Components/navbar";
 import backgroundImage from "../assest/Accueil.jpg";
 
 const Inscrire = () => {
@@ -38,17 +39,22 @@ const Inscrire = () => {
 
   return (
     <div className="auth-page">
+      <Navbar />
       <div 
-        className="auth-container d-flex align-items-center justify-content-center"
+        className="auth-container"
         style={{
-          background: `linear-gradient(rgba(0, 0, 0, 0.6), url(${backgroundImage})`,
-          backgroundSize: "cover",
-          minHeight: "100vh",
-          paddingTop: "80px"
+          background: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          minHeight: '100vh',
+          paddingTop: '80px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
         }}
       >
         <Zoom in={true}>
-          <div className="auth-card bg-dark rounded-4 p-5 shadow-lg">
+          <div className="auth-card">
             <div className="text-center mb-5">
               <Person sx={{ 
                 fontSize: 50, 
