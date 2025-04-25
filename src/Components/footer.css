@@ -1,83 +1,67 @@
-/* Assurez-vous que le footer reste en bas de page */
-html, body {
-  height: 100%;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-#root {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-main {
-  flex: 1;
-}
-
-/* Footer Styling */
+/* footer.css */
 .footer {
-  background-color: #1a1a1a;  /* Couleur de fond plus foncée */
-  color: white;
-  padding: 3rem 0;
-  text-align: center;
+  background: #1a1a1a;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  margin-top: auto;
+  height: 3px;
+  background: linear-gradient(90deg, #61fd8d 0%, #12231b 100%);
 }
 
-.footer .logo {
-  font-family: 'Cursive', sans-serif;
-  font-size: 2rem;
-  letter-spacing: 1px;
+.logo h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.2rem;
+  letter-spacing: -0.5px;
 }
 
-.footer .logo .text-primary {
-  color: #0d6efd;
+.hover-primary {
+  transition: all 0.3s ease;
+  position: relative;
 }
 
-.footer .menu h5 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 1rem;
+.hover-primary:hover {
+  color: #0d6efd !important;
+  padding-left: 8px;
 }
 
-.footer .menu ul {
-  padding-left: 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+.hover-primary:after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #0d6efd;
+  transition: width 0.3s ease;
 }
 
-.footer .menu .nav-item {
-  margin: 0.5rem;
+.hover-primary:hover:after {
+  width: 100%;
 }
 
-.footer .menu .nav-link {
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s ease;
+.social-icons a {
+  transition: all 0.3s ease;
+  display: inline-block;
 }
 
-.footer .menu .nav-link:hover {
-  color: #0d6efd;
-  text-decoration: underline;
+.social-icons a:hover {
+  transform: translateY(-3px);
+  color: #0d6efd !important;
 }
 
-.footer .social-icons a {
-  font-size: 1.5rem;
-  transition: transform 0.3s ease;
-}
-
-.footer .social-icons a:hover {
-  transform: scale(1.1);
-  color: #0d6efd;
-}
-
-.footer .text-center p {
-  margin-top: 1rem;
-  font-size: 0.9rem;
-  color: #aaa;
+@media (max-width: 768px) {
+  .footer .col-md-4 {
+    margin-bottom: 2rem;
+  }
+  
+  .logo h2 {
+    font-size: 1.8rem;
+  }
 }
