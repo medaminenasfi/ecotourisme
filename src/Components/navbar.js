@@ -17,16 +17,18 @@ const Navbar = () => {
         {/* Brand Logo */}
         <Link className="navbar-brand d-flex align-items-center" to="/">
           <FaLeaf className="me-2 fs-4 text-success" />
-          EcoTourisme
+          <span className="font-weight-bold">EcoTourisme</span>
         </Link>
 
-        {/* Toggler */}
+        {/* Mobile Toggler */}
         <button
           className="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#mainNav"
+          aria-controls="mainNav"
           aria-expanded="false"
+          aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon"></span>
         </button>
@@ -34,36 +36,96 @@ const Navbar = () => {
         {/* Navigation Items */}
         <div className="collapse navbar-collapse" id="mainNav">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            {/* Liens principaux */}
             <li className="nav-item">
-              <NavLink to="/" className="nav-link" end>Accueil</NavLink>
+              <NavLink
+                to="/"
+                className={({ isActive }) => 
+                  `nav-link ${isActive ? "active text-success" : ""}`
+                }
+                end
+              >
+                Accueil
+              </NavLink>
             </li>
+            
             <li className="nav-item">
-              <NavLink to="/Randonée" className="nav-link">Randonnée</NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink to="/Reservation" className="nav-link">Réservation</NavLink>
-            </li>
-            <li className="nav-item"><Link to="/Artisan" className="nav-link">Artisan</Link></li>
-            <li className="nav-item"><Link to="/Contact" className="nav-link">Contact</Link></li>
-            <li className="nav-item">
-              <NavLink to="/ServicesList" className="nav-link">Services</NavLink>
+              <NavLink
+                to="/Randonée"
+                className={({ isActive }) => 
+                  `nav-link ${isActive ? "active text-success" : ""}`
+                }
+              >
+                Randonnée
+              </NavLink>
             </li>
 
-            {/* Lien Gestion conditionnel */}
+            <li className="nav-item">
+              <NavLink
+                to="/Reservation"
+                className={({ isActive }) => 
+                  `nav-link ${isActive ? "active text-success" : ""}`
+                }
+              >
+                Réservation
+              </NavLink>
+            </li>
+
+            <li className="nav-item">
+              <NavLink
+                to="/Artisan"
+                className={({ isActive }) => 
+                  `nav-link ${isActive ? "active text-success" : ""}`
+                }
+              >
+                Artisan
+              </NavLink>
+            </li>
+
+            <li className="nav-item">
+              <NavLink
+                to="/Contact"
+                className={({ isActive }) => 
+                  `nav-link ${isActive ? "active text-success" : ""}`
+                }
+              >
+                Contact
+              </NavLink>
+            </li>
+
+            <li className="nav-item">
+              <NavLink
+                to="/ServicesList"
+                className={({ isActive }) => 
+                  `nav-link ${isActive ? "active text-success" : ""}`
+                }
+              >
+                Services
+              </NavLink>
+            </li>
+
+            {/* Conditional Admin/Fournisseur Links */}
             {isAuthenticated && (
               <li className="nav-item">
-                <NavLink to="/gestion" className="nav-link">
+                <NavLink
+                  to="/gestion"
+                  className={({ isActive }) => 
+                    `nav-link ${isActive ? "active text-success" : ""}`
+                  }
+                >
                   <FaChartLine className="me-1" />
-                  Avis & Reclamation
+                  Avis & Réclamation
                 </NavLink>
               </li>
             )}
 
-            {/* Liens spécifiques aux rôles */}
             {isAuthenticated && user.role === "admin" && (
               <li className="nav-item">
-                <NavLink to="/AdminDashboard" className="nav-link">
+                <NavLink
+                  to="/AdminDashboard"
+                  className={({ isActive }) => 
+                    `nav-link ${isActive ? "active text-success" : ""}`
+                  }
+                >
                   Dashboard Admin
                 </NavLink>
               </li>
@@ -71,7 +133,12 @@ const Navbar = () => {
 
             {isAuthenticated && user.role === "fournisseur" && (
               <li className="nav-item">
-                <NavLink to="/create-service" className="nav-link">
+                <NavLink
+                  to="/create-service"
+                  className={({ isActive }) => 
+                    `nav-link ${isActive ? "active text-success" : ""}`
+                  }
+                >
                   <FaPlusCircle className="me-1" />
                   Mes Services
                 </NavLink>
@@ -79,8 +146,8 @@ const Navbar = () => {
             )}
           </ul>
 
-          {/* Section authentification */}
-          <div className="d-flex align-items-center gap-2">
+          {/* Auth Section */}
+          <div className="d-flex align-items-center gap-3">
             {!isAuthenticated ? (
               <>
                 <Link to="/Seconnecter" className="btn btn-outline-light rounded-pill px-4">
@@ -93,24 +160,27 @@ const Navbar = () => {
             ) : (
               <div className="dropdown">
                 <button
-                  className="btn btn-outline-light dropdown-toggle d-flex align-items-center"
+                  className="btn btn-outline-light d-flex align-items-center gap-2 rounded-pill"
                   type="button"
+                  id="userMenu"
                   data-bs-toggle="dropdown"
+                  aria-expanded="false"
                 >
-                  <FaUser className="me-2" />
-                  {user.first_name}
+                  <FaUser />
+                  <span>{user.first_name}</span>
                 </button>
-                <ul className="dropdown-menu dropdown-menu-end">
+                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
                   <li>
                     <Link to="/profile" className="dropdown-item">
                       Profil
                     </Link>
                   </li>
+                  <li><hr className="dropdown-divider" /></li>
                   <li>
-                    <hr className="dropdown-divider" />
-                  </li>
-                  <li>
-                    <button className="dropdown-item text-danger" onClick={logout}>
+                    <button 
+                      className="dropdown-item text-danger" 
+                      onClick={logout}
+                    >
                       Déconnexion
                     </button>
                   </li>
@@ -120,6 +190,27 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+      {/* Inline Styles */}
+      <style>
+        {`
+          .nav-link {
+            transition: all 0.2s ease;
+            position: relative;
+            border-bottom: 2px solid transparent;
+          }
+          .nav-link:hover {
+            transform: translateY(-2px);
+            color: #20c997 !important;
+          }
+          .nav-link.active {
+            border-bottom-color: #20c997;
+          }
+          .dropdown-item:active {
+            background-color: #20c997;
+          }
+        `}
+      </style>
     </nav>
   );
 };
