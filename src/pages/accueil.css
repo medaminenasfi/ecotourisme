@@ -310,3 +310,18 @@ button {
 .card-img-top {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
+
+.hover-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hover-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+}
+
+.lead {
+  font-size: 1.25rem;
+  color: #aaa;
+}
