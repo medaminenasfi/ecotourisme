@@ -1,10 +1,11 @@
 import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { Form, Button, Alert, Spinner, Card, Row, Col, Badge, Modal } from "react-bootstrap";
-import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import { Form, Button, Alert, Spinner, Card, Row, Col, Badge, Modal, Container } from "react-bootstrap";
+import { FaEdit, FaTrash, FaPlus, FaPhone } from "react-icons/fa";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/navbar";
+import backgroundImage from "../assest/Accueil.jpg";
 
 const CreateService = () => {
   const { user } = useContext(AuthContext);
@@ -39,10 +40,7 @@ const CreateService = () => {
         const response = await axios.get("http://localhost:5000/api/services", {
           headers: { Authorization: `Bearer ${token}` }
         });
-        
-        console.log("Tous les services de la DB:", response.data); 
         setServices(response.data); 
-        
       } catch (err) {
         setError(err.response?.data?.message || "Erreur de chargement des services");
       }
@@ -52,6 +50,7 @@ const CreateService = () => {
       fetchAllServices();
     }
   }, [user]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -131,161 +130,288 @@ const CreateService = () => {
 
   if (!user || user.role !== "fournisseur") {
     return (
-      <div className="container mt-5">
-        <Alert variant="danger">Accès réservé aux fournisseurs</Alert>
+      <div style={{
+        background: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        minHeight: '100vh',
+        paddingTop: '80px'
+      }}>
+        <Navbar />
+        <Container className="py-5">
+          <Alert variant="danger" className="text-center">Accès réservé aux fournisseurs</Alert>
+        </Container>
       </div>
     );
   }
 
   return (
-    <div className="container mt-5">
-            <Navbar />
-<br/><br/><br/>
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2>Mes Services</h2>
-        <Button variant="primary" onClick={handleShowModal}>
-          <FaPlus className="me-2" /> Ajouter un service
-        </Button>
-      </div>
-
-      {error && <Alert variant="danger">{error}</Alert>}
-
-      {services.length === 0 ? (
-        <Alert variant="info">Aucun service créé pour le moment</Alert>
-      ) : (
-        <Row xs={1} md={2} lg={3} className="g-4">
-          {services.map(service => (
-            <Col key={service._id}>
-              <Card className="h-100 shadow-sm">
-                <Card.Img
-                  variant="top"
-                  src={service.photo || '/placeholder.jpg'}
-                  style={{ height: '200px', objectFit: 'cover' }}
-                />
-                <Card.Body>
-                  <Card.Title>{service.type}</Card.Title>
-                  <Card.Text>{service.description}</Card.Text>
-                  <Badge bg="info">{service.phoneNumber}</Badge>
-                </Card.Body>
-                <Card.Footer className="d-flex justify-content-end gap-2">
-                  <Button
-                    variant="outline-primary"
-                    size="sm"
-                    onClick={() => handleEdit(service)}
-                  >
-                    <FaEdit />
-                  </Button>
-                  <Button
-                    variant="outline-danger"
-                    size="sm"
-                    onClick={() => {
-                      setSelectedService(service);
-                      setShowDeleteModal(true);
-                    }}
-                  >
-                    <FaTrash />
-                  </Button>
-                </Card.Footer>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      )}
-
-      {/* Formulaire Modal */}
-      <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            {editMode ? "Modifier le service" : "Nouveau service"}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Label>Type de service</Form.Label>
-              <Form.Select 
-                name="type"
-                value={formData.type}
-                onChange={(e) => setFormData({...formData, type: e.target.value})}
-                required
+    <div style={{
+      background: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${backgroundImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      minHeight: '100vh',
+      paddingTop: '80px'
+    }}>
+      <Navbar />
+      
+      <Container className="py-5" style={{ maxWidth: '1200px' }}>
+        <Card className="shadow" style={{
+          background: 'rgba(0, 0, 0, 0.7)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '15px'
+        }}>
+          <Card.Header style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            <div className="d-flex justify-content-between align-items-center">
+              <h2 style={{ 
+                color: '#FFFFFF', 
+                margin: 0,
+                fontWeight: '600',
+                letterSpacing: '0.5px'
+              }}>
+                Mes Services
+              </h2>
+              <Button 
+                variant="primary" 
+                onClick={handleShowModal}
+                className="rounded-pill px-4 py-2 d-flex align-items-center"
               >
-                <option value="">Sélectionner un type</option>
-                {serviceTypes.map(type => (
-                  <option key={type} value={type}>{type}</option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Description</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                name="description"
-                value={formData.description}
-                onChange={(e) => setFormData({...formData, description: e.target.value})}
-                required
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>URL de la photo</Form.Label>
-              <Form.Control
-                type="url"
-                name="photo"
-                value={formData.photo}
-                onChange={(e) => setFormData({...formData, photo: e.target.value})}
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Numéro de téléphone</Form.Label>
-              <Form.Control
-  type="tel"
-  name="phoneNumber"
-  value={formData.phoneNumber}
-  onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-/>
-
-            </Form.Group>
-
-            <div className="d-flex justify-content-end gap-2">
-              <Button variant="secondary" onClick={handleCloseModal}>
-                Annuler
-              </Button>
-              <Button variant="primary" type="submit" disabled={loading}>
-                {loading ? (
-                  <Spinner animation="border" size="sm" />
-                ) : editMode ? (
-                  "Enregistrer"
-                ) : (
-                  "Créer"
-                )}
+                <FaPlus className="me-2" /> Ajouter un service
               </Button>
             </div>
-          </Form>
-        </Modal.Body>
-      </Modal>
+          </Card.Header>
 
-      {/* Modal de confirmation de suppression */}
-      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirmation de suppression</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Êtes-vous sûr de vouloir supprimer ce service ?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-            Annuler
-          </Button>
-          <Button variant="danger" onClick={handleDelete}>
-            Supprimer
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          <Card.Body>
+            {error && <Alert variant="danger">{error}</Alert>}
+
+            {services.length === 0 ? (
+              <div className="text-center py-5">
+                <img 
+                  src="/empty-state.svg" 
+                  alt="No services" 
+                  style={{ width: '200px', opacity: 0.7 }} 
+                  className="mb-4"
+                />
+                <h4 className="text-white mb-3">Aucun service créé pour le moment</h4>
+                <Button 
+                  variant="outline-primary" 
+                  onClick={handleShowModal}
+                  className="rounded-pill px-4"
+                >
+                  Créer votre premier service
+                </Button>
+              </div>
+            ) : (
+              <Row xs={1} md={2} lg={3} className="g-4">
+                {services.map(service => (
+                  <Col key={service._id}>
+                    <Card className="h-100" style={{
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      color: 'white'
+                    }}>
+                      <Card.Img
+                        variant="top"
+                        src={service.photo || '/placeholder.jpg'}
+                        style={{ height: '200px', objectFit: 'cover' }}
+                        className="border-bottom"
+                      />
+                      <Card.Body>
+                        <Badge bg="light" className="text-primary mb-2 fw-normal">
+                          {service.type}
+                        </Badge>
+                        <Card.Text className="text-white mb-3">
+                          {service.description}
+                        </Card.Text>
+                        <div className="d-flex align-items-center text-white">
+                          <FaPhone className="me-2" size={14} />
+                          <small>{service.phoneNumber}</small>
+                        </div>
+                      </Card.Body>
+                      <Card.Footer style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+                      }} className="d-flex justify-content-end gap-2">
+                        <Button
+                          variant="outline-primary"
+                          size="sm"
+                          className="rounded-circle p-2 d-flex align-items-center justify-content-center"
+                          onClick={() => handleEdit(service)}
+                        >
+                          <FaEdit size={14} />
+                        </Button>
+                        <Button
+                          variant="outline-danger"
+                          size="sm"
+                          className="rounded-circle p-2 d-flex align-items-center justify-content-center"
+                          onClick={() => {
+                            setSelectedService(service);
+                            setShowDeleteModal(true);
+                          }}
+                        >
+                          <FaTrash size={14} />
+                        </Button>
+                      </Card.Footer>
+                    </Card>
+                  </Col>
+                ))}
+              </Row>
+            )}
+          </Card.Body>
+        </Card>
+
+        {/* Add/Edit Service Modal */}
+        <Modal show={showModal} onHide={handleCloseModal} centered>
+          <Modal.Header closeButton style={{
+            background: 'rgba(0, 0, 0, 0.7)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            color: 'white'
+          }}>
+            <Modal.Title>
+              {editMode ? "Modifier le service" : "Nouveau service"}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body style={{
+            background: 'rgba(0, 0, 0, 0.7)',
+            color: 'white'
+          }}>
+            <Form onSubmit={handleSubmit}>
+              <Form.Group className="mb-3">
+                <Form.Label>Type de service</Form.Label>
+                <Form.Select className="text-black"
+                  name="type"
+                  value={formData.type}
+                  onChange={(e) => setFormData({...formData, type: e.target.value})}
+                  required
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                    color: 'white'
+                  }}
+                >
+                  <option value="">Sélectionner un type</option>
+                  {serviceTypes.map(type => (
+                    <option key={type} value={type}>{type}</option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Description</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  name="description"
+                  value={formData.description}
+                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                  required
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                    color: 'white'
+                  }}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>URL de la photo</Form.Label>
+                <Form.Control
+                  type="url"
+                  name="photo"
+                  value={formData.photo}
+                  onChange={(e) => setFormData({...formData, photo: e.target.value})}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                    color: 'white'
+                  }}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Numéro de téléphone</Form.Label>
+                <Form.Control
+                  type="tel"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
+                  onChange={(e) => setFormData({...formData, phoneNumber: e.target.value})}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                    color: 'white'
+                  }}
+                />
+              </Form.Group>
+
+              <div className="d-flex justify-content-end gap-2">
+                <Button 
+                  variant="secondary" 
+                  onClick={handleCloseModal}
+                  style={{ borderRadius: '20px' }}
+                >
+                  Annuler
+                </Button>
+                <Button 
+                  variant="primary" 
+                  type="submit" 
+                  disabled={loading}
+                  style={{ borderRadius: '20px' }}
+                >
+                  {loading ? (
+                    <Spinner animation="border" size="sm" />
+                  ) : editMode ? (
+                    "Enregistrer"
+                  ) : (
+                    "Créer"
+                  )}
+                </Button>
+              </div>
+            </Form>
+          </Modal.Body>
+        </Modal>
+
+        {/* Delete Confirmation Modal */}
+        <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
+          <Modal.Header closeButton style={{
+            background: 'rgba(0, 0, 0, 0.7)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            color: 'white'
+          }}>
+            <Modal.Title>Confirmation de suppression</Modal.Title>
+          </Modal.Header>
+          <Modal.Body style={{
+            background: 'rgba(0, 0, 0, 0.7)',
+            color: 'white'
+          }}>
+            Êtes-vous sûr de vouloir supprimer ce service ?
+          </Modal.Body>
+          <Modal.Footer style={{
+            background: 'rgba(0, 0, 0, 0.7)',
+            borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            <Button 
+              variant="secondary" 
+              onClick={() => setShowDeleteModal(false)}
+              style={{ borderRadius: '20px' }}
+            >
+              Annuler
+            </Button>
+            <Button 
+              variant="danger" 
+              onClick={handleDelete}
+              style={{ borderRadius: '20px' }}
+            >
+              Supprimer
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </Container>
     </div>
   );
 };
 
-export default CreateService; 
+export default CreateService;
