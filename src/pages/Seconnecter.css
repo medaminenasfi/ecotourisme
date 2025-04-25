@@ -1,292 +1,84 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap");
-
-/* Global Styles */
-body {
-  margin: 0;
-  padding: 0;
-  font-family: "Poppins", sans-serif;
-  background-color: #f4f4f4;
+/* auth.css */
+.auth-page {
+  background-color: #1a1a1a;
 }
 
-/* Page Container */
-.page-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  position: relative;
+.auth-container {
+  min-height: calc(100vh - 80px);
+  padding: 2rem;
 }
 
-/* Navbar */
-.navbar {
-  background-color: #2c3e50;
-  padding: 1rem 2rem;
+.auth-card {
   width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
+  max-width: 450px;
+  backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.nav-links {
-  display: flex;
-  gap: 2rem;
-  justify-content: flex-end;
-  max-width: 1200px;
-  margin: 0 auto;
+.form-control {
+  transition: all 0.3s ease;
 }
 
-.nav-link {
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-  transition: opacity 0.3s ease;
+.form-control:focus {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: #20c997 !important;
+  box-shadow: 0 0 0 0.25rem rgba(32, 201, 151, 0.25);
+  color: white !important;
 }
 
-.nav-link:hover {
-  opacity: 0.8;
+.btn-success {
+  background-color: #20c997;
+  border: none;
+  transition: all 0.3s ease;
 }
 
-/* Hero Section */
-.hero-section {
-  flex: 1;
-  padding: 8rem 2rem 4rem; /* Adjusted for fixed navbar */
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-  box-sizing: border-box;
-  text-align: center;
-  position: relative;
+.btn-success:hover {
+  background-color: #1aa87d;
+  transform: translateY(-1px);
 }
 
-/* Overlay Effect */
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Dark overlay for better text visibility */
+.text-success {
+  color: #20c997 !important;
 }
 
-/* Content Section */
-.content {
-  position: relative;
-  z-index: 2;
-  color: white;
-  width: 1515px;
-  height: 859px;
-  left: -1px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  margin: 0 auto;
+.text-success:hover {
+  color: #1aa87d !important;
+  text-decoration: underline;
 }
 
-/* Headings */
-h1 {
-  font-family: "Poppins", sans-serif;
-  font-size: 3.5rem;
-  font-weight: 700;
-  text-align: center;
-  color: white;
-  margin: 0;
+.input-group-text {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #20c997 !important;
+  cursor: pointer;
 }
 
-.lead {
-  font-size: 1.5rem;
-  font-weight: 400;
-  font-family: "Poppins", sans-serif;
-  margin-top: 1rem;
-}
-
-/* Quotes Section */
-.quotes {
-  position: absolute;
-  bottom: 5%;
-  width: 90%;
-  display: flex;
-  justify-content: space-between;
-  font-size: 1rem;
-  font-style: italic;
+.alert-danger {
+  background-color: #dc3545;
+  border: none;
   color: white;
 }
 
-.quote {
-  width: 40%;
-  z-index: 2;
-}
-
-.quote.left {
-  text-align: left;
-}
-
-.quote.right {
-  text-align: right;
-}
-
-/* Footer */
-.main-footer {
-  background-color: #222222;
-  color: white;
-  margin-top: auto;
-  padding: 3rem 2rem;
-  width: 100%;
-}
-
-.footer-links-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 2rem;
-}
-
-.footer-nav {
-  display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
-
-.footer-link {
-  color: white;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.footer-link:hover {
-  color: #4caf50;
-}
-
-.copyright-section {
-  text-align: center;
-  margin-top: 3rem;
-  padding-top: 2rem;
-  border-top: 1px solid #444444;
-  color: #888888;
-}
-
-
-
-.image-section {
-  width: 1264px;
-  height: 420px;
-  background-color: black; /* Optional background */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
-
-.image-style {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: cover; /* Ensures the image fits inside */
-}
-
-
-
-
-:root {
-  --default-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Ubuntu, "Helvetica Neue", Helvetica, Arial, "PingFang SC",
-    "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei",
-    "Source Han Sans CN", sans-serif;
-}
-
-.main-container {
-  overflow: hidden;
-}
-
-.main-container,
-.main-container * {
-  box-sizing: border-box;
-}
-
-input,
-select,
-textarea,
-button {
-  outline: 0;
-}
-
-.main-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  flex-wrap: nowrap;
-  gap: 10px;
-  position: relative;
-  width: 1264px;
-  margin: 0 auto;
-    padding: 0 15px; /* Add padding for responsiveness */
-
-}
-.mask-group {
-  flex-shrink: 0;
-  position: relative;
-  width: 1264px;
-  height: 420px;
-  background: url(../assest/tatouine.jpg)
-    no-repeat center;
-  background-size: cover;
-}
-.explore-tunisia {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  position: absolute;
-  width: 620px;
-  height: 128px;
-  top: 157px;
-  left: 53px;
-  color: #ffffff;
-  font-family: Poppins, var(--default-font-family);
-  font-size: 60px;
-  font-weight: 600;
-  line-height: 63.6px;
-  text-align: left;
-  text-overflow: initial;
-  letter-spacing: -0.6px;
-  z-index: 1;
-  overflow: hidden;
-
-}
-.frame-1 {
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: nowrap;
-  flex-shrink: 0;
-  gap: 10px;
-  position: absolute;
-  width: 86px;
-  height: 86px;
-  top: 188px;
-  left: 1085px;
-  background: url(../assest/fleche.png)
-    no-repeat center;
-  background-size: cover;
-  z-index: 2;
-}
-@media (max-width: 480px) {
-  .explore-tunisia {
-    font-size: 1.5rem; /* Smaller text */
+@media (max-width: 576px) {
+  .auth-card {
+    padding: 2rem 1.5rem;
   }
-  .image-section {
-    height: 250px; /* Adjust height */
-  }
-  .main-container {
-    padding: 0 10px; /* Add more padding */
+  
+  .auth-container {
+    padding: 1rem;
   }
 }
-@media (max-width: 768px) {
-  .explore-tunisia {
-    font-size: 2rem; /* Adjust font size */
-  }
-  .image-section {
-    height: 300px; /* Adjust height */
-  }
+.input-group .btn-outline-secondary {
+  border-left: none !important;
+  border-color: #495057;
+}
+
+.input-group .btn-outline-secondary:hover {
+  background-color: rgba(32, 201, 151, 0.1);
+  border-color: #20c997;
+}
+
+.input-group:focus-within {
+  box-shadow: 0 0 0 0.25rem rgba(32, 201, 151, 0.25);
 }

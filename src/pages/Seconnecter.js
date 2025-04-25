@@ -4,6 +4,7 @@ import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import Navbar from "../Components/navbar";
 import backgroundImage from "../assest/Accueil.jpg";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Seconnecter = () => {
   const { login } = useContext(AuthContext);
@@ -31,78 +32,88 @@ const Seconnecter = () => {
   };
 
   return (
-    <>
+    <div className="auth-page">
       <Navbar />
-      <main>
-        <section
-          className="d-flex align-items-center justify-content-center text-white"
-          style={{
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            height: "100vh",
-            width: "100%",
-          }}
+      <div 
+        className="auth-container d-flex align-items-center justify-content-center"
+        style={{
+          background: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${backgroundImage})`,
+          backgroundSize: "cover",
+          minHeight: "100vh",
+          paddingTop: "80px"
+        }}
+      >
+      <div className="auth-card bg-dark rounded-4 p-5 shadow-lg">
+  <div className="text-center mb-5">
+    <h2 className="text-white mb-3 fw-bold">Connexion</h2>
+  </div>
+
+  <form onSubmit={handleSubmit}>
+    {/* Champ Email */}
+    <div className="mb-4">
+      <label className="form-label text-white">Adresse e-mail</label>
+      <input
+        type="email"
+        className="form-control bg-transparent text-white border-secondary"
+        placeholder="exemple@email.com"
+        name="email"
+        required
+        onChange={handleChange}
+      />
+    </div>
+
+    {/* Champ Mot de passe */}
+    <div className="mb-4">
+      <label className="form-label text-white">Mot de passe</label>
+      <div className="input-group">
+        <input
+          type={showPassword ? "text" : "password"}
+          className="form-control bg-transparent text-white border-secondary"
+          placeholder="Entrez votre mot de passe"
+          name="password"
+          required
+          onChange={handleChange}
+        />
+        <button
+          type="button"
+          className="btn btn-outline-secondary"
+          onClick={() => setShowPassword(!showPassword)}
         >
-          <div className="main-container">
-            <div className="main-div">
-              <div className="header">
-                <a href="/" className="back-to-login">
-                  &lt; Retour à l'accueil
-                </a>
-                <h2 className="forgot-password-title">Connexion à votre compte</h2>
-              </div>
-              {error && <div className="alert alert-danger">{error}</div>}
+          {showPassword ? <FaEyeSlash /> : <FaEye />}
+        </button>
+      </div>
+    </div>
 
-              <form className="password-recovery-form" onSubmit={handleSubmit}>
-                <label className="email-label">Adresse e-mail</label>
-                <input
-                  type="email"
-                  className="email-input"
-                  name="email"
-                  placeholder="exemple@email.com"
-                  required
-                  onChange={handleChange}
-                />
+    {/* Bouton de connexion */}
+    <button 
+      type="submit" 
+      className="btn btn-success w-100 py-2 fw-bold rounded-pill mb-3"
+    >
+      Se connecter
+    </button>
 
-                <label className="email-label">Mot de passe</label>
-                <div className="password-input-container">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    className="email-input"
-                    name="password"
-                    placeholder="********"
-                    required
-                    onChange={handleChange}
-                  />
-                  <button
-                    type="button"
-                    className="show-password"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? "Masquer" : "Afficher"}
-                  </button>
-                </div>
-
-                <button type="submit" className="btn-continue">
-                  SE CONNECTER
-                </button>
-              </form>
-
-              <div className="additional-links">
-                <a href="/forgot" className="forgot-password">
-                  Mot de passe oublié ?
-                </a>
-                <span className="signup-link">
-                  Vous n'avez pas de compte ? <a href="/inscrire">S'inscrire</a>
-                </span>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-    </>
+    {/* Liens supplémentaires */}
+    <div className="d-flex flex-column align-items-center gap-2 mt-4">
+      <a 
+        href="/forgot" 
+        className="text-decoration-none text-success small"
+      >
+        Mot de passe oublié ?
+      </a>
+      <span className="text-white small">
+        Pas de compte ?{" "}
+        <a 
+          href="/inscrire" 
+          className="text-success text-decoration-none fw-medium"
+        >
+          S'inscrire
+        </a>
+      </span>
+    </div>
+  </form>
+</div>
+      </div>
+    </div>
   );
 };
 
