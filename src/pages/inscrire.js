@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Box, Typography, Container, Paper, Select, MenuItem, InputLabel, FormControl,InputAdornment,IconButton,Alert,Fade,Zoom,Link 
-} from '@mui/material';
-import { Visibility, VisibilityOff,Person,Lock,Phone,Email,Male,Female,Work,} from '@mui/icons-material';
+import { TextField, Button, Box, Typography,MenuItem, Container, InputAdornment, IconButton, Alert, Fade, Zoom, Link } from '@mui/material';
+import { Visibility, VisibilityOff, Person, Lock, Phone, Email, Male, Female, Work } from '@mui/icons-material';
+import backgroundImage from "../assest/Accueil.jpg";
 
 const Inscrire = () => {
   const [formData, setFormData] = useState({
@@ -30,282 +30,234 @@ const Inscrire = () => {
       if (response.data.accessToken) {
         localStorage.setItem('accessToken', response.data.accessToken);
         navigate('/seconnecter');
-      } else {
-        setError(response.data.message || 'Erreur lors de l\'inscription');
       }
     } catch (error) {
-      console.error('Error during registration:', error);
       setError('Échec de l\'inscription. Veuillez réessayer.');
     }
   };
 
   return (
-    <Container 
-      component="main" 
-      maxWidth="xs" 
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-      }}
-    >
-      <Zoom in={true}>
-        <Paper 
-          elevation={6}
-          sx={{
-            padding: 4,
-            width: '100%',
-            borderRadius: 4,
-            transform: 'translateY(0)',
-            transition: 'transform 0.3s, box-shadow 0.3s',
-            '&:hover': {
-              transform: 'translateY(-5px)',
-              boxShadow: 8
-            }
-          }}
-        >
-          <Box textAlign="center" mb={4}>
-            <Person sx={{ 
-              fontSize: 50, 
-              color: 'primary.main', 
-              bgcolor: 'rgba(63, 81, 181, 0.1)', 
-              p: 1.5, 
-              borderRadius: '50%' 
-            }}/>
-            <Typography variant="h4" sx={{ mt: 2, fontWeight: 700 }}>
-              Créer un compte
-            </Typography>
-          </Box>
+    <div className="auth-page">
+      <div 
+        className="auth-container d-flex align-items-center justify-content-center"
+        style={{
+          background: `linear-gradient(rgba(0, 0, 0, 0.6), url(${backgroundImage})`,
+          backgroundSize: "cover",
+          minHeight: "100vh",
+          paddingTop: "80px"
+        }}
+      >
+        <Zoom in={true}>
+          <div className="auth-card bg-dark rounded-4 p-5 shadow-lg">
+            <div className="text-center mb-5">
+              <Person sx={{ 
+                fontSize: 50, 
+                color: '#20c997', 
+                bgcolor: 'rgba(32, 201, 151, 0.1)', 
+                p: 1.5, 
+                borderRadius: '50%' 
+              }}/>
+              <h2 className="text-white mb-3 fw-bold">Créer un compte</h2>
+              <p className="text-muted">Rejoignez notre communauté</p>
+            </div>
 
-          {error && (
-            <Fade in={!!error}>
-              <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>
-                {error}
-              </Alert>
-            </Fade>
-          )}
+            {error && (
+              <Fade in={!!error}>
+                <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>
+                  {error}
+                </Alert>
+              </Fade>
+            )}
 
-          <form onSubmit={handleSubmit}>
-            <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
-              <TextField
-                fullWidth
-                label="Prénom"
-                name="first_name"
-                value={formData.first_name}
-                onChange={handleChange}
-                variant="outlined"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Person fontSize="small" color="action" />
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: 2,
-                    '& fieldset': { borderWidth: 2 },
-                  }
-                }}
-              />
-              <TextField
-                fullWidth
-                label="Nom"
-                name="last_name"
-                value={formData.last_name}
-                onChange={handleChange}
-                variant="outlined"
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: 2,
-                    '& fieldset': { borderWidth: 2 },
-                  }
-                }}
-              />
-            </Box>
+            <form onSubmit={handleSubmit}>
+              <div className="row g-3 mb-4">
+                <div className="col-md-6">
+                  <TextField
+                    fullWidth
+                    label="Prénom"
+                    name="first_name"
+                    variant="outlined"
+                    value={formData.first_name}
+                    onChange={handleChange}
+                    InputProps={{
+                      startAdornment: <Person fontSize="small" sx={{ color: '#20c997', mr: 1 }} />,
+                    }}
+                    sx={inputStyle}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <TextField
+                    fullWidth
+                    label="Nom"
+                    name="last_name"
+                    variant="outlined"
+                    value={formData.last_name}
+                    onChange={handleChange}
+                    sx={inputStyle}
+                  />
+                </div>
+              </div>
 
-            <Box sx={{ mb: 3 }}>
-              <TextField
-                fullWidth
-                label="Téléphone"
-                name="phone_number"
-                value={formData.phone_number}
-                onChange={handleChange}
-                variant="outlined"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Phone fontSize="small" color="action" />
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: 2,
-                    '& fieldset': { borderWidth: 2 },
-                  }
-                }}
-              />
-            </Box>
+              <div className="mb-4">
+                <TextField
+                  fullWidth
+                  label="Téléphone"
+                  name="phone_number"
+                  variant="outlined"
+                  value={formData.phone_number}
+                  onChange={handleChange}
+                  InputProps={{
+                    startAdornment: <Phone fontSize="small" sx={{ color: '#20c997', mr: 1 }} />,
+                  }}
+                  sx={inputStyle}
+                />
+              </div>
 
-            <Box sx={{ mb: 3 }}>
-              <TextField
-                fullWidth
-                label="Email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                variant="outlined"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Email fontSize="small" color="action" />
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: 2,
-                    '& fieldset': { borderWidth: 2 },
-                  }
-                }}
-              />
-            </Box>
+              <div className="mb-4">
+                <TextField
+                  fullWidth
+                  label="Email"
+                  name="email"
+                  type="email"
+                  variant="outlined"
+                  value={formData.email}
+                  onChange={handleChange}
+                  InputProps={{
+                    startAdornment: <Email fontSize="small" sx={{ color: '#20c997', mr: 1 }} />,
+                  }}
+                  sx={inputStyle}
+                />
+              </div>
 
-            <Box sx={{ mb: 3 }}>
-              <TextField
-                fullWidth
-                label="Mot de passe"
-                name="password"
-                type={showPassword ? 'text' : 'password'}
-                value={formData.password}
-                onChange={handleChange}
-                variant="outlined"
-                inputProps={{ minLength: 8 }}
-                helperText="Minimum 8 caractères"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Lock fontSize="small" color="action" />
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() => setShowPassword(!showPassword)}
-                        edge="end"
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
+              <div className="mb-4">
+                <TextField
+                  fullWidth
+                  label="Mot de passe"
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  variant="outlined"
+                  value={formData.password}
+                  onChange={handleChange}
+                  InputProps={{
+                    startAdornment: <Lock fontSize="small" sx={{ color: '#20c997', mr: 1 }} />,
+                    endAdornment: (
+                      <IconButton onClick={() => setShowPassword(!showPassword)}>
+                        {showPassword ? 
+                          <VisibilityOff sx={{ color: '#20c997' }} /> : 
+                          <Visibility sx={{ color: '#20c997' }} />}
                       </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: 2,
-                    '& fieldset': { borderWidth: 2 },
-                  }
-                }}
-              />
-            </Box>
+                    ),
+                  }}
+                  sx={inputStyle}
+                />
+              </div>
 
-            <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
-              <FormControl fullWidth variant="outlined" sx={{ borderRadius: 2 }}>
-                <InputLabel>Genre</InputLabel>
-                <Select
-                  label="Genre"
-                  name="gender"
-                  value={formData.gender}
-                  onChange={handleChange}
-                  startAdornment={
-                    <InputAdornment position="start">
-                      {formData.gender === 'male' ? <Male /> : <Female />}
-                    </InputAdornment>
-                  }
-                >
-                  <MenuItem value="male">
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Male fontSize="small" /> Homme
-                    </Box>
-                  </MenuItem>
-                  <MenuItem value="female">
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Female fontSize="small" /> Femme
-                    </Box>
-                  </MenuItem>
-                </Select>
-              </FormControl>
+              <div className="row g-3 mb-4">
+                <div className="col-md-6">
+                  <TextField
+                    select
+                    fullWidth
+                    label="Genre"
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleChange}
+                    sx={inputStyle}
+                    InputProps={{
+                      startAdornment: formData.gender === 'male' ? 
+                        <Male sx={{ color: '#20c997', mr: 1 }} /> : 
+                        <Female sx={{ color: '#20c997', mr: 1 }} />,
+                    }}
+                  >
+                    <MenuItem value="male">Homme</MenuItem>
+                    <MenuItem value="female">Femme</MenuItem>
+                  </TextField>
+                </div>
+                <div className="col-md-6">
+                  <TextField
+                    select
+                    fullWidth
+                    label="Rôle"
+                    name="role"
+                    value={formData.role}
+                    onChange={handleChange}
+                    sx={inputStyle}
+                    InputProps={{
+                      startAdornment: <Work sx={{ color: '#20c997', mr: 1 }} />,
+                    }}
+                  >
+                    <MenuItem value="voyageur">Voyageur</MenuItem>
+                    <MenuItem value="fournisseur">Fournisseur</MenuItem>
+                  </TextField>
+                </div>
+              </div>
 
-              <FormControl fullWidth variant="outlined" sx={{ borderRadius: 2 }}>
-                <InputLabel>Rôle</InputLabel>
-                <Select
-                  label="Rôle"
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <Work fontSize="small" />
-                    </InputAdornment>
-                  }
-                >
-                  <MenuItem value="voyageur">
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      Voyageur
-                    </Box>
-                  </MenuItem>
-                  <MenuItem value="fournisseur">Fournisseur</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
-
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              size="large"
-              sx={{
-                py: 1.5,
-                borderRadius: 2,
-                fontSize: '1.1rem',
-                fontWeight: 700,
-                textTransform: 'none',
-                transition: 'all 0.3s',
-                '&:hover': {
-                  transform: 'scale(1.02)',
-                  boxShadow: 3
-                }
-              }}
-            >
-              S'inscrire
-            </Button>
-          </form>
-
-          <Box mt={3} textAlign="center">
-            <Typography variant="body2">
-              Déjà un compte?{' '}
-              <Link 
-                href="/seconnecter" 
-                sx={{ 
-                  fontWeight: 600, 
-                  color: 'primary.main',
-                  '&:hover': { 
-                    textDecoration: 'none',
-                    opacity: 0.9
-                  }
-                }}
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={buttonStyle}
               >
-                Se connecter
-              </Link>
-            </Typography>
-          </Box>
-        </Paper>
-      </Zoom>
-    </Container>
+                S'inscrire
+              </Button>
+            </form>
+
+            <Box mt={3} textAlign="center">
+              <Typography variant="body2" sx={{ color: '#fff' }}>
+                Déjà un compte?{' '}
+                <Link 
+                  href="/seconnecter" 
+                  sx={{ 
+                    fontWeight: 600, 
+                    color: '#20c997',
+                    '&:hover': { 
+                      textDecoration: 'none',
+                      opacity: 0.9
+                    }
+                  }}
+                >
+                  Se connecter
+                </Link>
+              </Typography>
+            </Box>
+          </div>
+        </Zoom>
+      </div>
+    </div>
   );
+};
+
+const inputStyle = {
+  '& .MuiOutlinedInput-root': {
+    borderRadius: '8px',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    color: '#fff',
+    '& fieldset': {
+      borderColor: '#20c997',
+    },
+    '&:hover fieldset': {
+      borderColor: '#1aa87d',
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: '#20c997',
+    },
+  },
+  '& .MuiInputLabel-root': {
+    color: '#20c997',
+  },
+};
+
+const buttonStyle = {
+  backgroundColor: '#20c997',
+  color: '#fff',
+  borderRadius: '20px',
+  py: 1.5,
+  fontSize: '1.1rem',
+  fontWeight: 700,
+  textTransform: 'none',
+  '&:hover': {
+    backgroundColor: '#1aa87d',
+    transform: 'scale(1.02)',
+  },
 };
 
 export default Inscrire;
