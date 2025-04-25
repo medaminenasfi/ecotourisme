@@ -16,6 +16,7 @@ import Navbar from "../Components/navbar";
 import { format } from 'date-fns';
 import frLocale from 'date-fns/locale/fr';
 import { toast } from 'react-toastify';
+import backgroundImage from "../assest/Accueil.jpg";
 
 const Profile = () => {
   const { user, logout, loading: authLoading } = useContext(AuthContext);
@@ -31,7 +32,7 @@ const Profile = () => {
     } else if (user) {
       fetchUserReservations();
     }
-  }, [user, authLoading]);
+  }, [user, authLoading, navigate]);
 
   const fetchUserReservations = async () => {
     try {
@@ -141,85 +142,158 @@ const Profile = () => {
   }
 
   return (
-    <>
+    <div style={{
+      background: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${backgroundImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      minHeight: '100vh',
+      paddingTop: '80px'
+    }}>
       <Navbar />
-      <br/><br/><br/><br/>
-      <Container className="py-5">
-        <Card className="shadow">
-          <Card.Header className="bg-white">
-            <h2>Profil Utilisateur</h2>
+      <Container className="py-5" style={{ maxWidth: '1200px' }}>
+        <Card className="shadow" style={{
+          background: 'rgba(0, 0, 0, 0.4)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '15px'
+        }}>
+          <Card.Header style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            <h2 style={{ 
+              color: '#f1faee', 
+              margin: 0,
+              fontWeight: '600',
+              letterSpacing: '0.5px'
+            }}>
+              Profil Utilisateur
+            </h2>
           </Card.Header>
           
           <Card.Body>
             {error && <Alert variant="danger">{error}</Alert>}
 
-            <Row>
+            <Row className="g-4">
               <Col md={6}>
-                <ListGroup variant="flush" className="mb-4">
-                  <ListGroup.Item>
-                    <strong>Prénom:</strong> {user.first_name || "Non fourni"}
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    <strong>Nom:</strong> {user.last_name || "Non fourni"}
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    <strong>Email:</strong> {user.email}
-                  </ListGroup.Item>
+                <ListGroup variant="flush">
+                  {['first_name', 'last_name', 'email'].map((field) => (
+                    <ListGroup.Item key={field} style={{
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      color: '#fff',
+                      borderColor: 'rgba(255, 255, 255, 0.1)',
+                      padding: '1.2rem'
+                    }}>
+                      <strong style={{ 
+                        color: '#20c997',
+                        minWidth: '90px',
+                        display: 'inline-block'
+                      }}>
+                        {{
+                          first_name: 'Prénom',
+                          last_name: 'Nom',
+                          email: 'Email'
+                        }[field]}
+                      </strong>
+                      <span style={{ marginLeft: '15px' }}>
+                        {user[field] || "Non fourni"}
+                      </span>
+                    </ListGroup.Item>
+                  ))}
                 </ListGroup>
               </Col>
               <Col md={6}>
-                <ListGroup variant="flush" className="mb-4">
-                  <ListGroup.Item>
-                    <strong>Téléphone:</strong> {user.phone_number || "Non fourni"}
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    <strong>Genre:</strong> {user.gender === 'male' ? 'Homme' : 
-                                          user.gender === 'female' ? 'Femme' : 
-                                          "Non spécifié"}
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    <strong>Rôle:</strong>{" "}
-                    <Badge bg={
-                      user.role === 'admin' ? 'danger' : 
-                      user.role === 'fournisseur' ? 'warning' : 
-                      'primary'
-                    }>
-                      {user.role === 'admin' ? 'Administrateur' : 
-                       user.role === 'fournisseur' ? 'Fournisseur' : 
-                       'Voyageur'}
-                    </Badge>
-                  </ListGroup.Item>
+                <ListGroup variant="flush">
+                  {['phone_number', 'gender', 'role'].map((field) => (
+                    <ListGroup.Item key={field} style={{
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      color: '#fff',
+                      borderColor: 'rgba(255, 255, 255, 0.1)',
+                      padding: '1.2rem'
+                    }}>
+                      <strong style={{ 
+                        color: '#20c997',
+                        minWidth: '90px',
+                        display: 'inline-block'
+                      }}>
+                        {{
+                          phone_number: 'Téléphone',
+                          gender: 'Genre',
+                          role: 'Rôle'
+                        }[field]}
+                      </strong>
+                      <span style={{ marginLeft: '15px' }}>
+                        {field === 'role' ? (
+                          <Badge pill bg={
+                            user.role === 'admin' ? 'danger' : 
+                            user.role === 'fournisseur' ? 'warning' : 'primary'
+                          }>
+                            {user.role === 'admin' ? 'Administrateur' : 
+                            user.role === 'fournisseur' ? 'Fournisseur' : 'Voyageur'}
+                          </Badge>
+                        ) : field === 'gender' ? (
+                          user.gender === 'male' ? 'Homme' : 'Femme'
+                        ) : user[field] || "Non fourni"}
+                      </span>
+                    </ListGroup.Item>
+                  ))}
                 </ListGroup>
               </Col>
             </Row>
-            <div className="mt-4 d-flex justify-content-end">
+
+            <div className="mt-4 d-flex justify-content-end gap-3">
               <Button 
                 variant="outline-danger" 
                 onClick={handleLogout}
-                className="me-2"
+                style={{
+                  borderColor: '#dc3545',
+                  color: '#dc3545',
+                  borderRadius: '8px',
+                  padding: '8px 20px',
+                  transition: 'all 0.3s ease'
+                }}
+                className="hover-scale"
               >
-                <i className="bi bi-box-arrow-right me-1"></i>
                 Déconnexion
               </Button>
               {user.role === 'admin' && (
                 <Button 
                   variant="primary"
                   onClick={() => navigate("/AdminDashboard")}
+                  style={{
+                    backgroundColor: '#20c997',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '8px 20px',
+                    transition: 'all 0.3s ease'
+                  }}
+                  className="hover-scale"
                 >
-                  <i className="bi bi-speedometer2 me-1"></i>
                   Tableau de bord
                 </Button>
               )}
             </div>
-            <h4 className="mb-3">Vos Réservations</h4>
+
+            <h4 className="mt-5 mb-4" style={{ 
+              color: '#f1faee',
+              fontWeight: '600',
+              paddingBottom: '10px',
+              borderBottom: '2px solid rgba(255, 255, 255, 0.1)'
+            }}>
+              Vos Réservations
+            </h4>
             
             {reservationsLoading ? (
               <div className="text-center py-4">
-                <Spinner animation="border" />
-                <p className="mt-2">Chargement des données...</p>
+                <Spinner animation="border" variant="light" />
+                <p className="mt-3 text-light">Chargement des données...</p>
               </div>
             ) : reservations.length === 0 ? (
-              <Alert variant="info">
+              <Alert variant="info" style={{
+                background: 'rgba(32, 201, 151, 0.15)',
+                borderColor: 'rgba(32, 201, 151, 0.3)',
+                color: '#20c997'
+              }}>
                 Vous n'avez aucune réservation pour le moment.
               </Alert>
             ) : (
@@ -228,43 +302,52 @@ const Profile = () => {
                   const circuitInfo = getCircuitInfo(reservation);
                   
                   return (
-                    <ListGroup.Item key={reservation._id}>
+                    <ListGroup.Item key={reservation._id} style={{
+                      background: 'rgba(255, 255, 255, 0.02)',
+                      borderColor: 'rgba(255, 255, 255, 0.1)',
+                      color: '#fff',
+                      padding: '1.5rem'
+                    }}>
                       <div className="d-flex justify-content-between align-items-center">
                         <div>
-                          <h5>
+                          <h5 style={{ color: '#20c997', marginBottom: '0.8rem' }}>
                             {circuitInfo.name}
-                            {circuitInfo.isCustom && (
-                              <Badge bg="info" className="ms-2">
-                              </Badge>
-                            )}
+                            {circuitInfo.isCustom }
                           </h5>
-                          <div className="d-flex align-items-center mt-2">
-                            <Badge bg="light" text="dark" className="me-2">
+                          <div className="d-flex align-items-center gap-2 flex-wrap">
+                            <Badge bg="dark" className="d-flex align-items-center">
                               <i className="bi bi-calendar me-1"></i>
                               {formatDate(reservation.date)}
                             </Badge>
-                            <Badge bg="secondary" className="me-2">
+                            <Badge bg="secondary" className="d-flex align-items-center">
                               <i className="bi bi-people me-1"></i>
                               {reservation.numberOfPeople} pers.
                             </Badge>
-                            <Badge bg={reservation.status === 'confirmed' ? 'success' : 
-                                     reservation.status === 'cancelled' ? 'danger' : 'warning'}>
+                            <Badge bg={
+                              reservation.status === 'confirmed' ? 'success' : 
+                              reservation.status === 'cancelled' ? 'danger' : 'warning'
+                            }>
                               {reservation.status === 'confirmed' ? 'Confirmée' :
-                               reservation.status === 'cancelled' ? 'Annulée' : 'En attente'}
+                              reservation.status === 'cancelled' ? 'Annulée' : 'En attente'}
                             </Badge>
                           </div>
                         </div>
                         <div className="text-end">
-                          <div className="d-flex flex-column align-items-end">
-                            <h5 className="text-primary mb-2">{reservation.totalPrice?.toFixed(2)} TND</h5>
+                          <div className="d-flex flex-column align-items-end gap-2">
+                            <h5 className="text-primary mb-0">
+                              {reservation.totalPrice?.toFixed(2)} TND
+                            </h5>
                             <div className="d-flex gap-2 align-items-center">
-                              <small className="text-muted">Ref: {reservation._id.slice(-6)}</small>
+                              <small className="text-white">Ref: {reservation._id.slice(-6)}</small>
                               <Button 
                                 variant="outline-danger" 
                                 size="sm" 
                                 onClick={() => handleDeleteReservation(reservation._id)}
                                 disabled={deletingId === reservation._id}
-                                className="ms-2"
+                                style={{
+                                  minWidth: '100px',
+                                  borderRadius: '20px'
+                                }}
                               >
                                 {deletingId === reservation._id ? (
                                   <Spinner animation="border" size="sm" />
@@ -287,7 +370,7 @@ const Profile = () => {
           </Card.Body>
         </Card>
       </Container>
-    </>
+    </div>
   );
 };
 
