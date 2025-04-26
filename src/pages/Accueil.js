@@ -10,11 +10,9 @@ import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Carousel from "react-bootstrap/Carousel";
-
 import bg1 from "../assest/Accueil.jpg";
 import bg2 from "../assest/bizert.jpg";
 import bg3 from "../assest/pexels-mahmoud-yahyaoui-14765461.jpg";
-
 import card1 from "../assest/groupe-gens-affaires-ayant-reunion_53876-14819.jpg"
 import card2 from "../assest/pexels-photo-7321954.jpg"
 import card3 from "../assest/potier.jpg"
@@ -231,7 +229,6 @@ const Accueil = () => {
                 </p>
               </div>
             </div>
-
             <div className="row g-4">
               {/* Matmata Card */}
               <div className="col-12 col-md-6 col-lg-4">
@@ -260,8 +257,6 @@ const Accueil = () => {
                   </Card.Body>
                 </Card>
               </div>
-
-              {/* Tataouine Card */}
               <div className="col-12 col-md-6 col-lg-4">
                 <Card className="h-100 bg-dark text-light border-light hover-card">
                   <Card.Img
@@ -287,8 +282,6 @@ const Accueil = () => {
                   </Card.Body>
                 </Card>
               </div>
-
-              {/* Tozeur Card */}
               <div className="col-12 col-md-6 col-lg-4">
                 <Card className="h-100 bg-dark text-light border-light hover-card">
                   <Card.Img
