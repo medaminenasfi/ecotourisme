@@ -41,7 +41,7 @@ const Accueil = () => {
           </div>
         </section>
 
-        <section className="bg-black text-white p-5 shadow-lg rounded-3">
+        <section className="bg-black text-white p-5 shadow-lg ">
   <h1 className="text-center mb-4">Carte des Artisans</h1>
   <div className="container">
     <div className="row justify-content-center">
