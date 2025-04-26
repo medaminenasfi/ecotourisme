@@ -7,13 +7,14 @@ import backgroundImage from "../assest/Accueil.jpg";
 import Container from "react-bootstrap/Container";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { Button } from "@mui/material";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import dayjs from "dayjs";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker"; // Remplacer l'import
+
 
 const Accueil = () => {
   const location = useLocation();
@@ -255,20 +256,29 @@ useEffect(() => {
               </Col>
 
               <Col md={6}>
-                <div className="bg-light p-4 rounded">
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DateCalendar
-                      value={selectedDate}
-                      onChange={setSelectedDate}
-                      minDate={dayjs().add(1, 'day')}
-                      disablePast
-                    />
-                  </LocalizationProvider>
-                  <div className="text-center mt-3 text-dark">
-                  Date sélectionnée: {selectedDate.format("DD/MM/YYYY")}
-                  </div>
-                </div>
-              </Col>
+  <div className="bg-light p-4 rounded">
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DatePicker
+        label="Choisir une date"
+        value={selectedDate}
+        onChange={setSelectedDate}
+        minDate={dayjs().add(1, 'day')}
+        disablePast
+        format="DD/MM/YYYY"
+        sx={{
+          width: '100%',
+          '& .MuiOutlinedInput-root': {
+            borderRadius: '8px',
+            backgroundColor: 'white'
+          }
+        }}
+      />
+    </LocalizationProvider>
+    <div className="text-center mt-3 text-dark">
+      Date sélectionnée: {selectedDate.format("DD/MM/YYYY")}
+    </div>
+  </div>
+</Col>
             </Row>
 
             <div className="text-center mt-4">
