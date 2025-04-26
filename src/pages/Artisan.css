@@ -290,3 +290,30 @@ button {
     height: 300px; /* Adjust height */
   }
 }
+.hero-section {
+  height: 60vh;
+  min-height: 400px;
+}
+
+.hero-section img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.hero-content {
+  z-index: 2;
+  width: 90%;
+}
+
+.list-unstyled li {
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.list-unstyled li::before {
+  content: '•';
+  color: #ffc107;
+  position: absolute;
+  left: 0;
+}
