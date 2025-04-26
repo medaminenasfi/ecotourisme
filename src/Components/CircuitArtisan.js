@@ -166,7 +166,6 @@ const regions = [
     imageUrl: 'path_to_gafsa_image.jpg' 
   }
 ];
-
 function ChangeView({ coords }) {
   const map = useMap();
   map.setView(coords, 10);
@@ -175,81 +174,73 @@ function ChangeView({ coords }) {
 
 const Circuit = () => {
   const [selectedRegion, setSelectedRegion] = useState(null);
-  const [regionCircuits, setRegionCircuits] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredRegions, setFilteredRegions] = useState(regions);
-
-  const handleRegionClick = (region) => {
-    setSelectedRegion(region.coords);
-  };
 
   const handleSearchChange = (e) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
-    const filtered = regions.filter((region) =>
+    
+    // Déplacer la logique de recherche ici
+    const foundRegion = regions.find(region => 
       region.name.toLowerCase().includes(term)
     );
-    setFilteredRegions(filtered);
-
-    if (filtered.length === 1) {
-      handleRegionClick(filtered[0]);
+    
+    if (foundRegion) {
+      setSelectedRegion(foundRegion.coords);
     }
   };
 
-  const handleReserveClick = (circuit) => {
-    alert(`You have reserved: ${circuit.name}`);
-  };
+  const filteredRegions = regions.filter(region => 
+    region.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="circuit-container">
-      <input
-        type="text"
-        placeholder="Search for a region..."
-        value={searchTerm}
-        onChange={handleSearchChange}
-        className="search-bar"
-      />
-      <MapContainer center={tunisiaCenter} zoom={zoomLevel} style={{ height: "100vh", width: "100%" }}>
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Rechercher une région..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+          className="search-bar"
+        />
+      </div>
+
+      <MapContainer 
+        center={tunisiaCenter} 
+        zoom={zoomLevel} 
+        className="map-view"
+      >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-        {regions.map((region) => (
+
+        {filteredRegions.map((region) => (
           <Marker
             key={region.name}
             position={region.coords}
             icon={customIcon}
             eventHandlers={{
-              click: () => handleRegionClick(region),
+              click: () => setSelectedRegion(region.coords),
             }}
           >
             <Popup>
-              <div>
-                <h3>{region.name}</h3>
-                <p>{region.description}</p>
-                <img src={region.imageUrl} alt={region.name} style={{ width: '100%', height: 'auto' }} />
+              <div className="popup-content">
+                <h3 className="popup-title">{region.name}</h3>
+                <img 
+                  src={region.imageUrl} 
+                  alt={region.name} 
+                  className="popup-image"
+                />
+                <p className="popup-description">{region.description}</p>
               </div>
             </Popup>
           </Marker>
         ))}
+
         {selectedRegion && <ChangeView coords={selectedRegion} />}
       </MapContainer>
-
-      {regionCircuits.length > 0 && (
-        <div className="circuit-list">
-          <h2>Circuits in {selectedRegion && selectedRegion.name}</h2>
-          <ul>
-            {regionCircuits.map((circuit, index) => (
-              <li key={index}>
-                <h3>{circuit.name}</h3>
-                <p>{circuit.description}</p>
-                <p><strong>Start:</strong> {circuit.start}</p>
-                <p><strong>End:</strong> {circuit.end}</p>
-                <button onClick={() => handleReserveClick(circuit)}>Reserver</button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
 };
