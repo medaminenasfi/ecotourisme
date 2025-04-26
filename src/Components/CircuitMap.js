@@ -9,7 +9,6 @@ import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
 import { Container, Row, Col, Form, Card, Button } from "react-bootstrap";
 import 'leaflet-routing-machine';
 import React, { useEffect } from 'react';
-import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import 'leaflet-routing-machine';
 
@@ -541,7 +540,7 @@ function Routing({ map }) {
   const routingControlRef = useRef(null);
 
   useEffect(() => {
-    if (!map) return;
+    if (!map ) return;
 
     const waypoints = [
       L.latLng(36.8356, 10.2237),  // deb
