@@ -30,15 +30,15 @@ const Accueil = () => {
             
           }}
         >
-          <div className="overlay"></div>
-          <div className="content text-center">
-            <h1>
-L'Artisanat Local            </h1>
-            <p className="lead">
-            L'âme de notre Patrimoine
-            </p>
+        <div className="content text-center" data-aos="fade-up">
+    <h1 className="display-1 mb-4 artisan-title">
+      L'Artisanat Local
+      <span className="title-line"></span>
+    </h1>
+    <p className="lead fs-3 subtitle">
+      L'Âme de Notre Patrimoine
+    </p>
           </div>
-          
         </section>
 
         <section className="bg-black text-white p-5 shadow-lg rounded-3">
