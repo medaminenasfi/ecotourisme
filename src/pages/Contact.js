@@ -1,18 +1,15 @@
 import React, { useState } from "react";
 import Navbar from "../Components/navbar";
-import "../pages/Contact.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 import Footer from "../Components/footer";
-import backgroundImage from "../assest/Accueil.jpg";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import { Container, Row, Col } from "react-bootstrap";
 import { init } from 'emailjs-com';
 import emailjs from 'emailjs-com';
+import { FiSend, FiMail, FiPhone } from "react-icons/fi";
+import { motion } from "framer-motion";
+import backgroundImage from "../assest/Accueil.jpg";
+import "./Contact.css";
 
-init("PpvCGv7Qe60PVbyR7"); 
-
-
+init("PpvCGv7Qe60PVbyR7");
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -26,10 +23,7 @@ const Contact = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const validateForm = () => {
@@ -58,23 +52,23 @@ const Contact = () => {
 
     emailjs.send(
       'service_t688zch', 
-      'template_dgfpx5s', 
-    )
-    .then((response) => {
+      'template_dgfpx5s',
+      formData
+    ).then(() => {
       setSuccess(true);
       setFormData({ name: '', email: '', message: '' });
       setTimeout(() => setSuccess(false), 5000);
     }, (err) => {
       setError('Erreur lors de l\'envoi: ' + err.text);
-    })
-    .finally(() => {
-      setLoading(false);
-    });
+    }).finally(() => setLoading(false));
   };
+
   return (
     <>
       <Navbar />
-      <main>
+      
+      <main className="contact-page">
+        {/* Hero Section */}
         <section
           className="d-flex align-items-center justify-content-center text-white"
           style={{
@@ -96,98 +90,111 @@ const Contact = () => {
           </div>
           
         </section>
+
+
+
+
+
+        {/* Contact Section */}
         <section className="contact-section">
           <Container>
-            <h2 className="section-title">Formulaire de Contact</h2>
-
-            {error && <div className="alert alert-danger">{error}</div>}
-            {success && <div className="alert alert-success">Message envoyé avec succès!</div>}
-
-            <Row className="g-4">
-              <Col lg={6} className="contact-info-col">
-              <div className="contact-info">
-                  <h3>Parlons-en</h3>
-                  <p>
-                  Vous avez une idée ou une marque à développer et avez besoin d'aide ? Contactez-nous ! Nous serions ravis d'en savoir plus sur votre projet et de vous aider.
-                  </p>
+            <Row className="g-5 justify-content-center">
+              <Col lg={5} className="contact-info-col">
+                <motion.div 
+                  className="contact-info-card"
+                  initial={{ x: -50, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  <h3>Informations de Contact</h3>
                   <div className="contact-details">
                     <div className="detail-item">
-                      <i className="bi bi-envelope me-2"></i>
-                      <span>tnecotourisle@gmail.com</span>
+                      <div className="icon-box">
+                        <FiMail className="icon" />
+                      </div>
+                      <span>contact@tnecotourisme.com</span>
                     </div>
                     <div className="detail-item">
-                      <i className="bi bi-phone me-2"></i>
+                      <div className="icon-box">
+                        <FiPhone className="icon" />
+                      </div>
                       <span>+216 12 345 678</span>
                     </div>
                   </div>
-                </div>              </Col>
+                </motion.div>
+              </Col>
 
-              <Col lg={6} className="form-col">
-                <form onSubmit={handleSubmit} className="contact-form">
-                  <div className="form-group">
-                    <label>Nom Complet</label>
-                    <input 
-                      type="text" 
-                      name="name"
-                      className="form-control"
-                      placeholder="Entrez votre nom"
-                      value={formData.name}
-                      onChange={handleInputChange}
+              <Col lg={7} className="form-col">
+                <motion.div 
+                  className="form-card"
+                  initial={{ x: 50, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  {error && <div className="alert error">{error}</div>}
+                  {success && <div className="alert success">Message envoyé avec succès!</div>}
+
+                  <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                      <input
+                        type="text"
+                        name="name"
+                        placeholder="Votre nom complet"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        disabled={loading}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="Votre adresse email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        disabled={loading}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <textarea
+                        name="message"
+                        placeholder="Votre message..."
+                        value={formData.message}
+                        onChange={handleInputChange}
+                        disabled={loading}
+                        rows="6"
+                      />
+                    </div>
+
+                    <motion.button
+                      type="submit"
+                      className="submit-btn"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                       disabled={loading}
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label>Email</label>
-                    <input
-                      type="email"
-                      name="email"
-                      className="form-control"
-                      placeholder="Entrez votre email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      disabled={loading}
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label>Message</label>
-                    <textarea
-                      name="message"
-                      className="form-control"
-                      rows="5"
-                      placeholder="Écrivez votre message"
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      disabled={loading}
-                    ></textarea>
-                  </div>
-
-                  <button 
-                    type="submit" 
-                    className="submit-btn"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <>
-                        Envoi en cours...
-                        <div className="spinner-border spinner-border-sm ms-2"></div>
-                      </>
-                    ) : (
-                      <>
-                        Envoyer
-                        <i className="bi bi-send ms-2"></i>
-                      </>
-                    )}
-                  </button>
-                </form>
+                    >
+                      {loading ? (
+                        <div className="spinner" />
+                      ) : (
+                        <>
+                          Envoyer
+                          <FiSend className="send-icon" />
+                        </>
+                      )}
+                    </motion.button>
+                  </form>
+                </motion.div>
               </Col>
             </Row>
           </Container>
         </section>
       </main>
+
       <Footer />
     </>
   );
 };
+
 export default Contact;
