@@ -13,7 +13,14 @@ import Carousel from "react-bootstrap/Carousel";
 
 import bg1 from "../assest/Accueil.jpg";
 import bg2 from "../assest/bizert.jpg";
-import bg3 from "../assest/3.jpg";
+import bg3 from "../assest/pexels-mahmoud-yahyaoui-14765461.jpg";
+
+import card1 from "../assest/groupe-gens-affaires-ayant-reunion_53876-14819.jpg"
+import card2 from "../assest/pexels-photo-7321954.jpg"
+import card3 from "../assest/potier.jpg"
+import card4 from "../assest/jeunes-taille-moyenne-critiques_23-2149394417.jpg"
+import card5 from "../assest/643960ac1999ef0f2b66b178_62dfb171bd353b3faaedffff_recalamation-client-blog-cover.png"
+import card6 from "../assest/pexels-photo-8284731.webp"
 
 const Accueil = () => {
   console.log("Rendering Accueil page");
@@ -70,7 +77,7 @@ const Accueil = () => {
                 <Card className="h-100 bg-dark text-light border-light hover-shadow">
                   <Card.Img
                     variant="top"
-                    src={tozeur}
+                    src={card2}
                     style={{ height: "200px", objectFit: "cover" }}
                   />
                   <Card.Body className="d-flex flex-column">
@@ -94,7 +101,7 @@ const Accueil = () => {
                 <Card className="h-100 bg-dark text-light border-light hover-shadow">
                   <Card.Img
                     variant="top"
-                    src={tozeur}
+                    src={card6}
                     style={{ height: "200px", objectFit: "cover" }}
                   />
                   <Card.Body className="d-flex flex-column">
@@ -118,7 +125,7 @@ const Accueil = () => {
                 <Card className="h-100 bg-dark text-light border-light hover-shadow">
                   <Card.Img
                     variant="top"
-                    src={tozeur}
+                    src={card1}
                     style={{ height: "200px", objectFit: "cover" }}
                   />
                   <Card.Body className="d-flex flex-column">
@@ -143,7 +150,7 @@ const Accueil = () => {
                 <Card className="h-100 bg-dark text-light border-light hover-shadow">
                   <Card.Img
                     variant="top"
-                    src={tozeur}
+                    src={card3}
                     style={{ height: "200px", objectFit: "cover" }}
                   />
                   <Card.Body className="d-flex flex-column">
@@ -167,7 +174,7 @@ const Accueil = () => {
                 <Card className="h-100 bg-dark text-light border-light hover-shadow">
                   <Card.Img
                     variant="top"
-                    src={tozeur}
+                    src={card4}
                     style={{ height: "200px", objectFit: "cover" }}
                   />
                   <Card.Body className="d-flex flex-column">
@@ -188,7 +195,7 @@ const Accueil = () => {
                 <Card className="h-100 bg-dark text-light border-light hover-shadow">
                   <Card.Img
                     variant="top"
-                    src={tozeur}
+                    src={card5}
                     style={{ height: "200px", objectFit: "cover" }}
                   />
                   <Card.Body className="d-flex flex-column">
