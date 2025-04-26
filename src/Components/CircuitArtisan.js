@@ -2,7 +2,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useState } from 'react';
-import './Circuit.css';
+import './circuitar.css';
 import Bizert from "../assest/bizert.jpg";
 
 import markerIconPng from 'leaflet/dist/images/marker-icon.png';
