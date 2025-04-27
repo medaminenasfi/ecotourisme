@@ -321,3 +321,101 @@ button {
 
 
 
+.map-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.leaflet-container {
+  height: 100%;
+  background: #f8f9fa;
+}
+
+.loading, .error {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px 30px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  backdrop-filter: blur(5px);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.loading {
+  color: #2c3e50;
+}
+
+.error {
+  color: #e74c3c;
+}
+
+.weather-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 10px 0;
+  background: linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(248,249,250,0.95) 100%);
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.weather-details p {
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #34495e;
+  font-size: 0.95rem;
+}
+
+.weather-details svg {
+  font-size: 1.4rem;
+  min-width: 25px;
+}
+
+.leaflet-popup-content {
+  min-width: 220px !important;
+  padding: 15px !important;
+  border-radius: 12px !important;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1) !important;
+  backdrop-filter: blur(5px);
+  background: rgba(255,255,255,0.9) !important;
+}
+
+.weather-description {
+  margin: 10px 0 0 !important;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0,0,0,0.05);
+  color: #7f8c8d !important;
+  font-size: 0.85rem !important;
+  text-transform: capitalize;
+}
+
+/* Animation for markers */
+.leaflet-marker-icon {
+  transition: transform 0.2s ease;
+}
+
+.leaflet-marker-icon:hover {
+  transform: scale(1.15) translateY(-5px);
+}
+
+/* Custom tile layer attribution */
+.leaflet-control-attribution {
+  background: rgba(255,255,255,0.8) !important;
+  font-size: 0.8rem !important;
+  padding: 2px 8px !important;
+  border-radius: 3px !important;
+}
