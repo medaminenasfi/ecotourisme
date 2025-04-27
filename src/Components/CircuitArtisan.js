@@ -218,7 +218,7 @@ const Circuit = () => {
   );
 
   return (
-    <div className="circuit-container">
+    <div className="circuit-container bg-black">
       <div className="search-container">
         <input
           type="text"
