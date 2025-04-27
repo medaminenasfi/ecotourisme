@@ -16,7 +16,10 @@ L.Icon.Default.mergeOptions({
 const cities = [
   { name: "Tunis", coords: [36.8065, 10.1815] },
   { name: "Sousse", coords: [35.8254, 10.6369] },
-  { name: "Sfax", coords: [34.7406, 10.7603] }
+  { name: "Sfax", coords: [34.7406, 10.7603] },
+  {   name: 'Ariana',   coords: [36.8665, 10.1647], 
+  },
+
 ]
 
 function MapController({ center, zoom }) {
