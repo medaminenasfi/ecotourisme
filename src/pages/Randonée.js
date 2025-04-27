@@ -23,6 +23,8 @@ import bg3 from "../assest/pexels-mahmoud-yahyaoui-14765461.jpg";
 import Carousel from "react-bootstrap/Carousel";
 import jer from "../assest/djerba-3.jpg"
 import ta from "../assest/tatouine.jpg"
+import WeatherModal from "../Components/WeatherModal.jsx";
+import { WiCloud } from 'react-icons/wi';
 
 const Accueil = () => {
   const position1 = [36.806389, 10.181667]; // Coordinates for CircuitMap
@@ -70,6 +72,14 @@ const Accueil = () => {
         </section>
 
 
+
+        <section className="bg-black  text-white py-5">
+        <h2 className="text-center mb-5 display-4">🌦️ Afficher la Météo en Temps Réel</h2>
+
+  <Container>
+    <WeatherModal />
+  </Container>
+</section>
 
 {/* Featured Circuits Section */}
 <section className="bg-black text-white p-5 shadow-lg">
