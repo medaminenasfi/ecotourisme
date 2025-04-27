@@ -24,145 +24,145 @@ const regions = [
   { 
     name: 'Tunis', 
     coords: [36.8065, 10.1815], 
-    description: 'Capital city of Tunisia, rich in history and culture.', 
+    description: ' 🧵 Broderie traditionnelle.', 
     imageUrl: 'path_to_tunis_image.jpg' 
   },
   { 
     name: 'Ariana', 
     coords: [36.8665, 10.1647], 
-    description: 'A city located in the north of Tunis, known for its beautiful parks.', 
+    description: ' 🧵 Broderie traditionnelle.', 
     imageUrl: 'path_to_ariana_image.jpg' 
   },
   { 
     name: 'Ben Arous', 
     coords: [36.7435, 10.2317], 
-    description: 'An industrial city, located south of Tunis.', 
+    description: ' 🏺 Poterie artisanale', 
     imageUrl: 'path_to_ben_arous_image.jpg' 
   },
   { 
     name: 'Manouba', 
     coords: [36.8083, 9.9991], 
-    description: 'A city famous for its historical sites and monuments.', 
+    description: '👝 Travail du cuir.', 
     imageUrl: 'path_to_manouba_image.jpg' 
   },
   { 
     name: 'Nabeul', 
     coords: [36.451, 10.7361], 
-    description: 'Known for its pottery, Nabeul is located on the northeastern coast.', 
+    description: '🏺 Céramique & poterie.', 
     imageUrl: 'path_to_nabeul_image.jpg' 
   },
   { 
     name: 'Bizerte', 
     coords: [37.2744, 9.8739], 
-    description: 'Bizerte est une ville tunisienne située au nord, sur la Méditerranée. Elle est connue pour son port, ses plages et sa médina historique', 
+    description: '🚤 Construction de bateaux artisanaux', 
     imageUrl: Bizert 
   },
   { 
     name: 'Beja', 
     coords: [36.733, 9.1843], 
-    description: 'A city with a rich agricultural history, known for its beautiful landscapes.', 
+    description: '🧺 Vannerie en alfa', 
     imageUrl: 'path_to_beja_image.jpg' 
   },
   { 
     name: 'Jendouba', 
     coords: [36.5011, 8.7802], 
-    description: 'Jendouba is a quiet, rural city in northwestern Tunisia.', 
+    description: '👒 Chapeaux de paille', 
     imageUrl: 'path_to_jendouba_image.jpg' 
   },
   { 
     name: 'Kef', 
     coords: [36.1675, 8.704], 
-    description: 'A city with a mountainous landscape, famous for its beautiful nature reserves.', 
+    description: '👒 Chapeaux de paille', 
     imageUrl: 'path_to_kef_image.jpg' 
   },
   { 
     name: 'Siliana', 
     coords: [36.088, 9.3746], 
-    description: 'A city known for its agricultural heritage and scenic views.', 
+    description: '🧺 Travail de l’alfa & broderie', 
     imageUrl: 'path_to_siliana_image.jpg' 
   },
   { 
     name: 'Zaghouan', 
     coords: [36.4021, 10.1447], 
-    description: 'A historical city, home to the ancient Roman waterworks system.', 
+    description: '🏺 Poterie traditionnelle.', 
     imageUrl: 'path_to_zaghouan_image.jpg' 
   },
   { 
     name: 'Sousse', 
     coords: [35.8256, 10.6369], 
-    description: 'A coastal city with sandy beaches and a UNESCO World Heritage site.', 
+    description: '💍 Bijouterie artisanale', 
     imageUrl: 'path_to_sousse_image.jpg' 
   },
   { 
     name: 'Monastir', 
     coords: [35.7643, 10.8113], 
-    description: 'Famous for its historical sites, including the Ribat of Monastir.', 
+    description: '💍 Bijouterie artisanale', 
     imageUrl: 'path_to_monastir_image.jpg' 
   },
   { 
     name: 'Mahdia', 
     coords: [35.5047, 11.0622], 
-    description: 'A city known for its beautiful beaches and fishing harbor.', 
+    description: '🧵 Tissage de soie & artisanat marin', 
     imageUrl: 'path_to_mahdia_image.jpg' 
   },
   { 
     name: 'Sfax', 
     coords: [34.7391, 10.7593], 
-    description: 'An industrial hub with a vibrant port city atmosphere.', 
+    description: '🛠️ Cuivre ciselé & poterie', 
     imageUrl: 'path_to_sfax_image.jpg' 
   },
   { 
     name: 'Kairouan', 
     coords: [35.6781, 10.0963], 
-    description: 'A historical city, known for its religious significance and mosques.', 
+    description: '🧵 Tapis de Kairouan', 
     imageUrl: 'path_to_kairouan_image.jpg' 
   },
   { 
     name: 'Kasserine', 
     coords: [35.1676, 8.8368], 
-    description: 'Known for its mountainous terrain and historical sites.', 
+    description: '🧶 Tissage de couvertures traditionnelles', 
     imageUrl: 'path_to_kasserine_image.jpg' 
   },
   { 
     name: 'Sidi Bouzid', 
     coords: [35.0382, 9.4858], 
-    description: 'A city that played a significant role in Tunisia\'s revolution.', 
+    description: '🪵 Bois d’olivier (ustensiles)', 
     imageUrl: 'path_to_sidi_bouzid_image.jpg' 
   },
   { 
     name: 'Gabes', 
     coords: [33.8815, 10.0982], 
-    description: 'A coastal city, known for its agriculture and beautiful beaches.', 
+    description: ' 🏺 Poterie de Chenini & bijoux berbères', 
     imageUrl: 'path_to_gabes_image.jpg' 
   },
   { 
     name: 'Medenine', 
     coords: [33.3549, 10.5055], 
-    description: 'Medenine is famous for its unique traditional architecture called “ksours.”', 
+    description: ' 🏺 Poterie de Chenini & bijoux berbères”', 
     imageUrl: 'path_to_medenine_image.jpg' 
   },
   { 
     name: 'Tataouine', 
     coords: [32.929, 10.4518], 
-    description: 'Known for its Berber culture and unique landscape.', 
+    description: '💍 Artisanat berbère (bijoux & tissage)', 
     imageUrl: 'path_to_tataouine_image.jpg' 
   },
   { 
     name: 'Tozeur', 
     coords: [33.9197, 8.1335], 
-    description: 'A city famous for its oasis and ancient architecture.', 
+    description: ' 🌴 Poterie & bois de palmier', 
     imageUrl: 'path_to_tozeur_image.jpg' 
   },
   { 
     name: 'Kebili', 
     coords: [33.7076, 8.9715], 
-    description: 'A city near the Sahara Desert, known for its desert landscape.', 
+    description: ' 🧺 Vannerie en feuilles de palmier', 
     imageUrl: 'path_to_kebili_image.jpg' 
   },
   { 
     name: 'Gafsa', 
     coords: [34.425, 8.7842], 
-    description: 'An agricultural city surrounded by scenic mountains and historic sites.', 
+    description: '🧵 Tapis de laine & margoums.', 
     imageUrl: 'path_to_gafsa_image.jpg' 
   }
 ];
