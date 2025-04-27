@@ -30,6 +30,42 @@ const customIcon = new L.Icon({
 const tunisiaCenter = [33.8869, 9.5375];
 const zoomLevel = 6;
 const circuitsByRegion = {
+  BenArous: [
+    {
+      name: "Circuit du Parc de Fouchana",
+      description: "Randonnée écologique dans une réserve naturelle urbaine.",
+      location: "Parc de Fouchana - Zone humide",
+      duration: 2,
+      price: 25,
+      difficulty: "Facile",
+    },
+    {
+      name: "Circuit des Collines de Mornag",
+      description: "Sentiers viticoles à travers les domaines agricoles.",
+      location: "Mornag - Domaine viticole",
+      duration: 3,
+      price: 35,
+      difficulty: "Moyen",
+    },
+  ],
+  SidiBouzid: [
+    {
+      name: "Circuit du Jebel Sidi Bouzid",
+      description: "Ascension avec vue sur les plaines agricoles.",
+      location: "Jebel Sidi Bouzid - Point de vue",
+      duration: 4,
+      price: 40,
+      difficulty: "Difficile",
+    },
+    {
+      name: "Circuit des Oasis de Regueb",
+      description: "Découverte des systèmes d'irrigation traditionnels.",
+      location: "Regueb - Palmeraies",
+      duration: 2.5,
+      price: 28,
+      difficulty: "Moyen",
+    },
+  ],
   Tunis: [
     {
       name: "Circuit du Belvédère - Lac de Tunise",
