@@ -149,7 +149,14 @@ const Accueil = () => {
     </div>
   </Container>
 </section>
-<WeatherMap />
+
+<div>
+      <h1>Weather Map</h1>
+      <WeatherMap />
+    </div>
+
+
+
       </main>
       <Footer />
     </>

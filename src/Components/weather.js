@@ -105,30 +105,30 @@ const WeatherMap = () => {
       {status.error && <div className="error">Erreur: {status.error}</div>}
       
       <div className="map-container" style={{ display: status.error ? 'none' : 'block' }}>
-        <MapContainer center={[35.5, 9.5]} zoom={7} scrollWheelZoom={true}>
-          <MapController center={[35.5, 9.5]} zoom={7} />
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='© OpenStreetMap'
-          />
+      <MapContainer center={[35.5, 9.5]} zoom={7} scrollWheelZoom={true} style={{ height: "600px", width: "100%" }}>
+  <MapController center={[35.5, 9.5]} zoom={7} />
+  <TileLayer
+    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    attribution='© OpenStreetMap'
+  />
+  {weatherData.map(({ city, position, data }) => (
+    <Marker key={city.name} position={position}>
+      <Popup>
+        <h3>{city.name}</h3>
+        <div className="weather-card">
+          {getWeatherIcon(data.weather[0].main)}
+          <div className="weather-details">
+            <p><WiThermometer /> {Math.round(data.main.temp)}°C</p>
+            <p><WiHumidity /> {data.main.humidity}%</p>
+            <p><WiStrongWind /> {data.wind.speed} km/h</p>
+          </div>
+        </div>
+        <p className="weather-description">{data.weather[0].description}</p>
+      </Popup>
+    </Marker>
+  ))}
+</MapContainer>
 
-          {weatherData.map(({ city, position, data }) => (
-            <Marker key={city.name} position={position}>
-              <Popup>
-                <h3>{city.name}</h3>
-                <div className="weather-card">
-                  {getWeatherIcon(data.weather[0].main)}
-                  <div className="weather-details">
-                    <p><WiThermometer /> {Math.round(data.main.temp)}°C</p>
-                    <p><WiHumidity /> {data.main.humidity}%</p>
-                    <p><WiStrongWind /> {data.wind.speed} km/h</p>
-                  </div>
-                </div>
-                <p className="weather-description">{data.weather[0].description}</p>
-              </Popup>
-            </Marker>
-          ))}
-        </MapContainer>
       </div>
     </div>
   )
