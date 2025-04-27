@@ -9,7 +9,7 @@ import Cuir from "../assest/Cuir.webp";
 import Potier  from "../assest/potier.jpg";
 import Tisserand from "../assest/tisserand.jpg";
 import CircuitArtisan from "../Components/CircuitArtisan"
-
+import WeatherMap from "../Components/weather";
 
 
 const Accueil = () => {
@@ -149,8 +149,7 @@ const Accueil = () => {
     </div>
   </Container>
 </section>
-
-
+<WeatherMap />
       </main>
       <Footer />
     </>
