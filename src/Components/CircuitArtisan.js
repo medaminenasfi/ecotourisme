@@ -3,7 +3,39 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useState } from 'react';
 import './circuitar.css';
-import Bizert from "../assest/bizert.jpg";
+import tunis from "../assest/tunisi.jpg";
+import ariane from "../assest/Ariana.webp";
+import Ben from "../assest/ben arous.jpg";
+import man from "../assest/mannoub.jpg";
+import nab from "../assest/nabeul.jpg";
+import zagh from "../assest/zagh.jpg";
+import bizer from "../assest/bizer.jpg";
+import beja from "../assest/beja.jpg";
+import jendoub from "../assest/jendouba.jpg";
+import kef from "../assest/kef.jpg";
+import  silia   from "../assest/silina.jpg"
+import  sous  from "../assest/souss.jpg"
+import  mounn   from "../assest/mounas.jpg"
+import   mah  from "../assest/mahd.jpg"
+import   sfax  from "../assest/sfaxx.jpg"
+import   kai  from "../assest/kaira.jpg"
+import   kasse  from "../assest/kasseri.jpg"
+import   sidibou  from "../assest/sidi bou.jpg"
+import   gafss  from "../assest/gafsaa.jpg"
+import   toze  from "../assest/tozeur poterie.jpg"
+import   gabes  from "../assest/Gabes.jpg"
+import  med   from "../assest/medenin.jpg"
+import   tata  from "../assest/tataa.jpg"
+import    kebili from "../assest/kebibli vannerie.jpg"
+
+
+
+
+
+
+
+
+
 
 import markerIconPng from 'leaflet/dist/images/marker-icon.png';
 import markerShadowPng from 'leaflet/dist/images/marker-shadow.png';
@@ -25,145 +57,145 @@ const regions = [
     name: 'Tunis', 
     coords: [36.8065, 10.1815], 
     description: ' 🧵 Broderie traditionnelle.', 
-    imageUrl: 'path_to_tunis_image.jpg' 
+    imageUrl: tunis 
   },
   { 
     name: 'Ariana', 
     coords: [36.8665, 10.1647], 
     description: ' 🧵 Broderie traditionnelle.', 
-    imageUrl: 'path_to_ariana_image.jpg' 
+    imageUrl: ariane
   },
   { 
     name: 'Ben Arous', 
     coords: [36.7435, 10.2317], 
     description: ' 🏺 Poterie artisanale', 
-    imageUrl: 'path_to_ben_arous_image.jpg' 
+    imageUrl: Ben
   },
   { 
     name: 'Manouba', 
     coords: [36.8083, 9.9991], 
     description: '👝 Travail du cuir.', 
-    imageUrl: 'path_to_manouba_image.jpg' 
+    imageUrl: man
   },
   { 
     name: 'Nabeul', 
     coords: [36.451, 10.7361], 
     description: '🏺 Céramique & poterie.', 
-    imageUrl: 'path_to_nabeul_image.jpg' 
+    imageUrl: nab
   },
   { 
     name: 'Bizerte', 
     coords: [37.2744, 9.8739], 
     description: '🚤 Construction de bateaux artisanaux', 
-    imageUrl: Bizert 
+    imageUrl: bizer
   },
   { 
     name: 'Beja', 
     coords: [36.733, 9.1843], 
     description: '🧺 Vannerie en alfa', 
-    imageUrl: 'path_to_beja_image.jpg' 
+    imageUrl: beja
   },
   { 
     name: 'Jendouba', 
     coords: [36.5011, 8.7802], 
     description: '👒 Chapeaux de paille', 
-    imageUrl: 'path_to_jendouba_image.jpg' 
+    imageUrl: jendoub
   },
   { 
     name: 'Kef', 
     coords: [36.1675, 8.704], 
     description: '👒 Chapeaux de paille', 
-    imageUrl: 'path_to_kef_image.jpg' 
+    imageUrl: kef
   },
   { 
     name: 'Siliana', 
     coords: [36.088, 9.3746], 
     description: '🧺 Travail de l’alfa & broderie', 
-    imageUrl: 'path_to_siliana_image.jpg' 
+    imageUrl: silia 
   },
   { 
     name: 'Zaghouan', 
     coords: [36.4021, 10.1447], 
     description: '🏺 Poterie traditionnelle.', 
-    imageUrl: 'path_to_zaghouan_image.jpg' 
+    imageUrl: zagh
   },
   { 
     name: 'Sousse', 
     coords: [35.8256, 10.6369], 
     description: '💍 Bijouterie artisanale', 
-    imageUrl: 'path_to_sousse_image.jpg' 
+    imageUrl: sous
   },
   { 
     name: 'Monastir', 
     coords: [35.7643, 10.8113], 
     description: '💍 Bijouterie artisanale', 
-    imageUrl: 'path_to_monastir_image.jpg' 
+    imageUrl: mounn 
   },
   { 
     name: 'Mahdia', 
     coords: [35.5047, 11.0622], 
     description: '🧵 Tissage de soie & artisanat marin', 
-    imageUrl: 'path_to_mahdia_image.jpg' 
+    imageUrl: mah
   },
   { 
     name: 'Sfax', 
     coords: [34.7391, 10.7593], 
     description: '🛠️ Cuivre ciselé & poterie', 
-    imageUrl: 'path_to_sfax_image.jpg' 
+    imageUrl: sfax
   },
   { 
     name: 'Kairouan', 
     coords: [35.6781, 10.0963], 
     description: '🧵 Tapis de Kairouan', 
-    imageUrl: 'path_to_kairouan_image.jpg' 
+    imageUrl: kai 
   },
   { 
     name: 'Kasserine', 
     coords: [35.1676, 8.8368], 
     description: '🧶 Tissage de couvertures traditionnelles', 
-    imageUrl: 'path_to_kasserine_image.jpg' 
+    imageUrl: kasse
   },
   { 
     name: 'Sidi Bouzid', 
     coords: [35.0382, 9.4858], 
     description: '🪵 Bois d’olivier (ustensiles)', 
-    imageUrl: 'path_to_sidi_bouzid_image.jpg' 
+    imageUrl: sidibou
   },
   { 
     name: 'Gabes', 
     coords: [33.8815, 10.0982], 
     description: ' 🏺 Poterie de Chenini & bijoux berbères', 
-    imageUrl: 'path_to_gabes_image.jpg' 
+    imageUrl:gabes 
   },
   { 
     name: 'Medenine', 
     coords: [33.3549, 10.5055], 
     description: ' 🏺 Poterie de Chenini & bijoux berbères”', 
-    imageUrl: 'path_to_medenine_image.jpg' 
+    imageUrl: med
   },
   { 
     name: 'Tataouine', 
     coords: [32.929, 10.4518], 
     description: '💍 Artisanat berbère (bijoux & tissage)', 
-    imageUrl: 'path_to_tataouine_image.jpg' 
+    imageUrl: tata
   },
   { 
     name: 'Tozeur', 
     coords: [33.9197, 8.1335], 
     description: ' 🌴 Poterie & bois de palmier', 
-    imageUrl: 'path_to_tozeur_image.jpg' 
+    imageUrl: toze
   },
   { 
     name: 'Kebili', 
     coords: [33.7076, 8.9715], 
     description: ' 🧺 Vannerie en feuilles de palmier', 
-    imageUrl: 'path_to_kebili_image.jpg' 
+    imageUrl: kebili
   },
   { 
     name: 'Gafsa', 
     coords: [34.425, 8.7842], 
     description: '🧵 Tapis de laine & margoums.', 
-    imageUrl: 'path_to_gafsa_image.jpg' 
+    imageUrl: gafss
   }
 ];
 function ChangeView({ coords }) {
