@@ -152,67 +152,6 @@ const Accueil = () => {
 
 
 
-
-<div style={{ 
-  padding: '20px', 
-  height: '100vh', 
-  display: 'flex', 
-  flexDirection: 'column',
-  background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
-}}>
-  <header style={{ 
-    margin: '0 0 20px 0', 
-    textAlign: 'center',
-    padding: '20px',
-    background: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: '15px',
-    boxShadow: '0 4px 6px rgba(0,0,0,0.05)'
-  }}>
-    <h1 style={{ 
-      margin: 0,
-      color: '#2c3e50', 
-      fontSize: '2.5rem',
-      fontWeight: '600',
-      letterSpacing: '-0.5px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: '10px'
-    }}>
-      <WiCloud style={{ color: '#4a90e2', fontSize: '2.8rem' }} />
-      Météo Tunisie
-    </h1>
-    <p style={{
-      margin: '8px 0 0',
-      color: '#7f8c8d',
-      fontSize: '1.1rem'
-    }}>Surveillance météorologique en temps réel</p>
-  </header>
-  
-  <div style={{ 
-    flex: 1,
-    borderRadius: '15px',
-    overflow: 'hidden',
-    boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-    border: '1px solid rgba(255,255,255,0.3)',
-    position: 'relative'
-  }}>
-    <WeatherMap />
-  </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
       </main>
       <Footer />
     </>
