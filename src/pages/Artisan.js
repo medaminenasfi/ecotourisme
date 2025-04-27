@@ -150,10 +150,12 @@ const Accueil = () => {
   </Container>
 </section>
 
-<div>
-      <h1>Weather Map</h1>
-      <WeatherMap />
-    </div>
+<div style={{ padding: '20px', height: '100vh', display: 'flex', flexDirection: 'column' }}>
+  <h1 style={{ margin: '0 0 20px 0', color: '#2c3e50', textAlign: 'center' }}>Météo Tunisie</h1>
+  <div style={{ flex: 1, borderRadius: '15px', overflow: 'hidden', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
+    <WeatherMap />
+  </div>
+</div>
 
 
 
