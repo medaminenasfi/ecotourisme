@@ -26,13 +26,12 @@ const Accueil = () => {
             <div className="main-div">
               <div className="header">
                 <a href="/Seconnecter" className="back-to-login">
-                  &lt; Back to login
+                  &lt; Retour à la connexion
                 </a>
-                <h2 className="forgot-password-title">Forgot your password?</h2>
+                <h2 className="forgot-password-title">Mot de passe oublié?</h2>
               </div>
               <p className="password-recovery-message">
-                Don’t worry, it happens to all of us. Enter your email below
-                to recover your password.
+              Ne vous inquiétez pas, cela nous arrive à tous. Saisissez votre adresse e-mail ci-dessous pour récupérer votre mot de passe.
               </p>
               <form className="password-recovery-form">
                 <label className="email-label">Email</label>
@@ -43,7 +42,7 @@ const Accueil = () => {
                   required
                 />
                 <button type="submit" className="btn-continue">
-                  CONTINUE
+                CONTINUER
                 </button>
               </form>
             </div>
