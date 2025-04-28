@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../Components/navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Footer from "../Components/footer";
-import backgroundImage from "../assest/Accueil.jpg";
+import backgroundImage from "../assest/bizert.jpg";
 import Container from "react-bootstrap/Container";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
