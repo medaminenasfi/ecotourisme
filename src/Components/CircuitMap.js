@@ -571,40 +571,62 @@ const regions = [
   },
 ];
 
-
-function Routing({ map }) {
+function Routing() {
+  const map = useMap();
   const routingControlRef = useRef(null);
 
   useEffect(() => {
-    if (!map ) return;
+    if (!map) return;
 
-    const waypoints = [
-      L.latLng(36.8356, 10.2237),  // deb
-      L.latLng(36.8003, 10.1907)   // fin
-    ];
-
-    routingControlRef.current = L.Routing.control({
-      waypoints: waypoints,
-      routeWhileDragging: true,
-      showAlternatives: false,
-      lineOptions: {
-        styles: [{ color: '#3388ff', weight: 5 }]
-      },
-      addWaypoints: false,
-      draggableWaypoints: false,
-      fitSelectedRoutes: true
-    }).addTo(map);
-
-    return () => {
+    // Cleanup previous routing control
+    const cleanUpControl = () => {
       if (routingControlRef.current) {
-        map.removeControl(routingControlRef.current);
+        try {
+          // Clear waypoints first to prevent updates
+          routingControlRef.current.getPlan().setWaypoints([]);
+          // Remove control from map
+          map.removeControl(routingControlRef.current);
+        } catch (error) {
+          // Handle cases where map might already be destroyed
+          console.log("Cleanup error:", error);
+        }
+        routingControlRef.current = null;
       }
     };
-  }, [map]);
+
+    // Initialize new routing control
+    const initializeControl = () => {
+      const control = L.Routing.control({
+        waypoints: [
+          L.latLng(36.8356, 10.2237),
+          L.latLng(36.8003, 10.1907)
+        ],
+        routeWhileDragging: true,
+        show: true,
+        collapsible: true,
+        lineOptions: { styles: [{ color: "#3388ff", weight: 5 }] },
+        createMarker: () => null,
+        formatter: new L.Routing.Formatter({
+          language: "fr",
+          unit: "metric"
+        })
+      });
+
+      routingControlRef.current = control.addTo(map);
+    };
+
+    // Perform cleanup before initialization
+    cleanUpControl();
+    initializeControl();
+
+    return () => {
+      // Cleanup when component unmounts
+      cleanUpControl();
+    };
+  }, [map]); // Only re-run when map instance changes
 
   return null;
 }
-
 function ChangeView({ coords }) {
   const map = useMap();
   map.setView(coords, 10);
@@ -661,8 +683,8 @@ const Circuit = () => {
                   center={tunisiaCenter}
                   zoom={zoomLevel}
                   style={{ height: "100%", width: "100%" }}
-                  ref={mapRef}
-                >
+                  whenCreated={(mapInstance) => (mapRef.current = mapInstance)} // Optional for external access
+                  >
                   <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution='&copy; OpenStreetMap contributors'
