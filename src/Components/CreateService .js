@@ -41,12 +41,13 @@ const CreateService = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
         const userServices = response.data.filter(service => service.fournisseur?._id === user.id);
-        setServices(userServices);
+        setServices(userServices); 
               } catch (err) {
         setError(err.response?.data?.message || "Erreur de chargement des services");
       }
     };
   
+    
     if (user?.role === "fournisseur") {
       fetchAllServices();
     }
