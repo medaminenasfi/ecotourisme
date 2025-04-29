@@ -40,8 +40,9 @@ const CreateService = () => {
         const response = await axios.get("http://localhost:5000/api/services", {
           headers: { Authorization: `Bearer ${token}` }
         });
-        setServices(response.data); 
-      } catch (err) {
+        const userServices = response.data.filter(service => service.fournisseur?._id === user.id);
+        setServices(userServices);
+              } catch (err) {
         setError(err.response?.data?.message || "Erreur de chargement des services");
       }
     };
