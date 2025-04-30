@@ -627,9 +627,9 @@ function Routing() {
 
   return null;
 }
-function ChangeView({ coords }) {
+function ChangeView({ coords, zoom }) {
   const map = useMap();
-  map.setView(coords, 10);
+  map.setView(coords, zoom);
   return null;
 }
 
@@ -683,13 +683,12 @@ const Circuit = () => {
                   center={tunisiaCenter}
                   zoom={zoomLevel}
                   style={{ height: "100%", width: "100%" }}
-                  whenCreated={(mapInstance) => (mapRef.current = mapInstance)} // Optional for external access
                   >
                   <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution='&copy; OpenStreetMap contributors'
                   />
-                  <Routing map={mapRef.current} />
+                  {selectedRegion && <Routing />}
                     {regions.map((region) => (
                             <Marker
                               key={region.name}
