@@ -20,6 +20,8 @@ import card4 from "../assest/jeunes-taille-moyenne-critiques_23-2149394417.jpg"
 import card5 from "../assest/643960ac1999ef0f2b66b178_62dfb171bd353b3faaedffff_recalamation-client-blog-cover.png"
 import card6 from "../assest/pexels-photo-8284731.webp"
 
+import ScrollToTopButton from "../Components/ScrollToTopButton";
+
 const Accueil = () => {
   console.log("Rendering Accueil page");
   return (
@@ -312,6 +314,8 @@ const Accueil = () => {
         </section>
       </main>
       <Footer />
+      <ScrollToTopButton />
+
     </>
   );
 };
