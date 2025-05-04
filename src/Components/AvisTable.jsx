@@ -3,6 +3,7 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { Button, Modal, Form, Alert, Spinner, Card, Row, Col, Badge } from 'react-bootstrap';
 import { FaEdit, FaTrash, FaPlus, FaStar, FaRegStar, FaStarHalfAlt } from 'react-icons/fa';
+import ScrollToTopButton from "../Components/ScrollToTopButton";
 
 const renderStars = (rating) => {
   const fullStars = Math.floor(rating);
@@ -303,6 +304,8 @@ const AvisPage = () => {
           </Form>
         </Modal.Body>
       </Modal>
+      <ScrollToTopButton />
+
     </div>
   );
 };

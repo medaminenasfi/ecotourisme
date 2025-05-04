@@ -3,6 +3,7 @@ import axios from "axios";
 import { Button, Modal, Form, Alert, Spinner, Card, Row, Col, Badge } from "react-bootstrap";
 import { FaEdit, FaTrash, FaPlus, FaInfoCircle } from "react-icons/fa";
 import { AuthContext } from "../context/AuthContext";
+import ScrollToTopButton from "../Components/ScrollToTopButton";
 
 const ReclamationsTable = () => {
   const { user = null } = useContext(AuthContext) || {};
@@ -276,6 +277,8 @@ const ReclamationsTable = () => {
           </Form>
         </Modal.Body>
       </Modal>
+      <ScrollToTopButton />
+
     </div>
   );
 };

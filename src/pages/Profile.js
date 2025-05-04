@@ -17,6 +17,7 @@ import { format } from 'date-fns';
 import frLocale from 'date-fns/locale/fr';
 import { toast } from 'react-toastify';
 import backgroundImage from "../assest/Accueil.jpg";
+import ScrollToTopButton from "../Components/ScrollToTopButton";
 
 const Profile = () => {
   const { user, logout, loading: authLoading } = useContext(AuthContext);
@@ -370,7 +371,10 @@ const Profile = () => {
           </Card.Body>
         </Card>
       </Container>
+      <ScrollToTopButton />
+
     </div>
+
   );
 };
 

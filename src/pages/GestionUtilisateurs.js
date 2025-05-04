@@ -6,6 +6,7 @@ import { Button, Table, Alert, Spinner, Modal, Form } from "react-bootstrap";
 import jwtDecode from "jwt-decode";
 import backgroundImage from "../assest/Accueil.jpg"; // Fix import path
 import Navbar from "../Components/navbar";
+import ScrollToTopButton from "../Components/ScrollToTopButton";
 
 const GestionUtilisateurs = () => {
   const [users, setUsers] = useState([]);
@@ -333,7 +334,10 @@ const GestionUtilisateurs = () => {
           </Form>
         </Modal.Body>
       </Modal>
-    </div></>
+    </div>
+    <ScrollToTopButton />
+
+    </>
   );
 };
 

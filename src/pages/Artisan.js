@@ -11,6 +11,7 @@ import Tisserand from "../assest/tisserand.jpg";
 import CircuitArtisan from "../Components/CircuitArtisan"
 import WeatherMap from "../Components/weather";
 import { WiCloud } from 'react-icons/wi'
+import ScrollToTopButton from "../Components/ScrollToTopButton";
 
 const Accueil = () => {
   console.log("Rendering Accueil page");
@@ -154,6 +155,8 @@ const Accueil = () => {
 
       </main>
       <Footer />
+      <ScrollToTopButton />
+
     </>
   );
 };

@@ -6,6 +6,7 @@ import { FaEdit, FaTrashAlt, FaPlus } from 'react-icons/fa';
 import jwtDecode from 'jwt-decode';
 import backgroundImage from '../assest/Accueil.jpg';
 import  Navbar from "../Components/navbar";
+import ScrollToTopButton from "../Components/ScrollToTopButton";
 
 const GestionCircuits = () => {
   const [circuits, setCircuits] = useState([]);
@@ -331,6 +332,8 @@ const GestionCircuits = () => {
         </Modal.Body>
       </Modal>
     </div>
+    <ScrollToTopButton />
+
   </>
   );
 };

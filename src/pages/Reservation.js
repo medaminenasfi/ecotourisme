@@ -14,6 +14,7 @@ import dayjs from "dayjs";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker"; // Remplacer l'import
+import ScrollToTopButton from "../Components/ScrollToTopButton";
 
 
 const Accueil = () => {
@@ -303,6 +304,8 @@ useEffect(() => {
         </section>
       </main>
       <Footer />
+      <ScrollToTopButton />
+
     </>
   );
 };

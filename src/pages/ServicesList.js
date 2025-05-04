@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Navbar from "../Components/navbar";
 import backgroundImage from "../assest/Accueil.jpg";
+import ScrollToTopButton from "../Components/ScrollToTopButton";
 
 const ServicesList = () => {
   const { user } = useContext(AuthContext);
@@ -238,9 +239,11 @@ const ServicesList = () => {
           </Card.Body>
         </Card>
 
-        
+        <ScrollToTopButton />
+
       </Container>
     </div>
+    
   );
 };
 

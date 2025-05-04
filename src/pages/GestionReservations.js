@@ -5,6 +5,7 @@ import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import jwtDecode from 'jwt-decode';
 import backgroundImage from '../assest/Accueil.jpg';
 import  Navbar from "../Components/navbar";
+import ScrollToTopButton from "../Components/ScrollToTopButton";
 
 const GestionReservations = () => {
   const [reservations, setReservations] = useState([]);
@@ -411,6 +412,8 @@ const GestionReservations = () => {
         </Modal.Body>
       </Modal>
     </div>
+    <ScrollToTopButton />
+
     </>
   );
 };

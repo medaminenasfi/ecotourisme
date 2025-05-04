@@ -8,6 +8,7 @@ import { FiSend, FiMail, FiPhone } from "react-icons/fi";
 import { motion } from "framer-motion";
 import backgroundImage from "../assest/Accueil.jpg";
 import "./Contact.css";
+import ScrollToTopButton from "../Components/ScrollToTopButton";
 
 init("PpvCGv7Qe60PVbyR7");
 
@@ -193,6 +194,8 @@ const Contact = () => {
       </main>
 
       <Footer />
+      <ScrollToTopButton />
+
     </>
   );
 };

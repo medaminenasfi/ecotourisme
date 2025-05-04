@@ -6,6 +6,8 @@ import { Button, Table, Alert, Spinner, Modal, Badge } from "react-bootstrap";
 import jwtDecode from "jwt-decode";
 import backgroundImage from "../assest/Accueil.jpg";
 import Navbar from "../Components/navbar";
+import ScrollToTopButton from "../Components/ScrollToTopButton";
+
 const GestionFournisseurs = () => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -194,6 +196,8 @@ const GestionFournisseurs = () => {
         </Modal.Footer>
       </Modal>
     </div>
+    <ScrollToTopButton />
+
     </>
   );
 };

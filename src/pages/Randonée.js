@@ -10,6 +10,8 @@ import Sidi from "../assest/sidi.jpg";
 import tozeur from "../assest/Tozeur.jpg";
 import Oriental from "../assest/oriental.jpg";
 import CircuitMap from "../Components/CircuitMap";
+import ScrollToTopButton from "../Components/ScrollToTopButton";
+
 import { 
   Card as JoyCard, 
   CardCover, 
@@ -290,6 +292,8 @@ Tataouine (Extrême Sud)            </Typography>
   
       </main>
       <Footer />
+      <ScrollToTopButton />
+
     </>
   );
 };
