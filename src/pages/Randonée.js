@@ -86,7 +86,8 @@ const Accueil = () => {
 {/* Featured Circuits Section */}
 <section className="bg-black text-white p-5 shadow-lg">
   <Container>
-    <h2 className="text-center mb-5 display-4">Destination introuvable</h2>
+    <h2 className="text-center mb-5 display-4">Destination  extraordinaire
+</h2>
     
     <Row className="g-4 justify-content-center">
       {/* Circuit 1 - Tozeur */}
