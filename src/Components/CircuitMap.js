@@ -96,7 +96,7 @@ const circuitsByRegion = {
     {
       name: "Circuit du Parc de la Soukra",
       description: "Randonnée dans une forêt de pins.",
-      location: "Forêt de la Soukra - Coteaux d’Ariana",
+      location: "Forêt de la Soukra - Coteaux d'Ariana",
       duration: 2,
       price: 18,
       difficulty: "Moyen",
@@ -112,7 +112,7 @@ const circuitsByRegion = {
       difficulty: "Facile",
     },
     {
-      name: "Circuit d’Oued Ellil",
+      name: "Circuit d'Oued Ellil",
       description: "Randonnée à travers les collines verdoyantes.",
       location: "Oued Ellil - Collines de Jedaida",
       duration: 3,
@@ -140,9 +140,9 @@ const circuitsByRegion = {
   ],
   Bizerte: [
     {
-      name: "Circuit du Lac d’Ichkeul",
+      name: "Circuit du Lac d'Ichkeul",
       description: "Découverte du parc naturel et de sa faune.",
-      location: "Parc National d’Ichkeul - Mont Ichkeul",
+      location: "Parc National d'Ichkeul - Mont Ichkeul",
       duration: 3,
       price: 25,
       difficulty: "Moyen",
@@ -166,7 +166,7 @@ const circuitsByRegion = {
       difficulty: "Moyen",
     },
     {
-      name: "Circuit d’Oued Zarga",
+      name: "Circuit d'Oued Zarga",
       description: "Découverte des cascades et paysages verdoyants.",
       location: "Oued Zarga - Cascade naturelle",
       duration: 4,
@@ -202,7 +202,7 @@ const circuitsByRegion = {
       difficulty: "Difficile",
     },
     {
-      name: "Circuit de l’Oasis de Tajerouine",
+      name: "Circuit de l'Oasis de Tajerouine",
       description: "Découverte des oasis locales.",
       location: "Tajerouine - Sources naturelles",
       duration: 3,
@@ -222,7 +222,7 @@ const circuitsByRegion = {
     {
       name: "Circuit de la Vallée de Kesra",
       description: "Randonnée dans une vallée sauvage.",
-      location: "Kesra - Chutes d’eau",
+      location: "Kesra - Chutes d'eau",
       duration: 3,
       price: 28,
       difficulty: "Moyen",
@@ -321,7 +321,7 @@ const circuitsByRegion = {
     },
     {
       name: "Circuit des Oliveraies",
-      description: "Randonnée à travers les champs d’oliviers.",
+      description: "Randonnée à travers les champs d'oliviers.",
       location: "Kairouan - Oasis de Barrouta",
       duration: 3,
       price: 25,
@@ -348,8 +348,8 @@ const circuitsByRegion = {
   ],
   Gabes: [
     {
-      name: "Circuit de l’Oasis de Gabes",
-      description: "Découvrez l’oasis de Gabes, unique en bord de mer.",
+      name: "Circuit de l'Oasis de Gabes",
+      description: "Découvrez l'oasis de Gabes, unique en bord de mer.",
       location: "Oasis de Gabès - Bord de mer",
       duration: 3,
       price: 28,
@@ -412,7 +412,7 @@ const circuitsByRegion = {
   ],
   Kebili: [
     {
-      name: "Circuit de l’Oasis de Kebili",
+      name: "Circuit de l'Oasis de Kebili",
       description: "Randonnée dans une oasis du désert.",
       location: "Kebili - Erg el-Naouel",
       duration: 5,
@@ -420,7 +420,7 @@ const circuitsByRegion = {
       difficulty: "Difficile",
     },
     {
-      name: "Circuit de la Vallée de l’Oued Djerid",
+      name: "Circuit de la Vallée de l'Oued Djerid",
       description: "Découverte des paysages désertiques.",
       location: "Kebili - Chott el-Jerid",
       duration: 4,
@@ -430,7 +430,7 @@ const circuitsByRegion = {
   ],
   Gafsa: [
     {
-      name: "Circuit de l’Oasis de Tozeur",
+      name: "Circuit de l'Oasis de Tozeur",
       description: "Exploration des oasis au bord du désert.",
       location: "Tozeur - Oasis de Chott el-Jerid",
       duration: 4,
@@ -439,7 +439,7 @@ const circuitsByRegion = {
     },
     {
       name: "Circuit du Ksar Ouled Soltane",
-      description: "Découverte de l’architecture des ksour.",
+      description: "Découverte de l'architecture des ksour.",
       location: "Ksar Ouled Soltane - Erg Chebbi",
       duration: 5,
       price: 45,
@@ -571,62 +571,95 @@ const regions = [
   },
 ];
 
-function Routing() {
+// Add custom icons for start and end points
+const startIcon = L.divIcon({
+  className: 'custom-marker start-marker',
+  html: `<svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="8" fill="#2ecc71" stroke="#fff" stroke-width="2"/></svg>`,
+  iconSize: [18, 18],
+  iconAnchor: [9, 9]
+});
+
+const endIcon = L.divIcon({
+  className: 'custom-marker end-marker',
+  html: `<svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="8" fill="#e74c3c" stroke="#fff" stroke-width="2"/></svg>`,
+  iconSize: [18, 18],
+  iconAnchor: [9, 9]
+});
+
+function Routing({ waypoints }) {
   const map = useMap();
   const routingControlRef = useRef(null);
 
   useEffect(() => {
-    if (!map) return;
+    if (!map || !waypoints || waypoints.length < 2) return;
 
-    // Cleanup previous routing control
-    const cleanUpControl = () => {
+    const cleanup = () => {
       if (routingControlRef.current) {
         try {
-          // Clear waypoints first to prevent updates
-          routingControlRef.current.getPlan().setWaypoints([]);
-          // Remove control from map
           map.removeControl(routingControlRef.current);
+          routingControlRef.current = null;
         } catch (error) {
-          // Handle cases where map might already be destroyed
           console.log("Cleanup error:", error);
         }
-        routingControlRef.current = null;
       }
     };
 
-    // Initialize new routing control
-    const initializeControl = () => {
-      const control = L.Routing.control({
-        waypoints: [
-          L.latLng(36.8356, 10.2237),
-          L.latLng(36.8003, 10.1907)
-        ],
-        routeWhileDragging: true,
-        show: true,
-        collapsible: true,
-        lineOptions: { styles: [{ color: "#3388ff", weight: 5 }] },
-        createMarker: () => null,
-        formatter: new L.Routing.Formatter({
-          language: "fr",
-          unit: "metric"
-        })
-      });
+    const initializeRouting = () => {
+      try {
+        const control = L.Routing.control({
+          waypoints: waypoints.map(wp => L.latLng(wp[0], wp[1])),
+          routeWhileDragging: true,
+          show: true,
+          showAlternatives: true,
+          collapsible: true,
+          addWaypoints: false,
+          draggableWaypoints: false,
+          lineOptions: { 
+            styles: [{ 
+              color: "#FF6B6B", 
+              weight: 6,
+              opacity: 0.9,
+              dashArray: '5, 10'
+            }] 
+          },
+          createMarker: (i, wp) => {
+            return L.marker(wp.latLng, {
+              icon: i === 0 ? startIcon : endIcon
+            });
+          },
+          formatter: new L.Routing.Formatter({
+            language: "fr",
+            unit: "metric"
+          })
+        });
 
-      routingControlRef.current = control.addTo(map);
+        routingControlRef.current = control.addTo(map);
+        
+        // Force the panel to be visible
+        const panel = document.querySelector('.leaflet-routing-container');
+        if (panel) {
+          panel.style.display = 'block';
+        }
+      } catch (error) {
+        console.error("Routing initialization error:", error);
+      }
     };
 
-    // Perform cleanup before initialization
-    cleanUpControl();
-    initializeControl();
+    cleanup();
+    
+    const timer = setTimeout(() => {
+      initializeRouting();
+    }, 100);
 
     return () => {
-      // Cleanup when component unmounts
-      cleanUpControl();
+      cleanup();
+      clearTimeout(timer);
     };
-  }, [map]); // Only re-run when map instance changes
+  }, [map, waypoints]);
 
   return null;
 }
+
 function ChangeView({ coords, zoom }) {
   const map = useMap();
   map.setView(coords, zoom);
@@ -638,11 +671,41 @@ const Circuit = () => {
   const [regionCircuits, setRegionCircuits] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredRegions, setFilteredRegions] = useState(regions);
+  const [waypoints, setWaypoints] = useState([]);
   const mapRef = useRef();
 
   const handleRegionClick = (region) => {
     setSelectedRegion(region);
     setRegionCircuits(circuitsByRegion[region.id] || []);
+    
+    // Generate waypoints for all circuits in the region
+    if (circuitsByRegion[region.id]) {
+      const newWaypoints = [];
+      
+      // Add start point (region center)
+      newWaypoints.push(region.coords);
+      
+      // Add circuit points with proper spacing
+      circuitsByRegion[region.id].forEach((circuit, index) => {
+        // Calculate angle for even distribution
+        const angle = (index * 2 * Math.PI) / circuitsByRegion[region.id].length;
+        const radius = 0.05; // Distance from center in degrees
+        
+        const newPoint = [
+          region.coords[0] + radius * Math.cos(angle),
+          region.coords[1] + radius * Math.sin(angle)
+        ];
+        
+        newWaypoints.push(newPoint);
+      });
+      
+      // Add end point (back to center)
+      newWaypoints.push(region.coords);
+      
+      setWaypoints(newWaypoints);
+    } else {
+      setWaypoints([]);
+    }
   };
 
   const handleSearchChange = (e) => {
@@ -683,30 +746,33 @@ const Circuit = () => {
                   center={tunisiaCenter}
                   zoom={zoomLevel}
                   style={{ height: "100%", width: "100%" }}
-                  >
+                  ref={mapRef}
+                >
                   <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution='&copy; OpenStreetMap contributors'
                   />
-                  {selectedRegion && <Routing />}
-                    {regions.map((region) => (
-                            <Marker
-                              key={region.name}
-                              position={region.coords}
-                              icon={customIcon}
-                              eventHandlers={{
-                                click: () => handleRegionClick(region),
-                              }}
-                            >
-                              <Popup>
-                                <div>
-                                  <h3>{region.name}</h3>
-                                  <p>{region.description}</p>
-                                </div>
-                              </Popup>
-                            </Marker>
-                          ))}
-                  {selectedRegion && <ChangeView coords={selectedRegion.coords} />}
+                  {waypoints.length > 0 && <Routing waypoints={waypoints} />}
+                  {regions.map((region) => (
+                    <Marker
+                      key={region.id}
+                      position={region.coords}
+                      icon={customIcon}
+                      eventHandlers={{
+                        click: () => handleRegionClick(region),
+                      }}
+                    >
+                      <Popup>
+                        <div>
+                          <h3>{region.name}</h3>
+                          {circuitsByRegion[region.id] && (
+                            <p>{circuitsByRegion[region.id].length} circuits disponibles</p>
+                          )}
+                        </div>
+                      </Popup>
+                    </Marker>
+                  ))}
+                  {selectedRegion && <ChangeView coords={selectedRegion.coords} zoom={12} />}
                 </MapContainer>
               </div>
             </Col>
