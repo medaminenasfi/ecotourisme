@@ -115,7 +115,7 @@ function MapController({ center, zoom }) {
 const WeatherMap = () => {
   const [weatherData, setWeatherData] = useState([])
   const [status, setStatus] = useState({ loading: true, error: null })
-  const API_KEY = 'ea6990b8ad9ce003cb88b22e93c93638' // 🔑 Vérifiez ici !
+  const API_KEY = 'ea6990b8ad9ce003cb88b22e93c93638' 
 
   useEffect(() => {
     const source = axios.CancelToken.source()

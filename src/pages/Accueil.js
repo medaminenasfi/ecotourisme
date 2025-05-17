@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../Components/navbar";
 import "./accueil.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -21,9 +21,16 @@ import card5 from "../assest/643960ac1999ef0f2b66b178_62dfb171bd353b3faaedffff_r
 import card6 from "../assest/pexels-photo-8284731.webp"
 
 import ScrollToTopButton from "../Components/ScrollToTopButton";
+import RecommendationModal from '../Components/RecommendationModal';
+import {  Container } from 'react-bootstrap';
 
 const Accueil = () => {
+
   console.log("Rendering Accueil page");
+  const [showModal, setShowModal] = useState(false); // <-- dans la fonction
+
+  const handleOpen = () => setShowModal(true);
+  const handleClose = () => setShowModal(false);
   return (
     <>
       <Navbar />
@@ -311,6 +318,19 @@ const Accueil = () => {
               </div>
             </div>
           </div>
+        </section>
+                <section className="bg-black text-white py-5 px-3 px-md-5">
+
+        <Container className="mt-5 text-center">
+          <p>Découvrez des circuits écotouristiques personnalisés grâce à l'IA !</p>
+
+          <Button variant="success" onClick={handleOpen}>
+            Demander une recommandation IA
+          </Button>
+
+          {/* POPUP MODALE */}
+          <RecommendationModal show={showModal} handleClose={handleClose} />
+        </Container>
         </section>
       </main>
       <Footer />
