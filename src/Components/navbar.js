@@ -61,13 +61,16 @@ const Navbar = () => {
                 </span>
               </NavLink>
             </li>
-            <li className="nav-item mx-1">
-              <NavLink to="/Reservation" className="nav-link">
-                <span className="d-flex align-items-center">
-                  <FaCalendarAlt className="me-1" /> Réservation
-                </span>
-              </NavLink>
-            </li>
+
+          {!(isAuthenticated && user.role === 'admin') && (
+  <li className="nav-item mx-1">
+    <NavLink to="/Reservation" className="nav-link">
+      <span className="d-flex align-items-center">
+        <FaCalendarAlt className="me-1" /> Réservation
+      </span>
+    </NavLink>
+  </li>
+)}
             <li className="nav-item mx-1">
               <NavLink to="/Artisan" className="nav-link">
                 <span className="d-flex align-items-center">
