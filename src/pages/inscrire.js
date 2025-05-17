@@ -18,6 +18,7 @@ const Inscrire = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -29,9 +30,13 @@ const Inscrire = () => {
     try {
       const response = await axios.post('http://localhost:5000/auth/register', formData);
       if (response.data.accessToken) {
+setSuccess(true); // Mettre à jour le succès
+      setTimeout(() => {
+
         localStorage.setItem('accessToken', response.data.accessToken);
-        navigate('/seconnecter');
-      }
+        navigate('/');
+      },2000);
+    }
     } catch (error) {
       setError('Échec de l\'inscription. Veuillez réessayer.');
     }
@@ -74,6 +79,15 @@ const Inscrire = () => {
                 </Alert>
               </Fade>
             )}
+
+            {success && (
+              <Fade in={success}>
+                <Alert severity="success" sx={{ mb: 3, borderRadius: 2 }}>
+                  Compte créé avec succès ! Redirection vers la connexion...
+                </Alert>
+              </Fade>
+            )}
+
 
             <form onSubmit={handleSubmit}>
               <div className="row g-3 mb-4">

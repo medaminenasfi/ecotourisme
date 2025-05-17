@@ -170,6 +170,7 @@ useEffect(() => {
       alert(`Reservation confirmed!\n
         Date: ${dayjs(reservationData.date).format("DD/MM/YYYY")}\n
         Total: ${reservationData.totalPrice} TND`);
+    navigate("/");  // <-- Add this line
 
       // Reset form
       setSelectedCircuit(passedCircuit?._id || "");
