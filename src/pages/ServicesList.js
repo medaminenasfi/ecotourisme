@@ -8,6 +8,20 @@ import Navbar from "../Components/navbar";
 import backgroundImage from "../assest/Accueil.jpg";
 import ScrollToTopButton from "../Components/ScrollToTopButton";
 
+
+// Fonction utilitaire pour générer un hash stable à partir d'une chaîne
+const stringToStableHash = (str) => {
+  let hash = 0;
+  if (str.length === 0) return hash;
+  
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash |= 0; // Convertit en entier 32 bits
+  }
+  
+  return Math.abs(hash);
+};
 const ServicesList = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -31,25 +45,34 @@ const ServicesList = () => {
     "Loueurs de matériel"
   ];
 
-  useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const token = localStorage.getItem('accessToken');
-        const response = await axios.get('http://localhost:5000/api/services', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setServices(response.data);
-      } catch (err) {
-        if (err.response?.status === 401) {
-          navigate('/login');
-        }
-        setError(err.response?.data?.message || 'Erreur de chargement des services');
-      } finally {
-        setLoading(false);
+  
+    useEffect(() => {
+  const fetchServices = async () => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const response = await axios.get('http://localhost:5000/api/services', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      // Ajouter la remise fixe ici
+      const servicesWithDiscount = response.data.map(service => ({
+        ...service,
+        discount: (stringToStableHash(service._id) % 20 + 1 )// Entre 1% et 20%
+      }));
+
+      setServices(servicesWithDiscount);
+    } catch (err) {
+      if (err.response?.status === 401) {
+        navigate('/login');
       }
-    };
-    fetchServices();
-  }, [navigate]);
+      setError(err.response?.data?.message || 'Erreur de chargement des services');
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchServices();
+}, [navigate]);
+
 
   const openEditModal = (service) => {
     setSelectedService(service);
@@ -147,7 +170,6 @@ const ServicesList = () => {
             ) : (
               <Row xs={1} md={2} lg={3} className="g-4">
                 {services.map(service => {
-                  const discount = Math.floor(Math.random() * 20) + 1;
                   return (
                     <Col key={service._id}>
                       <Card className="h-100" style={{
@@ -168,21 +190,21 @@ const ServicesList = () => {
                             }}
                             onError={(e) => e.target.src = '/placeholder.jpg'}
                           />
-                          <Badge 
-                            bg="danger"
-                            style={{
-                              position: 'absolute',
-                              top: '10px',
-                              right: '10px',
-                              fontSize: '0.9rem',
-                              padding: '5px 10px',
-                              borderRadius: '20px',
-                              boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
-                              animation: 'slideIn 0.3s ease-out'
-                            }}
-                          >
-                            -{discount}%
-                          </Badge>
+<Badge 
+  bg={service.discount > 15 ? 'danger' : service.discount > 10 ? 'warning' : 'success'}
+  style={{ 
+    position: 'absolute',
+    top: '10px',
+    right: '10px',
+    fontSize: '0.9rem',
+    padding: '5px 10px',
+    borderRadius: '20px',
+    boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+    transition: 'all 0.3s ease'
+  }}
+>
+  -{service.discount}%
+</Badge>
                         </div>
                         <Card.Body>
                           <div className="d-flex justify-content-between align-items-start">
