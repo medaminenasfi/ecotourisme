@@ -16,6 +16,7 @@ const GestionUtilisateurs = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
+  const [selectedRole, setSelectedRole] = useState('all'); // Ajout du state pour le filtre
 
   const [formData, setFormData] = useState({
     first_name: "",
@@ -146,6 +147,44 @@ const GestionUtilisateurs = () => {
     });
     setShowModal(true);
   };
+  const ROLES = {
+    ALL: 'all',
+    VOYAGEUR: 'voyageur',
+    FOURNISSEUR: 'fournisseur',
+    ADMIN: 'admin'
+  };
+const filteredUsers = users.filter(user => 
+    selectedRole === ROLES.ALL || 
+    user.role.toLowerCase() === selectedRole.toLowerCase()
+  );
+const RoleFilters = () => (
+    <div className="d-flex gap-2 mb-3 flex-wrap">
+      <Button 
+        variant={selectedRole === ROLES.ALL ? 'primary' : 'outline-primary'}
+        onClick={() => setSelectedRole(ROLES.ALL)}
+      >
+        👥 Tous
+      </Button>
+      <Button 
+        variant={selectedRole === ROLES.VOYAGEUR ? 'primary' : 'outline-primary'}
+        onClick={() => setSelectedRole(ROLES.VOYAGEUR)}
+      >
+        ✈️ Voyageurs
+      </Button>
+      <Button 
+        variant={selectedRole === ROLES.FOURNISSEUR ? 'primary' : 'outline-primary'}
+        onClick={() => setSelectedRole(ROLES.FOURNISSEUR)}
+      >
+        🏨 Fournisseurs
+      </Button>
+      <Button 
+        variant={selectedRole === ROLES.ADMIN ? 'primary' : 'outline-primary'}
+        onClick={() => setSelectedRole(ROLES.ADMIN)}
+      >
+        🔑 Admins
+      </Button>
+    </div>
+  );
 
   return (
     <>
@@ -182,6 +221,7 @@ const GestionUtilisateurs = () => {
           <div className="card-body">
             {error && <Alert variant="danger" className="rounded-3">{error}</Alert>}
             {success && <Alert variant="success" className="rounded-3">{success}</Alert>}
+              <RoleFilters />
 
             {loading ? (
               <div className="text-center py-5">
@@ -190,6 +230,7 @@ const GestionUtilisateurs = () => {
             ) : users.length === 0 ? (
               <div className="text-center py-4 text-muted">Aucun utilisateur trouvé</div>
             ) : (
+
               <div className="table-responsive">
                 <Table hover responsive className="align-middle text-white mb-0">
                   <thead style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
@@ -203,17 +244,17 @@ const GestionUtilisateurs = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {users.map(user => (
+                  {filteredUsers.map(user => (
                       <tr key={user._id} style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}>
                         <td>{user.first_name} {user.last_name}</td>
                         <td>{user.phone_number || '-'}</td>
                         <td>{user.email}</td>
                         <td>
-                          <span className={`badge rounded-pill ${
-                            user.role === 'Admin' ? 'bg-danger' :
-                            user.role === 'Manager' ? 'bg-warning text-dark' :
-                            'bg-primary'
-                          }`}>
+                        <span className={`badge rounded-pill ${
+  user.role === 'Admin' ? 'bg-danger' :
+  user.role === 'Fournisseur' ? 'bg-warning' : // Exemple ajusté
+  'bg-primary'
+}`}>
                             {user.role}
                           </span>
                         </td>
