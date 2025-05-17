@@ -319,19 +319,6 @@ const Accueil = () => {
             </div>
           </div>
         </section>
-                <section className="bg-black text-white py-5 px-3 px-md-5">
-
-        <Container className="mt-5 text-center">
-          <p>Découvrez des circuits écotouristiques personnalisés grâce à l'IA !</p>
-
-          <Button variant="success" onClick={handleOpen}>
-            Demander une recommandation IA
-          </Button>
-
-          {/* POPUP MODALE */}
-          <RecommendationModal show={showModal} handleClose={handleClose} />
-        </Container>
-        </section>
       </main>
       <Footer />
       <ScrollToTopButton />

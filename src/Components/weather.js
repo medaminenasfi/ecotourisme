@@ -4,6 +4,7 @@ import L from 'leaflet'
 import axios from 'axios'
 import { WiDaySunny, WiRain, WiCloud, WiThermometer, WiHumidity, WiStrongWind } from 'react-icons/wi'
 import 'leaflet/dist/leaflet.css'
+import { Form, Spinner, Card } from 'react-bootstrap'
 
 // Correction des icônes Leaflet
 delete L.Icon.Default.prototype._getIconUrl
@@ -114,67 +115,123 @@ function MapController({ center, zoom }) {
 
 const WeatherMap = () => {
   const [weatherData, setWeatherData] = useState([])
+  const [forecastData, setForecastData] = useState({})
+  const [selectedDate, setSelectedDate] = useState(new Date())
   const [status, setStatus] = useState({ loading: true, error: null })
-  const API_KEY = 'ea6990b8ad9ce003cb88b22e93c93638' 
+  const API_KEY = 'ea6990b8ad9ce003cb88b22e93c93638'
 
-  useEffect(() => {
+  // Fonction pour formater la date en français
+  const formatDate = (date) => {
+    const options = { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    }
+    return date.toLocaleDateString('fr-FR', options)
+  }
+
+  const fetchData = async () => {
+    setStatus({ loading: true, error: null })
     const source = axios.CancelToken.source()
     
-    const fetchData = async () => {
-      try {
-        const responses = await Promise.allSettled(
-          cities.map(city => 
-            axios.get(
-              `https://api.openweathermap.org/data/2.5/weather?lat=${city.coords[0]}&lon=${city.coords[1]}&appid=${API_KEY}&units=metric&lang=fr`,
-              {
-                timeout: 15000,
-                cancelToken: source.token
-              }
-            )
+    try {
+      // Fetch current weather
+      const currentWeatherResponses = await Promise.allSettled(
+        cities.map(city => 
+          axios.get(
+            `https://api.openweathermap.org/data/2.5/weather?lat=${city.coords[0]}&lon=${city.coords[1]}&appid=${API_KEY}&units=metric&lang=fr`,
+            {
+              timeout: 15000,
+              cancelToken: source.token
+            }
           )
         )
+      )
 
-        const validData = responses
-          .map((response, index) => {
-            if (response.status === 'rejected') {
-              console.error(`Erreur pour ${cities[index].name}:`, response.reason)
-              return null
+      // Fetch 5-day forecast for each city
+      const forecastResponses = await Promise.allSettled(
+        cities.map(city =>
+          axios.get(
+            `https://api.openweathermap.org/data/2.5/forecast?lat=${city.coords[0]}&lon=${city.coords[1]}&appid=${API_KEY}&units=metric&lang=fr`,
+            {
+              timeout: 15000,
+              cancelToken: source.token
             }
-            
-            const data = response.value.data
-            if (!data || data.cod !== 200) {
-              console.warn(`Données invalides pour ${cities[index].name}:`, data)
-              return null
-            }
-            
-            return {
-              city: cities[index],
-              position: [data.coord.lat, data.coord.lon],
-              data: data
-            }
-          })
-          .filter(Boolean)
+          )
+        )
+      )
 
-        if (validData.length === 0) {
-          throw new Error('Échec de toutes les requêtes - Vérifiez votre connexion et votre clé API')
-        }
+      const validCurrentData = currentWeatherResponses
+        .map((response, index) => {
+          if (response.status === 'rejected') {
+            console.error(`Erreur pour ${cities[index].name}:`, response.reason)
+            return null
+          }
+          
+          const data = response.value.data
+          if (!data || data.cod !== 200) {
+            console.warn(`Données invalides pour ${cities[index].name}:`, data)
+            return null
+          }
+          
+          return {
+            city: cities[index],
+            position: [data.coord.lat, data.coord.lon],
+            data: data
+          }
+        })
+        .filter(Boolean)
 
-        setWeatherData(validData)
-        setStatus({ loading: false, error: null })
-      } catch (err) {
-        if (!axios.isCancel(err)) {
-          setStatus({ 
-            loading: false, 
-            error: err.response?.status === 401 
-              ? 'Clé API invalide ou expirée' 
-              : err.message 
-          })
-        }
+      const validForecastData = forecastResponses
+        .map((response, index) => {
+          if (response.status === 'rejected') return null
+          const data = response.value.data
+          if (!data || data.cod !== '200') return null
+          
+          // Group forecast by date
+          const forecastByDate = data.list.reduce((acc, item) => {
+            const date = new Date(item.dt * 1000).toLocaleDateString()
+            if (!acc[date]) acc[date] = []
+            acc[date].push(item)
+            return acc
+          }, {})
+          
+          return {
+            city: cities[index].name,
+            forecast: forecastByDate
+          }
+        })
+        .filter(Boolean)
+        .reduce((acc, item) => {
+          acc[item.city] = item.forecast
+          return acc
+        }, {})
+
+      if (validCurrentData.length === 0) {
+        throw new Error('Impossible de récupérer les données météo. Veuillez réessayer plus tard.')
+      }
+
+      setWeatherData(validCurrentData)
+      setForecastData(validForecastData)
+      setStatus({ loading: false, error: null })
+    } catch (err) {
+      if (!axios.isCancel(err)) {
+        setStatus({ 
+          loading: false, 
+          error: err.response?.status === 401 
+            ? 'Clé API invalide ou expirée' 
+            : err.message 
+        })
       }
     }
+  }
 
+  useEffect(() => {
     fetchData()
-    return () => source.cancel("Annulation requête")
+    // Rafraîchir les données toutes les 30 minutes
+    const interval = setInterval(fetchData, 30 * 60 * 1000)
+    return () => clearInterval(interval)
   }, [])
 
   const getWeatherIcon = (condition) => {
@@ -184,37 +241,111 @@ const WeatherMap = () => {
     return <WiCloud className="cloud" />
   }
 
+  const getForecastForDate = (cityName, date) => {
+    const cityForecast = forecastData[cityName]
+    if (!cityForecast) return null
+    
+    const dateStr = date.toLocaleDateString()
+    const dayForecast = cityForecast[dateStr]
+    if (!dayForecast) return null
+    
+    // Get average values for the day
+    const avgTemp = dayForecast.reduce((sum, item) => sum + item.main.temp, 0) / dayForecast.length
+    const avgHumidity = dayForecast.reduce((sum, item) => sum + item.main.humidity, 0) / dayForecast.length
+    const avgWind = dayForecast.reduce((sum, item) => sum + item.wind.speed, 0) / dayForecast.length
+    
+    // Get most frequent weather condition
+    const conditions = dayForecast.map(item => item.weather[0].main)
+    const mostFrequent = conditions.sort((a,b) =>
+      conditions.filter(v => v === a).length - conditions.filter(v => v === b).length
+    ).pop()
+    
+    return {
+      temp: Math.round(avgTemp),
+      humidity: Math.round(avgHumidity),
+      wind: Math.round(avgWind),
+      condition: mostFrequent
+    }
+  }
+
   return (
     <div className="map-wrapper">
-      {status.loading && <div className="loading">Chargement...</div>}
-      {status.error && <div className="error">Erreur: {status.error}</div>}
-      
-      <div className="map-container" style={{ display: status.error ? 'none' : 'block' }}>
-      <MapContainer center={[35.5, 9.5]} zoom={7} scrollWheelZoom={true} style={{ height: "600px", width: "100%" }}>
-  <MapController center={[35.5, 9.5]} zoom={7} />
-  <TileLayer
-    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-    attribution='© OpenStreetMap'
-  />
-  {weatherData.map(({ city, position, data }) => (
-    <Marker key={city.name} position={position}>
-      <Popup>
-        <h3>{city.name}</h3>
-        <div className="weather-card">
-          {getWeatherIcon(data.weather[0].main)}
-          <div className="weather-details">
-            <p><WiThermometer /> {Math.round(data.main.temp)}°C</p>
-            <p><WiHumidity /> {data.main.humidity}%</p>
-            <p><WiStrongWind /> {data.wind.speed} km/h</p>
+      <Card className="mb-3 shadow-sm">
+        <Card.Body>
+          <Form.Group>
+            <Form.Label>Date de prévision</Form.Label>
+            <Form.Control
+              type="date"
+              value={selectedDate.toISOString().split('T')[0]}
+              onChange={(e) => setSelectedDate(new Date(e.target.value))}
+              min={new Date().toISOString().split('T')[0]}
+              max={new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
+            />
+          </Form.Group>
+          <div className="mt-3 text-center">
+            <h4 className="text-primary mb-0" style={{ 
+              padding: '10px',
+              backgroundColor: '#f8f9fa',
+              borderRadius: '8px',
+              border: '1px solid #dee2e6'
+            }}>
+              {selectedDate.toDateString() === new Date().toDateString() 
+                ? "Météo actuelle" 
+                : `Prévisions pour le ${formatDate(selectedDate)}`}
+            </h4>
           </div>
-        </div>
-        <p className="weather-description">{data.weather[0].description}</p>
-      </Popup>
-    </Marker>
-  ))}
-</MapContainer>
+        </Card.Body>
+      </Card>
 
-      </div>
+      {status.loading ? (
+        <div className="loading-spinner">
+          <Spinner animation="border" variant="primary" />
+          <p className="mt-3">Chargement des données météo...</p>
+        </div>
+      ) : status.error ? (
+        <div className="error-message">
+          <p>{status.error}</p>
+          <button 
+            className="retry-btn"
+            onClick={fetchData}
+          >
+            Réessayer
+          </button>
+        </div>
+      ) : (
+        <div className="map-container">
+          <MapContainer center={[35.5, 9.5]} zoom={7} scrollWheelZoom={true} style={{ height: "600px", width: "100%" }}>
+            <MapController center={[35.5, 9.5]} zoom={7} />
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='© OpenStreetMap'
+            />
+            {weatherData.map(({ city, position, data }) => {
+              const forecast = getForecastForDate(city.name, selectedDate)
+              const displayData = forecast || data
+              
+              return (
+                <Marker key={city.name} position={position}>
+                  <Popup>
+                    <h3>{city.name}</h3>
+                    <div className="weather-card">
+                      {getWeatherIcon(displayData.condition || displayData.weather[0].main)}
+                      <div className="weather-details">
+                        <p><WiThermometer /> {Math.round(displayData.temp || displayData.main.temp)}°C</p>
+                        <p><WiHumidity /> {Math.round(displayData.humidity || displayData.main.humidity)}%</p>
+                        <p><WiStrongWind /> {Math.round(displayData.wind || displayData.wind.speed)} km/h</p>
+                      </div>
+                    </div>
+                    <p className="weather-description">
+                      {forecast ? 'Prévision' : 'Actuel'}: {displayData.condition || displayData.weather[0].description}
+                    </p>
+                  </Popup>
+                </Marker>
+              )
+            })}
+          </MapContainer>
+        </div>
+      )}
     </div>
   )
 }
