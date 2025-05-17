@@ -78,37 +78,39 @@ const GestionReservations = () => {
     }
   };
 
-  const fetchReservations = async () => {
-    if (!validateToken()) return;
+// Modifier la fonction fetchReservations
+const fetchReservations = async () => {
+  if (!validateToken()) return;
 
-    try {
-      const token = localStorage.getItem("accessToken");
-      const response = await axios.get(
-        "http://localhost:5000/api/reservations",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+  try {
+    const token = localStorage.getItem("accessToken");
+    const response = await axios.get(
+      "http://localhost:5000/api/reservations",
+      {
+        headers: { Authorization: `Bearer ${token}` },
+                  params: { sort: "-createdAt" }
 
-      const enhancedReservations = response.data.map((res) => ({
+      }
+    );
+
+    const enhancedReservations = response.data
+      .map((res) => ({
         ...res,
-        circuitDisplay:
-          res.circuitDetails?.name || res.circuit?.name || "Circuit supprimé",
+        circuitDisplay: res.circuitDetails?.name || res.circuit?.name || "Circuit supprimé",
         userDisplay: res.user
           ? `${res.user.first_name} ${res.user.last_name}`
           : "Utilisateur supprimé",
       }))
-      
-      .sort((a, b) => new Date(b.date) - new Date(a.date)); 
+      // Double tri de sécurité
 
-      setReservations(enhancedReservations);
-      setError("");
-    } catch (err) {
-      handleError(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    setReservations(enhancedReservations);
+    setError("");
+  } catch (err) {
+    handleError(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     const loadData = async () => {
@@ -305,11 +307,13 @@ const GestionReservations = () => {
                               <Badge bg="info" className="ms-2"></Badge>
                             )}
                           </td>
-                          <td>
-                            {new Date(reservation.date).toLocaleDateString(
-                              "fr-FR"
-                            )}
-                          </td>
+<td>
+  {new Date(reservation.date).toLocaleDateString("fr-FR", {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })}
+</td>
                           <td>{reservation.numberOfPeople}</td>
                           <td>{reservation.totalPrice?.toFixed(2)} TND</td>
                           <td>
