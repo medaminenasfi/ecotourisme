@@ -106,7 +106,7 @@ const RecommendationModal = ({ show, handleClose }) => {
             </Form.Control>
           </Form.Group>
 
-          {/* Sélecteur de Météo */}
+          {/* Sélecteur de Météo
           <Form.Group className="mb-3">
             <Form.Label>Météo</Form.Label>
             <Form.Control 
@@ -122,7 +122,7 @@ const RecommendationModal = ({ show, handleClose }) => {
               ))}
             </Form.Control>
           </Form.Group>
-
+ */}
           <Button type="submit" variant="primary" disabled={loading}>
             {loading ? (
               <Spinner animation="border" size="sm" />
