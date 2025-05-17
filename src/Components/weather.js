@@ -270,6 +270,25 @@ const WeatherMap = () => {
 
   return (
     <div className="map-wrapper">
+      <div className="date-display-container" style={{
+        position: 'fixed',
+        top: '20px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 1000,
+        backgroundColor: 'white',
+        padding: '15px 30px',
+        borderRadius: '10px',
+        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+        border: '2px solid #007bff'
+      }}>
+        <h3 className="text-primary mb-0" style={{ fontSize: '1.2rem' }}>
+          {selectedDate.toDateString() === new Date().toDateString() 
+            ? "Météo actuelle" 
+            : `Prévisions pour le ${formatDate(selectedDate)}`}
+        </h3>
+      </div>
+
       <Card className="mb-3 shadow-sm">
         <Card.Body>
           <Form.Group>
@@ -282,18 +301,6 @@ const WeatherMap = () => {
               max={new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
             />
           </Form.Group>
-          <div className="mt-3 text-center">
-            <h4 className="text-primary mb-0" style={{ 
-              padding: '10px',
-              backgroundColor: '#f8f9fa',
-              borderRadius: '8px',
-              border: '1px solid #dee2e6'
-            }}>
-              {selectedDate.toDateString() === new Date().toDateString() 
-                ? "Météo actuelle" 
-                : `Prévisions pour le ${formatDate(selectedDate)}`}
-            </h4>
-          </div>
         </Card.Body>
       </Card>
 
