@@ -109,7 +109,7 @@ const Navbar = () => {
               <li className="nav-item mx-1">
                 <NavLink to="/AdminDashboard" className="nav-link">
                   <span className="d-flex align-items-center">
-                    <MdDashboard className="me-1" /> Dashboard Admin
+                    <MdDashboard className="me-1" /> Tableau de bord 
                   </span>
                 </NavLink>
               </li>
