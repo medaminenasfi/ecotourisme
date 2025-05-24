@@ -358,17 +358,17 @@ const circuitsByRegion = {
   ],
   Medenine: [
     {
-      name: "Circuit de Matmata",
-      description: "Exploration des habitations troglodytes.",
-      location: "Matmata - Désert de Tataouine",
+      name: "Circuit de Chenini",
+      description: "Découverte du village berbère troglodyte de Chenini et des traditions locales.",
+      location: "Chenini - Médenine",
       duration: 4,
       price: 35,
       difficulty: "Moyen",
     },
     {
-      name: "Circuit de Douz",
-      description: "Découverte des dunes du désert.",
-      location: "Douz - Erg Djemel",
+      name: "Circuit des Ksour de Médenine",
+      description: "Exploration des greniers fortifiés berbères et des paysages désertiques.",
+      location: "Ancien Ksar de Médenine - Chenini - Guermessa",
       duration: 5,
       price: 40,
       difficulty: "Difficile",

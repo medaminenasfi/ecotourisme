@@ -30,11 +30,11 @@ const Inscrire = () => {
     try {
       const response = await axios.post('http://localhost:5000/auth/register', formData);
       if (response.data.accessToken) {
-setSuccess(true); // Mettre à jour le succès
+setSuccess(true);  
       setTimeout(() => {
 
         localStorage.setItem('accessToken', response.data.accessToken);
-        navigate('/');
+        navigate('/Seconnecter');
       },2000);
     }
     } catch (error) {
