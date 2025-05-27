@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../Components/navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Footer from "../Components/footer";
-import backgroundImage from "../assest/bizert.jpg";
+import bg from "../assest/Accueil.jpg";
 import Container from "react-bootstrap/Container";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -13,9 +13,9 @@ import Col from "react-bootstrap/Col";
 import dayjs from "dayjs";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker"; // Remplacer l'import
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ScrollToTopButton from "../Components/ScrollToTopButton";
-
+import { motion } from "framer-motion";
 
 const Accueil = () => {
   const location = useLocation();
@@ -31,33 +31,34 @@ const Accueil = () => {
   const [error, setError] = useState("");
   const [isReserving, setIsReserving] = useState(false);
   const [tempCircuit, setTempCircuit] = useState(null);
-const [combinedCircuits, setCombinedCircuits] = useState([]);
+  const [combinedCircuits, setCombinedCircuits] = useState([]);
 
-
-useEffect(() => {
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-useEffect(() => {
-  if (passedCircuit?.isTemp) {
-    setCircuits(prev => [...prev, passedCircuit]);
-    setSelectedCircuit(passedCircuit._id);
-  }
-}, [passedCircuit]);
 
-useEffect(() => {
-  setCombinedCircuits([
-    ...circuits,
-    ...(tempCircuit ? [tempCircuit] : [])
-  ]);
-}, [circuits, tempCircuit]);
+  useEffect(() => {
+    if (passedCircuit?.isTemp) {
+      setCircuits(prev => [...prev, passedCircuit]);
+      setSelectedCircuit(passedCircuit._id);
+    }
+  }, [passedCircuit]);
+
+  useEffect(() => {
+    setCombinedCircuits([
+      ...circuits,
+      ...(tempCircuit ? [tempCircuit] : [])
+    ]);
+  }, [circuits, tempCircuit]);
+
   const validateToken = (token) => {
     try {
       const decoded = jwtDecode(token);
       if (!decoded) throw new Error("Invalid token");
-            if (decoded.exp && Date.now() >= decoded.exp * 1000) {
+      if (decoded.exp && Date.now() >= decoded.exp * 1000) {
         throw new Error("Token expired");
       }
-            if (!decoded.UserInfo?.id) {
+      if (!decoded.UserInfo?.id) {
         throw new Error("Invalid token structure");
       }
       
@@ -129,7 +130,6 @@ useEffect(() => {
       const userId = decoded.UserInfo?.id;
       if (!userId) throw new Error("User information not found in token");
 
-  
       const selectedDay = dayjs(selectedDate);
       if (!selectedDay.isValid() || selectedDay.isBefore(dayjs(), "day")) {
         throw new Error("Invalid date selection");
@@ -138,14 +138,12 @@ useEffect(() => {
       const circuit = circuits.find(c => c._id === selectedCircuit);
   
       const reservationData = {
-        
         user: userId,
         date: selectedDay.format("YYYY-MM-DD"),
         numberOfPeople: participants,
         totalPrice: circuit.price * participants,
         isTempCircuit: circuit.isTemp || false,
-        name: circuit.name, // Add circuit name directly to reservation
-
+        name: circuit.name,
       };
     
       if (circuit.isTemp) {
@@ -174,9 +172,8 @@ useEffect(() => {
       alert(`Reservation confirmed!\n
         Date: ${dayjs(reservationData.date).format("DD/MM/YYYY")}\n
         Total: ${reservationData.totalPrice} TND`);
-    navigate("/");  // <-- Add this line
+      navigate("/");
 
-      // Reset form
       setSelectedCircuit(passedCircuit?._id || "");
       setParticipants(1);
       setSelectedDate(dayjs());
@@ -189,8 +186,28 @@ useEffect(() => {
     }
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5
+      }
+    }
+  };
+
   if (loading) {
-    
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
         <div className="spinner-border text-primary" role="status">
@@ -204,39 +221,83 @@ useEffect(() => {
     <>
       <Navbar />
       <main>
-        <section
+        <motion.section
           className="d-flex align-items-center justify-content-center text-white"
           style={{
-            backgroundImage: `url(${backgroundImage})`,
+            backgroundImage: `url(${bg})`,
             backgroundSize: "cover",
             height: "100vh",
           }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
         >
-          <div className="text-center">
-            <h1>Votre aventure commence ici</h1>
-            <p className="lead">
-            Découvrez des paysages à couper le souffle et des expériences inoubliables.            </p>
-          </div>
-        </section>
+          <motion.div 
+            className="text-center"
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
+          >
+            <motion.h1
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+            >
+              Votre aventure commence ici
+            </motion.h1>
+            <motion.p 
+              className="lead"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
+            >
+              Découvrez des paysages à couper le souffle et des expériences inoubliables.
+            </motion.p>
+          </motion.div>
+        </motion.section>
 
-        <section className="bg-dark text-white p-5">
+        <motion.section 
+          className="bg-dark text-white p-5"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
           <Container>
-            <h2 className="text-center mb-4">Faire une réservation</h2>
-            {error && <div className="alert alert-danger">{error}</div>}
+            <motion.h2 
+              className="text-center mb-4"
+              variants={itemVariants}
+            >
+              Faire une réservation
+            </motion.h2>
+            {error && (
+              <motion.div 
+                className="alert alert-danger"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                {error}
+              </motion.div>
+            )}
             
             <Row className="g-4">
               <Col md={6}>
-                <div className="bg-light p-4 rounded text-dark">
-                <div className="mb-3">
-  <label className="form-label">Circuit sélectionné</label>
-  <input
-    type="text"
-    className="form-control"
-    value={combinedCircuits.find(circuit => circuit._id === selectedCircuit)?.name || ''}
-    readOnly
-    placeholder="Aucun circuit sélectionné"
-  />
-</div>
+                <motion.div 
+                  className="bg-light p-4 rounded text-dark"
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <div className="mb-3">
+                    <label className="form-label">Circuit sélectionné</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={combinedCircuits.find(circuit => circuit._id === selectedCircuit)?.name || ''}
+                      readOnly
+                      placeholder="Aucun circuit sélectionné"
+                    />
+                  </div>
 
                   <div className="mb-3">
                     <label className="form-label">Nombre de participants</label>
@@ -252,48 +313,75 @@ useEffect(() => {
 
                   <div className="mb-3">
                     <label className="form-label">Prix ​​total</label>
-                    <div className="h4">
+                    <motion.div 
+                      className="h4"
+                      initial={{ scale: 0.9 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
                       {circuits.find(c => c._id === selectedCircuit)?.price
                         ? `${totalPrice} TND`
                         : "Sélectionnez un circuit"}
-                    </div>
+                    </motion.div>
                   </div>
-                </div>
+                </motion.div>
               </Col>
 
               <Col md={6}>
-  <div className="bg-light p-4 rounded">
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DatePicker
-        label="Choisir une date"
-        value={selectedDate}
-        onChange={setSelectedDate}
-        minDate={dayjs().add(1, 'day')}
-        disablePast
-        format="DD/MM/YYYY"
-        sx={{
-          width: '100%',
-          '& .MuiOutlinedInput-root': {
-            borderRadius: '8px',
-            backgroundColor: 'white'
-          }
-        }}
-      />
-    </LocalizationProvider>
-    <div className="text-center mt-3 text-dark">
-      Date sélectionnée: {selectedDate.format("DD/MM/YYYY")}
-    </div>
-  </div>
-</Col>
+                <motion.div 
+                  className="bg-light p-4 rounded"
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label="Choisir une date"
+                      value={selectedDate}
+                      onChange={setSelectedDate}
+                      minDate={dayjs().add(1, 'day')}
+                      disablePast
+                      format="DD/MM/YYYY"
+                      sx={{
+                        width: '100%',
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '8px',
+                          backgroundColor: 'white'
+                        }
+                      }}
+                    />
+                  </LocalizationProvider>
+                  <motion.div 
+                    className="text-center mt-3 text-dark"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    Date sélectionnée: {selectedDate.format("DD/MM/YYYY")}
+                  </motion.div>
+                </motion.div>
+              </Col>
             </Row>
 
-            <div className="text-center mt-4">
+            <motion.div 
+              className="text-center mt-4"
+              variants={itemVariants}
+            >
               <Button
                 variant="contained"
                 size="large"
                 onClick={handleReservation}
                 disabled={!selectedCircuit || isReserving}
-                sx={{ px: 6, py: 2, fontSize: '1.2rem' }}
+                sx={{ 
+                  px: 6, 
+                  py: 2, 
+                  fontSize: '1.2rem',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    transform: 'scale(1.05)',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.2)'
+                  }
+                }}
               >
                 {isReserving ? (
                   <>
@@ -304,13 +392,12 @@ useEffect(() => {
                   "Confirmer la réservation"
                 )}
               </Button>
-            </div>
+            </motion.div>
           </Container>
-        </section>
+        </motion.section>
       </main>
       <Footer />
       <ScrollToTopButton />
-
     </>
   );
 };
