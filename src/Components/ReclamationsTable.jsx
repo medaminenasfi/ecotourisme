@@ -4,6 +4,7 @@ import { Button, Modal, Form, Alert, Spinner, Card, Row, Col, Badge } from "reac
 import { FaEdit, FaTrash, FaPlus, FaInfoCircle } from "react-icons/fa";
 import { AuthContext } from "../context/AuthContext";
 import ScrollToTopButton from "../Components/ScrollToTopButton";
+import { motion } from "framer-motion";
 
 const ReclamationsTable = () => {
   const { user = null } = useContext(AuthContext) || {};
@@ -83,9 +84,39 @@ const ReclamationsTable = () => {
     }
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5
+      }
+    }
+  };
+
   return (
-    <div>
-      <div className="d-flex justify-content-between align-items-center mb-4">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.div 
+        className="d-flex justify-content-between align-items-center mb-4"
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2 }}
+      >
         <h2 className="text-white mb-0">
           <FaInfoCircle className="me-2" />
           Gestion des Réclamations
@@ -100,186 +131,216 @@ const ReclamationsTable = () => {
         >
           <FaPlus className="me-2" /> Nouvelle Réclamation
         </Button>
-      </div>
+      </motion.div>
 
-      {error && <Alert variant="danger" className="rounded">{error}</Alert>}
+      {error && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <Alert variant="danger" className="rounded">{error}</Alert>
+        </motion.div>
+      )}
 
       {loading ? (
         <div className="text-center py-5">
           <Spinner animation="border" variant="light" />
         </div>
       ) : reclamations.length === 0 ? (
-        <Alert variant="info" style={{
-          background: 'rgba(32, 201, 151, 0.15)',
-          borderColor: 'rgba(32, 201, 151, 0.3)',
-          color: '#20c997'
-        }}>
-          Aucune réclamation trouvée
-        </Alert>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Alert variant="info" style={{
+            background: 'rgba(32, 201, 151, 0.15)',
+            borderColor: 'rgba(32, 201, 151, 0.3)',
+            color: '#20c997'
+          }}>
+            Aucune réclamation trouvée
+          </Alert>
+        </motion.div>
       ) : (
-        <Row xs={1} md={2} lg={3} className="g-4">
-          {reclamations.map(recl => {
-            const isOwner = user && (
-              user.role === "admin" || 
-              (recl.userId && 
-                (typeof recl.userId === 'object' 
-                  ? recl.userId._id === user.id
-                  : recl.userId === user.id))
-            );
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <Row xs={1} md={2} lg={3} className="g-4">
+            {reclamations.map(recl => {
+              const isOwner = user && (
+                user.role === "admin" || 
+                (recl.userId && 
+                  (typeof recl.userId === 'object' 
+                    ? recl.userId._id === user.id
+                    : recl.userId === user.id))
+              );
 
-            return (
-              <Col key={recl._id}>
-                <Card className="h-100" style={{
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  color: 'white'
-                }}>
-                  <Card.Header style={{
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
-                  }}>
-                    <div className="d-flex justify-content-between align-items-center">
-                      <div>
-                        <span className="fw-medium">
-                          {typeof recl.userId === 'object' 
-                            ? `${recl.userId?.first_name || ''} ${recl.userId?.last_name || ''}`.trim() 
-                            : "Anonymous User"}
-                        </span>
-                        <small className="text-white d-block">
-                          {new Date(recl.createdAt).toLocaleDateString()}
-                        </small>
-                      </div>
-                      <Badge bg={recl.status === "traité" ? "success" : "warning"}>
-                        {recl.status}
-                      </Badge>
-                    </div>
-                  </Card.Header>
-                  <Card.Body>
-                    <Badge bg="info" className="mb-2">{recl.type}</Badge>
-                    <p className="text-white-50">{recl.message}</p>
-                  </Card.Body>
-                  {isOwner && (
-                    <Card.Footer style={{
+              return (
+                <Col key={recl._id}>
+                  <motion.div
+                    variants={itemVariants}
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <Card className="h-100" style={{
                       background: 'rgba(255, 255, 255, 0.05)',
-                      borderTop: '1px solid rgba(255, 255, 255, 0.1)'
-                    }} className="d-flex justify-content-end gap-2">
-                      <Button
-                        variant="outline-warning"
-                        size="sm"
-                        onClick={() => {
-                          setSelectedReclamation(recl);
-                          setFormData({
-                            type: recl.type,
-                            message: recl.message,
-                            status: recl.status
-                          });
-                          setShowModal(true);
-                        }}
-                      >
-                        <FaEdit /> Modifier
-                      </Button>
-                      <Button
-                        variant="outline-danger"
-                        size="sm"
-                        onClick={() => handleDelete(recl._id)}
-                      >
-                        <FaTrash /> Supprimer
-                      </Button>
-                    </Card.Footer>
-                  )}
-                </Card>
-              </Col>
-            );
-          })}
-        </Row>
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      color: 'white'
+                    }}>
+                      <Card.Header style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+                      }}>
+                        <div className="d-flex justify-content-between align-items-center">
+                          <div>
+                            <span className="fw-medium">
+                              {typeof recl.userId === 'object' 
+                                ? `${recl.userId?.first_name || ''} ${recl.userId?.last_name || ''}`.trim() 
+                                : "Anonymous User"}
+                            </span>
+                            <small className="text-white d-block">
+                              {new Date(recl.createdAt).toLocaleDateString()}
+                            </small>
+                          </div>
+                          <Badge bg={recl.status === "traité" ? "success" : "warning"}>
+                            {recl.status}
+                          </Badge>
+                        </div>
+                      </Card.Header>
+                      <Card.Body>
+                        <Badge bg="info" className="mb-2">{recl.type}</Badge>
+                        <p className="text-white-50">{recl.message}</p>
+                      </Card.Body>
+                      {isOwner && (
+                        <Card.Footer style={{
+                          background: 'rgba(255, 255, 255, 0.05)',
+                          borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+                        }} className="d-flex justify-content-end gap-2">
+                          <Button
+                            variant="outline-warning"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedReclamation(recl);
+                              setFormData({
+                                type: recl.type,
+                                message: recl.message,
+                                status: recl.status
+                              });
+                              setShowModal(true);
+                            }}
+                          >
+                            <FaEdit /> Modifier
+                          </Button>
+                          <Button
+                            variant="outline-danger"
+                            size="sm"
+                            onClick={() => handleDelete(recl._id)}
+                          >
+                            <FaTrash /> Supprimer
+                          </Button>
+                        </Card.Footer>
+                      )}
+                    </Card>
+                  </motion.div>
+                </Col>
+              );
+            })}
+          </Row>
+        </motion.div>
       )}
 
       <Modal show={showModal} onHide={() => {
         setShowModal(false);
         setFormData({ type: "", message: "", status: "en cours" });
       }} centered>
-        <Modal.Header closeButton style={{
-          background: 'rgba(0, 0, 0, 0.7)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-          color: 'white'
-        }}>
-          <Modal.Title>
-            {selectedReclamation ? "Modifier Réclamation" : "Nouvelle Réclamation"}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body style={{
-          background: 'rgba(0, 0, 0, 0.7)',
-          color: 'white'
-        }}>
-          <Form onSubmit={handleSubmit}>
-            {!selectedReclamation || user?.role !== "admin" ? (
-              <>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Modal.Header closeButton style={{
+            background: 'rgba(0, 0, 0, 0.7)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            color: 'white'
+          }}>
+            <Modal.Title>
+              {selectedReclamation ? "Modifier Réclamation" : "Nouvelle Réclamation"}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body style={{
+            background: 'rgba(0, 0, 0, 0.7)',
+            color: 'white'
+          }}>
+            <Form onSubmit={handleSubmit}>
+              {!selectedReclamation || user?.role !== "admin" ? (
+                <>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Type</Form.Label>
+                    <Form.Select
+                      className="bg-dark text-white border-secondary"
+                      value={formData.type}
+                      onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                      required
+                    >
+                      <option value="">Sélectionnez un type</option>
+                      <option value="fournisseur">Fournisseur</option>
+                      <option value="artisan">Artisan</option>
+                      <option value="circuit">Circuit</option>
+                      <option value="sécurité">Sécurité</option>
+                      <option value="problème de financement">Financement</option>
+                      <option value="autre">Autre</option>
+                    </Form.Select>
+                  </Form.Group>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label>Message</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows={4}
+                      className="bg-dark text-white border-secondary"
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      required
+                    />
+                  </Form.Group>
+                </>
+              ) : (
                 <Form.Group className="mb-3">
-                  <Form.Label>Type</Form.Label>
+                  <Form.Label>Statut</Form.Label>
                   <Form.Select
                     className="bg-dark text-white border-secondary"
-                    value={formData.type}
-                    onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                    required
+                    value={formData.status}
+                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
                   >
-                    <option value="">Sélectionnez un type</option>
-                    <option value="fournisseur">Fournisseur</option>
-                    <option value="artisan">Artisan</option>
-                    <option value="circuit">Circuit</option>
-                    <option value="sécurité">Sécurité</option>
-                    <option value="problème de financement">Financement</option>
-                    <option value="autre">Autre</option>
+                    <option value="en cours">En cours</option>
+                    <option value="traité">Résolue</option>
                   </Form.Select>
                 </Form.Group>
+              )}
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Message</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={4}
-                    className="bg-dark text-white border-secondary"
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    required
-                  />
-                </Form.Group>
-              </>
-            ) : (
-              <Form.Group className="mb-3">
-                <Form.Label>Statut</Form.Label>
-                <Form.Select
-                  className="bg-dark text-white border-secondary"
-                  value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+              <div className="d-flex justify-content-end gap-2">
+                <Button 
+                  variant="secondary" 
+                  onClick={() => setShowModal(false)}
+                  className="rounded-pill"
                 >
-                  <option value="en cours">En cours</option>
-                  <option value="traité">Résolue</option>
-                </Form.Select>
-              </Form.Group>
-            )}
-
-            <div className="d-flex justify-content-end gap-2">
-              <Button 
-                variant="secondary" 
-                onClick={() => setShowModal(false)}
-                className="rounded-pill"
-              >
-                Annuler
-              </Button>
-              <Button 
-                variant="primary" 
-                type="submit"
-                className="rounded-pill"
-              >
-                {selectedReclamation ? "Enregistrer" : "Soumettre"}
-              </Button>
-            </div>
-          </Form>
-        </Modal.Body>
+                  Annuler
+                </Button>
+                <Button 
+                  variant="primary" 
+                  type="submit"
+                  className="rounded-pill"
+                >
+                  {selectedReclamation ? "Enregistrer" : "Soumettre"}
+                </Button>
+              </div>
+            </Form>
+          </Modal.Body>
+        </motion.div>
       </Modal>
       <ScrollToTopButton />
-
-    </div>
+    </motion.div>
   );
 };
 
