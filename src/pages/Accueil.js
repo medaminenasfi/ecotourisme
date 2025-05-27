@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../Components/navbar";
 import "./accueil.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -21,16 +21,38 @@ import card5 from "../assest/643960ac1999ef0f2b66b178_62dfb171bd353b3faaedffff_r
 import card6 from "../assest/pexels-photo-8284731.webp"
 
 import ScrollToTopButton from "../Components/ScrollToTopButton";
-import RecommendationModal from '../Components/RecommendationModal';
-import {  Container } from 'react-bootstrap';
+import { motion } from "framer-motion";
 
 const Accueil = () => {
 
   console.log("Rendering Accueil page");
-  const [showModal, setShowModal] = useState(false); // <-- dans la fonction
+  const [showModal, setShowModal] = useState(false);
 
-  const handleOpen = () => setShowModal(true);
-  const handleClose = () => setShowModal(false);
+useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5
+      }
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -50,22 +72,42 @@ const Accueil = () => {
                   }}
                 >
                   <div className="overlay"></div>
-                  <div className="content text-white text-center">
+                  <motion.div 
+                    className="content text-white text-center"
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                  >
                     <center>
-                      <h1>
+                      <motion.h1
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.2, duration: 0.5 }}
+                      >
                         Explorer <br /> la nature autrement
-                      </h1>
-                      <Link to="/Randonée">
-                        <Button variant="light">
-                          Commencer votre aventure
-                        </Button>
-                      </Link>
-                      <p className="lead mt-3">
+                      </motion.h1>
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4, duration: 0.5 }}
+                      >
+                        <Link to="/Randonée">
+                          <Button variant="light" className="hover-scale">
+                            Commencer votre aventure
+                          </Button>
+                        </Link>
+                      </motion.div>
+                      <motion.p 
+                        className="lead mt-3"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.6, duration: 0.5 }}
+                      >
                         Explorez des paysages enchanteurs, des déserts aux
                         plages superbes.
-                      </p>
+                      </motion.p>
                     </center>
-                  </div>
+                  </motion.div>
                 </div>
               </Carousel.Item>
             ))}
@@ -73,155 +115,63 @@ const Accueil = () => {
         </section>
 
         <section className="bg-black text-white py-5 px-3 px-md-5">
-          <div className="container">
-            <h1 className="text-center mb-5 display-4">
+          <motion.div 
+            className="container"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            <motion.h1 
+              className="text-center mb-5 display-4"
+              variants={itemVariants}
+            >
               🌿 Pourquoi choisir EcoTourisme TN ?
-            </h1>
+            </motion.h1>
 
-            <div className="row g-4">
-              {/* First Row */}
-              <div className="col-12 col-md-6 col-lg-4">
-                <Card className="h-100 bg-dark text-light border-light hover-shadow">
-                  <Card.Img
-                    variant="top"
-                    src={card2}
-                    style={{ height: "200px", objectFit: "cover" }}
-                  />
-                  <Card.Body className="d-flex flex-column">
-                    <Card.Title className="fs-5 mb-3">
-                      🗺️ Carte interactive
-                    </Card.Title>
-                    <Card.Text className="flex-grow-1">
-                      Visualisez rapidement les circuits disponibles partout en
-                      Tunisie grâce à une carte interactive intuitive.
-                    </Card.Text>
-                    <Link to="/Randonée" className="mt-2">
-                      <Button variant="outline-light" className="w-100">
-                        Explorer la carte
-                      </Button>
-                    </Link>
-                  </Card.Body>
-                </Card>
-              </div>
-
-              <div className="col-12 col-md-6 col-lg-4">
-                <Card className="h-100 bg-dark text-light border-light hover-shadow">
-                  <Card.Img
-                    variant="top"
-                    src={card6}
-                    style={{ height: "200px", objectFit: "cover" }}
-                  />
-                  <Card.Body className="d-flex flex-column">
-                    <Card.Title className="fs-5 mb-3">
-                      👥 Profils personnalisés
-                    </Card.Title>
-                    <Card.Text className="flex-grow-1">
-                      Voyageurs, fournisseurs ou administrateurs : chacun
-                      dispose d'un espace adapté à ses besoins.
-                    </Card.Text>
-                    <Link to="./profile" className="mt-2">
-                      <Button variant="outline-light" className="w-100">
-                        Voir mon espace
-                      </Button>
-                    </Link>
-                  </Card.Body>
-                </Card>
-              </div>
-
-              <div className="col-12 col-md-6 col-lg-4">
-                <Card className="h-100 bg-dark text-light border-light hover-shadow">
-                  <Card.Img
-                    variant="top"
-                    src={card1}
-                    style={{ height: "200px", objectFit: "cover" }}
-                  />
-                  <Card.Body className="d-flex flex-column">
-                    <Card.Title className="fs-5 mb-3">
-                      🕒 Réservation rapide
-                    </Card.Title>
-                    <Card.Text className="flex-grow-1">
-                      Réservez votre randonnée ou votre activité en quelques
-                      clics, en toute sécurité.
-                    </Card.Text>
-                    <Link to="./Reservation" className="mt-2">
-                      <Button variant="outline-light" className="w-100">
-                        Réserver un circuit
-                      </Button>
-                    </Link>
-                  </Card.Body>
-                </Card>
-              </div>
-
-              {/* Second Row */}
-              <div className="col-12 col-md-6 col-lg-4">
-                <Card className="h-100 bg-dark text-light border-light hover-shadow">
-                  <Card.Img
-                    variant="top"
-                    src={card3}
-                    style={{ height: "200px", objectFit: "cover" }}
-                  />
-                  <Card.Body className="d-flex flex-column">
-                    <Card.Title className="fs-5 mb-3">
-                      🛍️ Artisans locaux
-                    </Card.Title>
-                    <Card.Text className="flex-grow-1">
-                      Explorez les produits du terroir et soutenez l'économie
-                      locale.
-                    </Card.Text>
-                    <Link to="./Artisan" className="mt-2">
-                      <Button variant="outline-light" className="w-100">
-                        Découvrir les artisans
-                      </Button>
-                    </Link>
-                  </Card.Body>
-                </Card>
-              </div>
-
-              <div className="col-12 col-md-6 col-lg-4">
-                <Card className="h-100 bg-dark text-light border-light hover-shadow">
-                  <Card.Img
-                    variant="top"
-                    src={card4}
-                    style={{ height: "200px", objectFit: "cover" }}
-                  />
-                  <Card.Body className="d-flex flex-column">
-                    <Card.Title className="fs-5 mb-3">💬 Avis</Card.Title>
-                    <Card.Text className="flex-grow-1">
-                      Laissez un commentaire sur votre expérience.
-                    </Card.Text>
-                    <Link to="../gestion/avis" className="mt-2">
-                      <Button variant="outline-light" className="w-100">
-                        Donner un avis
-                      </Button>
-                    </Link>
-                  </Card.Body>
-                </Card>
-              </div>
-
-              <div className="col-12 col-md-6 col-lg-4">
-                <Card className="h-100 bg-dark text-light border-light hover-shadow">
-                  <Card.Img
-                    variant="top"
-                    src={card5}
-                    style={{ height: "200px", objectFit: "cover" }}
-                  />
-                  <Card.Body className="d-flex flex-column">
-                    <Card.Title className="fs-5 mb-3">
-                      💬 Réclamations
-                    </Card.Title>
-                    <Card.Text className="flex-grow-1">
-                      Rencontrez un souci ? Notre équipe vous répond rapidement.
-                    </Card.Text>
-                    <Link to="../gestion/reclamations" className="mt-2">
-                      <Button variant="outline-light" className="w-100">
-                        Faire une réclamation
-                      </Button>
-                    </Link>
-                  </Card.Body>
-                </Card>
-              </div>
-            </div>
-          </div>
+            <motion.div 
+              className="row g-4"
+              variants={containerVariants}
+            >
+              {/* Cards with hover animation */}
+              {[
+                { img: card2, title: "🗺️ Carte interactive", text: "Visualisez rapidement les circuits disponibles partout en Tunisie grâce à une carte interactive intuitive.", link: "/Randonée", btnText: "Explorer la carte" },
+                { img: card6, title: "👥 Profils personnalisés", text: "Voyageurs, fournisseurs ou administrateurs : chacun dispose d'un espace adapté à ses besoins.", link: "./profile", btnText: "Voir mon espace" },
+                { img: card1, title: "🕒 Réservation rapide", text: "Réservez votre randonnée ou votre activité en quelques clics, en toute sécurité.", link: "./Reservation", btnText: "Réserver un circuit" },
+                { img: card3, title: "🛍️ Artisans locaux", text: "Explorez les produits du terroir et soutenez l'économie locale.", link: "./Artisan", btnText: "Découvrir les artisans" },
+                { img: card4, title: "💬 Avis", text: "Laissez un commentaire sur votre expérience.", link: "../gestion/avis", btnText: "Donner un avis" },
+                { img: card5, title: "💬 Réclamations", text: "Rencontrez un souci ? Notre équipe vous répond rapidement.", link: "../gestion/reclamations", btnText: "Faire une réclamation" }
+              ].map((card, index) => (
+                <motion.div 
+                  key={index}
+                  className="col-12 col-md-6 col-lg-4"
+                  variants={itemVariants}
+                >
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <Card className="h-100 bg-dark text-light border-light hover-shadow">
+                      <Card.Img
+                        variant="top"
+                        src={card.img}
+                        style={{ height: "200px", objectFit: "cover" }}
+                      />
+                      <Card.Body className="d-flex flex-column">
+                        <Card.Title className="fs-5 mb-3">{card.title}</Card.Title>
+                        <Card.Text className="flex-grow-1">{card.text}</Card.Text>
+                        <Link to={card.link} className="mt-2">
+                          <Button variant="outline-light" className="w-100 hover-scale">
+                            {card.btnText}
+                          </Button>
+                        </Link>
+                      </Card.Body>
+                    </Card>
+                  </motion.div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.div>
         </section>
 
         <section className="bg-black text-white py-5 px-3 px-md-5">

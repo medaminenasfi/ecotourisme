@@ -10,8 +10,8 @@
 /* Container principal */
 .circuit-container {
   position: relative;
-  height: 100vh;
-  width: 100%;
+  height: 600px;
+  border-radius: 15px;
   overflow: hidden;
 }
 
@@ -19,107 +19,188 @@
 .search-container {
   position: absolute;
   top: 20px;
-  left: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 1000;
-  width: 300px;
+  width: 90%;
+  max-width: 400px;
+}
+
+.search-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.search-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  font-size: 1.2rem;
 }
 
 .search-bar {
   width: 100%;
-  padding: 12px 40px 12px 20px;
+  padding: 12px 20px 12px 45px;
   border: none;
   border-radius: 25px;
-  box-shadow: var(--shadow);
-  font-size: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
   transition: all 0.3s ease;
 }
 
 .search-bar:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(42, 92, 130, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  background: #fff;
+}
+
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 15px;
+  margin-top: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.search-result-item {
+  padding: 12px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+}
+
+.search-result-item:hover {
+  background: #f8f9fa;
+}
+
+.result-icon {
+  color: #20c997;
+  font-size: 1.1rem;
 }
 
 /* Carte */
 .map-view {
-  height: 100vh;
+  height: 100%;
   width: 100%;
-  z-index: 1;
+  border-radius: 15px;
 }
 
 /* Popups */
 .leaflet-popup-content-wrapper {
-  border-radius: 12px !important;
-  box-shadow: var(--shadow) !important;
-  padding: 0 !important;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.leaflet-popup-tip {
+  background: white;
 }
 
 .popup-content {
-  padding: 15px;
-  min-width: 280px;
-}
-
-.popup-header {
-  margin-bottom: 10px;
+  padding: 10px;
+  max-width: 300px;
 }
 
 .popup-title {
-  color: var(--primary);
-  margin: 0;
   font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.popup-image-container {
+  width: 100%;
+  height: 150px;
+  overflow: hidden;
+  border-radius: 8px;
+  margin-bottom: 10px;
 }
 
 .popup-image {
   width: 100%;
-  height: 150px;
+  height: 100%;
   object-fit: cover;
-  border-radius: 8px;
-  margin: 10px 0;
+  transition: transform 0.3s ease;
+}
+
+.popup-image:hover {
+  transform: scale(1.05);
 }
 
 .popup-description {
-  color: var(--text-dark);
-  margin: 0;
   font-size: 0.9rem;
-  line-height: 1.4;
+  color: #666;
+  margin: 0;
+}
+
+/* Custom scrollbar for search results */
+.search-results::-webkit-scrollbar {
+  width: 8px;
+}
+
+.search-results::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.search-results::-webkit-scrollbar-thumb {
+  background: #20c997;
+  border-radius: 4px;
+}
+
+.search-results::-webkit-scrollbar-thumb:hover {
+  background: #1ba87e;
+}
+
+/* Animation for search results */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.search-results {
+  animation: slideDown 0.3s ease;
+}
+
+/* Hover effects for markers */
+.leaflet-marker-icon {
+  transition: transform 0.2s ease;
+}
+
+.leaflet-marker-icon:hover {
+  transform: scale(1.2);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
+  .circuit-container {
+    height: 500px;
+  }
+
   .search-container {
-    width: calc(100% - 40px);
-    left: 20px;
-    right: 20px;
+    width: 95%;
   }
-  
+
   .popup-content {
-    min-width: 200px;
+    max-width: 250px;
   }
-  
-  .popup-image {
+
+  .popup-image-container {
     height: 120px;
   }
-}
-.search-container {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-  width: 80%;
-  max-width: 400px;
-}
-
-.search-bar {
-  width: 100%;
-  padding: 12px 20px;
-  border: 2px solid var(--primary);
-  border-radius: 25px;
-  font-size: 16px;
-  transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.9);
-}
-
-.search-bar:focus {
-  outline: none;
-  box-shadow: 0 0 10px rgba(42, 92, 130, 0.2);
 }

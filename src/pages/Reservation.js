@@ -33,6 +33,10 @@ const Accueil = () => {
   const [tempCircuit, setTempCircuit] = useState(null);
 const [combinedCircuits, setCombinedCircuits] = useState([]);
 
+
+useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 useEffect(() => {
   if (passedCircuit?.isTemp) {
     setCircuits(prev => [...prev, passedCircuit]);

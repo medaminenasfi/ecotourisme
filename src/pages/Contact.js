@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../Components/navbar";
 import Footer from "../Components/footer";
 import { Container, Row, Col } from "react-bootstrap";
@@ -21,6 +21,12 @@ const Contact = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+
+
+// Add scroll restoration
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -64,13 +70,34 @@ const Contact = () => {
     }).finally(() => setLoading(false));
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5
+      }
+    }
+  };
+
   return (
     <>
       <Navbar />
       
       <main className="contact-page">
         {/* Hero Section */}
-        <section
+        <motion.section
           className="d-flex align-items-center justify-content-center text-white"
           style={{
             backgroundImage: `url(${backgroundImage})`,
@@ -80,122 +107,179 @@ const Contact = () => {
             height: "100vh",
             width: "100%",
           }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
         >
           <div className="overlay"></div>
-          <div className="content text-center">
-            <h1>
-            Nous Sommes à Votre Écoute              </h1>
-            <p className="lead">
-            Contactez-Nous
-            </p>
-          </div>
-          
-        </section>
-
-
-
-
+          <motion.div 
+            className="content text-center"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
+          >
+            <motion.h1
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+            >
+              Nous Sommes à Votre Écoute
+            </motion.h1>
+            <motion.p 
+              className="lead"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
+            >
+              Contactez-Nous
+            </motion.p>
+          </motion.div>
+        </motion.section>
 
         {/* Contact Section */}
         <section className="contact-section">
           <Container>
-            <Row className="g-5 justify-content-center">
-              <Col lg={5} className="contact-info-col">
-                <motion.div 
-                  className="contact-info-card"
-                  initial={{ x: -50, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  <h3>Informations de Contact</h3>
-                  <div className="contact-details">
-                    <div className="detail-item">
-                      <div className="icon-box">
-                        <FiMail className="icon" />
-                      </div>
-                      <span>contact@tnecotourisme.com</span>
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              <Row className="g-5 justify-content-center">
+                <Col lg={5} className="contact-info-col">
+                  <motion.div 
+                    className="contact-info-card"
+                    variants={itemVariants}
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <h3>Informations de Contact</h3>
+                    <div className="contact-details">
+                      <motion.div 
+                        className="detail-item"
+                        whileHover={{ x: 10 }}
+                        transition={{ type: "spring", stiffness: 400 }}
+                      >
+                        <div className="icon-box">
+                          <FiMail className="icon" />
+                        </div>
+                        <span>contact@tnecotourisme.com</span>
+                      </motion.div>
+                      <motion.div 
+                        className="detail-item"
+                        whileHover={{ x: 10 }}
+                        transition={{ type: "spring", stiffness: 400 }}
+                      >
+                        <div className="icon-box">
+                          <FiPhone className="icon" />
+                        </div>
+                        <span>+216 12 345 678</span>
+                      </motion.div>
                     </div>
-                    <div className="detail-item">
-                      <div className="icon-box">
-                        <FiPhone className="icon" />
-                      </div>
-                      <span>+216 12 345 678</span>
-                    </div>
-                  </div>
-                </motion.div>
-              </Col>
+                  </motion.div>
+                </Col>
 
-              <Col lg={7} className="form-col">
-                <motion.div 
-                  className="form-card"
-                  initial={{ x: 50, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 0.4 }}
-                >
-                  {error && <div className="alert error">{error}</div>}
-                  {success && <div className="alert success">Message envoyé avec succès!</div>}
+                <Col lg={7} className="form-col">
+                  <motion.div 
+                    className="form-card"
+                    variants={itemVariants}
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    {error && (
+                      <motion.div 
+                        className="alert error"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                      >
+                        {error}
+                      </motion.div>
+                    )}
+                    {success && (
+                      <motion.div 
+                        className="alert success"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                      >
+                        Message envoyé avec succès!
+                      </motion.div>
+                    )}
 
-                  <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                      <input
-                        type="text"
-                        name="name"
-                        placeholder="Votre nom complet"
-                        value={formData.name}
-                        onChange={handleInputChange}
+                    <form onSubmit={handleSubmit}>
+                      <motion.div 
+                        className="form-group"
+                        whileHover={{ scale: 1.01 }}
+                        transition={{ type: "spring", stiffness: 400 }}
+                      >
+                        <input
+                          type="text"
+                          name="name"
+                          placeholder="Votre nom complet"
+                          value={formData.name}
+                          onChange={handleInputChange}
+                          disabled={loading}
+                        />
+                      </motion.div>
+
+                      <motion.div 
+                        className="form-group"
+                        whileHover={{ scale: 1.01 }}
+                        transition={{ type: "spring", stiffness: 400 }}
+                      >
+                        <input
+                          type="email"
+                          name="email"
+                          placeholder="Votre adresse email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          disabled={loading}
+                        />
+                      </motion.div>
+
+                      <motion.div 
+                        className="form-group"
+                        whileHover={{ scale: 1.01 }}
+                        transition={{ type: "spring", stiffness: 400 }}
+                      >
+                        <textarea
+                          name="message"
+                          placeholder="Votre message..."
+                          value={formData.message}
+                          onChange={handleInputChange}
+                          disabled={loading}
+                          rows="6"
+                        />
+                      </motion.div>
+
+                      <motion.button
+                        type="submit"
+                        className="submit-btn"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                         disabled={loading}
-                      />
-                    </div>
-
-                    <div className="form-group">
-                      <input
-                        type="email"
-                        name="email"
-                        placeholder="Votre adresse email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        disabled={loading}
-                      />
-                    </div>
-
-                    <div className="form-group">
-                      <textarea
-                        name="message"
-                        placeholder="Votre message..."
-                        value={formData.message}
-                        onChange={handleInputChange}
-                        disabled={loading}
-                        rows="6"
-                      />
-                    </div>
-
-                    <motion.button
-                      type="submit"
-                      className="submit-btn"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      disabled={loading}
-                    >
-                      {loading ? (
-                        <div className="spinner" />
-                      ) : (
-                        <>
-                          Envoyer
-                          <FiSend className="send-icon" />
-                        </>
-                      )}
-                    </motion.button>
-                  </form>
-                </motion.div>
-              </Col>
-            </Row>
+                      >
+                        {loading ? (
+                          <div className="spinner" />
+                        ) : (
+                          <>
+                            Envoyer
+                            <FiSend className="send-icon" />
+                          </>
+                        )}
+                      </motion.button>
+                    </form>
+                  </motion.div>
+                </Col>
+              </Row>
+            </motion.div>
           </Container>
         </section>
       </main>
 
       <Footer />
       <ScrollToTopButton />
-
     </>
   );
 };
