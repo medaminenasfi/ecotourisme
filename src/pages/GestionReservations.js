@@ -9,7 +9,7 @@ import {
   Spinner,
   Badge,
 } from "react-bootstrap";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { FaEdit, FaTrashAlt, FaCalendarAlt } from "react-icons/fa";
 import jwtDecode from "jwt-decode";
 import backgroundImage from "../assest/Accueil.jpg";
 import Navbar from "../Components/navbar";
@@ -17,14 +17,26 @@ import ScrollToTopButton from "../Components/ScrollToTopButton";
 
 const GestionReservations = () => {
   const [reservations, setReservations] = useState([]);
+  const [filteredReservations, setFilteredReservations] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedReservation, setSelectedReservation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
-  const [users, setUsers] = useState([]);
+  const [setUsers] = useState([]);
   const [circuits, setCircuits] = useState([]);
+  const [selectedDateFilter, setSelectedDateFilter] = useState("all");
+
+  const DATE_FILTERS = {
+    ALL: "all",
+    TODAY: "today",
+    WEEK: "week",
+    MONTH: "month",
+    NEXT_MONTH: "next_month",
+    PAST: "past",
+    FUTURE: "future",
+  };
 
   const [formData, setFormData] = useState({
     user: "",
@@ -34,6 +46,11 @@ const GestionReservations = () => {
     totalPrice: "",
     status: "pending",
   });
+
+  // Recalculer les filtres quand les réservations ou le filtre changent
+  useEffect(() => {
+    filterByDate(selectedDateFilter);
+  }, [reservations, selectedDateFilter]);
 
   const validateToken = () => {
     const token = localStorage.getItem("accessToken");
@@ -78,39 +95,37 @@ const GestionReservations = () => {
     }
   };
 
-// Modifier la fonction fetchReservations
-const fetchReservations = async () => {
-  if (!validateToken()) return;
+  const fetchReservations = async () => {
+    if (!validateToken()) return;
 
-  try {
-    const token = localStorage.getItem("accessToken");
-    const response = await axios.get(
-      "http://localhost:5000/api/reservations",
-      {
-        headers: { Authorization: `Bearer ${token}` },
-                  params: { sort: "-createdAt" }
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await axios.get(
+        "http://localhost:5000/api/reservations",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          params: { sort: "-date" } 
+        }
+      );
 
-      }
-    );
+      const enhancedReservations = response.data
+        .map((res) => ({
+          ...res,
+          circuitDisplay: res.circuitDetails?.name || res.circuit?.name || "Circuit supprimé",
+          userDisplay: res.user
+            ? `${res.user.first_name} ${res.user.last_name}`
+            : "Utilisateur supprimé",
+        }))
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
 
-    const enhancedReservations = response.data
-      .map((res) => ({
-        ...res,
-        circuitDisplay: res.circuitDetails?.name || res.circuit?.name || "Circuit supprimé",
-        userDisplay: res.user
-          ? `${res.user.first_name} ${res.user.last_name}`
-          : "Utilisateur supprimé",
-      }))
-      // Double tri de sécurité
-
-    setReservations(enhancedReservations);
-    setError("");
-  } catch (err) {
-    handleError(err);
-  } finally {
-    setLoading(false);
-  }
-};
+      setReservations(enhancedReservations);
+      setError("");
+    } catch (err) {
+      handleError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -119,6 +134,94 @@ const fetchReservations = async () => {
     };
     loadData();
   }, []);
+
+  const filterByDate = (filterType) => {
+    setSelectedDateFilter(filterType);
+    
+    if (filterType === DATE_FILTERS.ALL) {
+      setFilteredReservations(reservations);
+      return;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const filtered = reservations.filter(res => {
+      const resDate = new Date(res.date);
+      resDate.setHours(0, 0, 0, 0);
+      
+      switch (filterType) {
+        case DATE_FILTERS.TODAY:
+          return resDate.getTime() === today.getTime();
+          
+        case DATE_FILTERS.WEEK:
+          const nextWeek = new Date(today);
+          nextWeek.setDate(today.getDate() + 7);
+          return resDate >= today && resDate < nextWeek;
+          
+        case DATE_FILTERS.MONTH:
+          const nextMonth = new Date(today);
+          nextMonth.setMonth(today.getMonth() + 1);
+          return resDate >= today && resDate < nextMonth;
+          
+        case DATE_FILTERS.NEXT_MONTH:
+          const nextMonthStart = new Date(today);
+          nextMonthStart.setMonth(today.getMonth() + 1);
+          nextMonthStart.setDate(1);
+          
+          const nextMonthEnd = new Date(nextMonthStart);
+          nextMonthEnd.setMonth(nextMonthStart.getMonth() + 1);
+          
+          return resDate >= nextMonthStart && resDate < nextMonthEnd;
+          
+        case DATE_FILTERS.PAST:
+          return resDate < today;
+          
+        case DATE_FILTERS.FUTURE:
+          return resDate >= today;
+          
+        default:
+          return true;
+      }
+    });
+
+    setFilteredReservations(filtered);
+  };
+
+  const DateFilters = () => (
+    <div className="d-flex gap-2 mb-3 flex-wrap">
+      <Button 
+        variant={selectedDateFilter === DATE_FILTERS.ALL ? 'primary' : 'outline-primary'}
+        onClick={() => filterByDate(DATE_FILTERS.ALL)}
+      >
+        <FaCalendarAlt className="me-1" /> Toutes
+      </Button>
+      <Button 
+        variant={selectedDateFilter === DATE_FILTERS.TODAY ? 'primary' : 'outline-primary'}
+        onClick={() => filterByDate(DATE_FILTERS.TODAY)}
+      >
+        <FaCalendarAlt className="me-1" /> Aujourd'hui
+      </Button>
+      <Button 
+        variant={selectedDateFilter === DATE_FILTERS.WEEK ? 'primary' : 'outline-primary'}
+        onClick={() => filterByDate(DATE_FILTERS.WEEK)}
+      >
+        <FaCalendarAlt className="me-1" /> Cette semaine
+      </Button>
+      <Button 
+        variant={selectedDateFilter === DATE_FILTERS.MONTH ? 'primary' : 'outline-primary'}
+        onClick={() => filterByDate(DATE_FILTERS.MONTH)}
+      >
+        <FaCalendarAlt className="me-1" /> Ce mois
+      </Button>
+      <Button 
+        variant={selectedDateFilter === DATE_FILTERS.PAST ? 'primary' : 'outline-primary'}
+        onClick={() => filterByDate(DATE_FILTERS.PAST)}
+      >
+        <FaCalendarAlt className="me-1" /> Passées
+      </Button>
+    </div>
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -268,11 +371,15 @@ const fetchReservations = async () => {
                 </Alert>
               )}
 
+              <div className="mb-4">
+                <DateFilters />
+              </div>
+
               {loading ? (
                 <div className="text-center py-5">
                   <Spinner animation="border" variant="primary" />
                 </div>
-              ) : reservations.length === 0 ? (
+              ) : filteredReservations.length === 0 ? (
                 <div className="text-center py-4 text-muted">
                   Aucune réservation trouvée
                 </div>
@@ -295,7 +402,7 @@ const fetchReservations = async () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {reservations.map((reservation) => (
+                      {filteredReservations.map((reservation) => (
                         <tr
                           key={reservation._id}
                           style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
@@ -307,13 +414,13 @@ const fetchReservations = async () => {
                               <Badge bg="info" className="ms-2"></Badge>
                             )}
                           </td>
-<td>
-  {new Date(reservation.date).toLocaleDateString("fr-FR", {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })}
-</td>
+                          <td>
+                            {new Date(reservation.date).toLocaleDateString("fr-FR", {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric'
+                            })}
+                          </td>
                           <td>{reservation.numberOfPeople}</td>
                           <td>{reservation.totalPrice?.toFixed(2)} TND</td>
                           <td>
@@ -366,7 +473,6 @@ const fetchReservations = async () => {
           </div>
         </div>
 
-        {/* Edit Modal */}
         <Modal
           show={showModal}
           onHide={() => setShowModal(false)}
