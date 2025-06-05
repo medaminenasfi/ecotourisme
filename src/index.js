@@ -27,6 +27,7 @@ import AvisTable from "./Components/AvisTable.jsx";
 import Gestion  from "./Components/gestion.jsx";
 import { Navigate } from "react-router-dom";
 import ReclamationsTable from "./Components/ReclamationsTable.jsx"
+import StatisticsPage from './pages/StatisticsPage';
 
 const router = createBrowserRouter([
   {
@@ -119,6 +120,14 @@ const router = createBrowserRouter([
     element: (
       <AdminRoute>
         <GestionCircuits />
+      </AdminRoute>
+    ),
+  },
+    {
+    path: "/admin/StatisticsPage",
+    element: (
+      <AdminRoute>
+        <StatisticsPage />
       </AdminRoute>
     ),
   },

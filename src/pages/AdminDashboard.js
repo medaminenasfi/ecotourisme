@@ -1,6 +1,12 @@
 import React from "react";
-import { NavLink, Outlet } from "react-router-dom";
-import { FaUsers, FaBox, FaClipboardList, FaMapMarkedAlt } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
+import { 
+  FaUsers, 
+  FaBox, 
+  FaClipboardList, 
+  FaMapMarkedAlt, 
+  FaChartLine 
+} from "react-icons/fa";
 import Navbar from "../Components/navbar";
 import backgroundImage from "../assest/Accueil.jpg";
 
@@ -30,14 +36,16 @@ const AdminDashboard = () => {
               <span className="text-primary">Tableau de Bord</span> Administrateur
             </h1>
           </div>
-<br></br>
+          <br></br>
           <div className="card-body">
             <div className="row g-4">
               {[
                 { to: "utilisateurs", icon: <FaUsers />, title: "Utilisateurs", subtitle: "Gestion des comptes" },
                 { to: "circuits", icon: <FaMapMarkedAlt />, title: "Circuits", subtitle: "Gestion des parcours" },
                 { to: "reservations", icon: <FaClipboardList />, title: "Réservations", subtitle: "Suivi des bookings" },
-                { to: "fournisseurs", icon: <FaBox />, title: "Fournisseurs", subtitle: "Partenaires services" }
+                { to: "fournisseurs", icon: <FaBox />, title: "Fournisseurs", subtitle: "Partenaires services" },
+                // Ajoutez ce nouvel élément pour les statistiques
+                { to: "StatisticsPage", icon: <FaChartLine />, title: "Statistiques", subtitle: "Analyses et rapports" }
               ].map((item, index) => (
                 <div key={index} className="col-12 col-md-6 col-xl-3">
                   <NavLink
@@ -61,8 +69,6 @@ const AdminDashboard = () => {
                 </div>
               ))}
             </div>
-
-          
           </div>
         </div>
       </div>
@@ -70,4 +76,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default AdminDashboard;  

@@ -25,6 +25,8 @@ import GestionCircuits from "./pages/GestionCircuits";
 import AvisTable from "./Components/AvisTable.jsx";
 import Gestion  from "./Components/gestion.jsx";
 import ReclamationsTable from "./Components/ReclamationsTable.jsx"
+import StatisticsPage from './pages/StatisticsPage';
+
 function ProtectedRoute({ children }) {
   const { user } = useContext(AuthContext);
   if (user === undefined) {
@@ -139,6 +141,15 @@ function App() {
                 </AdminRoute>
               }
             />
+        <Route
+              path="/admin/StatisticsPage"
+              element={
+                <AdminRoute>
+                  <StatisticsPage />
+                </AdminRoute>
+              }
+            />
+            
 <Route
   path="/ServicesList"
   element={
