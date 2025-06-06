@@ -10,7 +10,9 @@ import {
   Badge,
   Container,
   Row,
-  Col
+  Col,
+  Modal,
+  Form
 } from "react-bootstrap";
 import Navbar from "../Components/navbar";
 import { format } from 'date-fns';
@@ -27,6 +29,13 @@ const Profile = () => {
   const [error, setError] = useState("");
   const [reservations, setReservations] = useState([]);
   const [deletingId, setDeletingId] = useState(null);
+  
+  // États pour la modification des réservations
+  const [editingReservation, setEditingReservation] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editDate, setEditDate] = useState("");
+  const [editPeople, setEditPeople] = useState(1);
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -97,6 +106,54 @@ const Profile = () => {
     }
   };
 
+  const handleEditReservation = (reservation) => {
+    setEditingReservation(reservation);
+    // Correction ici: parenthèse correctement placée
+    setEditDate(format(new Date(reservation.date), 'yyyy-MM-dd'));
+    setEditPeople(reservation.numberOfPeople);
+    setShowEditModal(true);
+  };
+
+  const handleUpdateReservation = async () => {
+    if (!editingReservation) return;
+    
+    try {
+      setUpdating(true);
+      
+      const response = await fetch(`http://localhost:5000/api/reservations/${editingReservation._id}`, {
+        method: "PUT",
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          date: editDate,
+          numberOfPeople: parseInt(editPeople)
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Échec de la mise à jour");
+      }
+
+      const updatedReservation = await response.json();
+      
+      // Mise à jour de l'état local
+      setReservations(prev => prev.map(r => 
+        r._id === updatedReservation._id ? updatedReservation : r
+      ));
+      
+      toast.success("Réservation mise à jour avec succès");
+      setShowEditModal(false);
+    } catch (error) {
+      console.error("Erreur de mise à jour:", error);
+      toast.error(error.message || "Erreur lors de la mise à jour");
+    } finally {
+      setUpdating(false);
+    }
+  };
+
   const handleLogout = () => {
     logout();
     navigate("/Seconnecter");
@@ -163,6 +220,11 @@ const Profile = () => {
   if (!user) {
     return null;
   }
+
+  // Vérifie si une réservation est passée
+  const isPastReservation = (dateString) => {
+    return new Date(dateString) < new Date();
+  };
 
   return (
     <motion.div 
@@ -395,6 +457,7 @@ const Profile = () => {
                   <ListGroup variant="flush">
                     {reservations.map((reservation, index) => {
                       const circuitInfo = getCircuitInfo(reservation);
+                      const isPast = isPastReservation(reservation.date);
                       
                       return (
                         <motion.div
@@ -405,61 +468,86 @@ const Profile = () => {
                           exit={{ opacity: 0, y: -20 }}
                         >
                           <ListGroup.Item style={{
-                            background: 'rgba(255, 255, 255, 0.02)',
+                            background: isPast 
+                              ? 'rgba(100, 100, 100, 0.1)' 
+                              : 'rgba(255, 255, 255, 0.02)',
                             borderColor: 'rgba(255, 255, 255, 0.1)',
-                            color: '#fff',
+                            color: isPast ? '#aaa' : '#fff',
                             padding: '1.5rem',
                             marginBottom: '10px',
                             borderRadius: '10px',
                             transition: 'all 0.3s ease'
                           }}
                           whileHover={{ 
-                            scale: 1.02,
-                            background: 'rgba(255, 255, 255, 0.05)'
+                            scale: isPast ? 1 : 1.02,
+                            background: isPast 
+                              ? 'rgba(100, 100, 100, 0.15)' 
+                              : 'rgba(255, 255, 255, 0.05)'
                           }}
                           >
                             <div className="d-flex justify-content-between align-items-center">
                               <div>
-                                <h5 style={{ color: '#20c997', marginBottom: '0.8rem' }}>
+                                <h5 style={{ 
+                                  color: isPast ? '#777' : '#20c997', 
+                                  marginBottom: '0.8rem'
+                                }}>
                                   {circuitInfo.name}
-                                  {circuitInfo.isCustom}
+                                  {circuitInfo.isCustom && (
+                                    <Badge bg="info" className="ms-2">
+                                      
+                                    </Badge>
+                                  )}
                                 </h5>
                                 <div className="d-flex align-items-center gap-2 flex-wrap">
-                                  <Badge bg="dark" className="d-flex align-items-center">
+                                  <Badge bg={isPast ? "secondary" : "dark"} className="d-flex align-items-center">
                                     <i className="bi bi-calendar me-1"></i>
                                     {formatDate(reservation.date)}
                                   </Badge>
-                                  <Badge bg="secondary" className="d-flex align-items-center">
+                                  <Badge bg={isPast ? "secondary" : "secondary"} className="d-flex align-items-center">
                                     <i className="bi bi-people me-1"></i>
                                     {reservation.numberOfPeople} pers.
                                   </Badge>
                                   <Badge bg={
-                                    reservation.status === 'confirmed' ? 'success' : 
+                                    reservation.status === 'confirmed' ? (isPast ? 'secondary' : 'success') : 
                                     reservation.status === 'cancelled' ? 'danger' : 'warning'
                                   }>
-                                    {reservation.status === 'confirmed' ? 'Confirmée' :
+                                    {reservation.status === 'confirmed' ? 
+                                      (isPast ? 'Terminée' : 'Confirmée') :
                                     reservation.status === 'cancelled' ? 'Annulée' : 'En attente'}
                                   </Badge>
                                 </div>
                               </div>
                               <div className="text-end">
                                 <div className="d-flex flex-column align-items-end gap-2">
-                                  <h5 className="text-primary mb-0">
+                                  <h5 className={isPast ? "text-secondary" : "text-primary"} style={{ marginBottom: 0 }}>
                                     {reservation.totalPrice?.toFixed(2)} TND
                                   </h5>
                                   <div className="d-flex gap-2 align-items-center">
-                                    <small className="text-white">Ref: {reservation._id.slice(-6)}</small>
+                                    <small className={isPast ? "text-secondary" : "text-white"}>
+                                      Ref: {reservation._id.slice(-6)}
+                                    </small>
                                     <Button 
-                                      variant="outline-danger" 
+                                      variant="outline-primary" 
                                       size="sm" 
-                                      onClick={() => handleDeleteReservation(reservation._id)}
-                                      disabled={deletingId === reservation._id}
+                                      onClick={() => handleEditReservation(reservation)}
+                                      disabled={isPast || deletingId === reservation._id || updating}
                                       style={{
                                         minWidth: '100px',
                                         borderRadius: '20px'
                                       }}
-                                      whileHover={{ scale: 1.05 }}
-                                      whileTap={{ scale: 0.95 }}
+                                    >
+                                      <i className="bi bi-pencil me-1"></i>
+                                      Modifier
+                                    </Button>
+                                    <Button 
+                                      variant="outline-danger" 
+                                      size="sm" 
+                                      onClick={() => handleDeleteReservation(reservation._id)}
+                                      disabled={isPast || deletingId === reservation._id || updating}
+                                      style={{
+                                        minWidth: '100px',
+                                        borderRadius: '20px'
+                                      }}
                                     >
                                       {deletingId === reservation._id ? (
                                         <Spinner animation="border" size="sm" />
@@ -485,6 +573,73 @@ const Profile = () => {
           </Card>
         </motion.div>
       </Container>
+      
+      {/* Modal de modification des réservations */}
+      <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered>
+        <Modal.Header closeButton style={{ backgroundColor: '#f8f9fa' }}>
+          <Modal.Title>Modifier la réservation</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {editingReservation && (
+            <Form>
+              <Form.Group className="mb-3">
+                <Form.Label>Circuit</Form.Label>
+                <Form.Control 
+                  type="text" 
+                  value={getCircuitInfo(editingReservation).name} 
+                  disabled 
+                />
+              </Form.Group>
+              
+              <Form.Group className="mb-3">
+                <Form.Label>Date</Form.Label>
+                <Form.Control 
+                  type="date" 
+                  value={editDate} 
+                  onChange={(e) => setEditDate(e.target.value)}
+                  min={new Date().toISOString().split('T')[0]}
+                />
+              </Form.Group>
+              
+              <Form.Group className="mb-3">
+                <Form.Label>Nombre de personnes</Form.Label>
+                <Form.Control 
+                  type="number" 
+                  value={editPeople} 
+                  onChange={(e) => setEditPeople(e.target.value)}
+                  min="1"
+                  max="20"
+                />
+              </Form.Group>
+              
+              <div className="d-flex justify-content-between">
+                <Button 
+                  variant="secondary" 
+                  onClick={() => setShowEditModal(false)}
+                  disabled={updating}
+                >
+                  Annuler
+                </Button>
+                <Button 
+                  variant="primary" 
+                  onClick={handleUpdateReservation}
+                  disabled={updating}
+                >
+                  {updating ? (
+                    <>
+                      <Spinner animation="border" size="sm" className="me-2" />
+                      Enregistrement...
+                    </>
+                  ) : (
+                    "Enregistrer les modifications"
+                  )}
+                </Button>
+              </div>
+            </Form>
+          )}
+        </Modal.Body>
+      </Modal>
+      
       <ScrollToTopButton />
     </motion.div>
   );
