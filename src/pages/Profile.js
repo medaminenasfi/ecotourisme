@@ -66,7 +66,9 @@ const Profile = () => {
       }
 
       const data = await response.json();
-      setReservations(data);
+      // Sort reservations by date (newest first) before setting state
+      const sortedReservations = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+      setReservations(sortedReservations);
     } catch (error) {
       console.error("Erreur de récupération des réservations:", error);
       setError(error.message);
@@ -108,7 +110,6 @@ const Profile = () => {
 
   const handleEditReservation = (reservation) => {
     setEditingReservation(reservation);
-    // Correction ici: parenthèse correctement placée
     setEditDate(format(new Date(reservation.date), 'yyyy-MM-dd'));
     setEditPeople(reservation.numberOfPeople);
     setShowEditModal(true);
@@ -221,7 +222,6 @@ const Profile = () => {
     return null;
   }
 
-  // Vérifie si une réservation est passée
   const isPastReservation = (dateString) => {
     return new Date(dateString) < new Date();
   };
@@ -494,7 +494,7 @@ const Profile = () => {
                                   {circuitInfo.name}
                                   {circuitInfo.isCustom && (
                                     <Badge bg="info" className="ms-2">
-                                      
+                                      Personnalisé
                                     </Badge>
                                   )}
                                 </h5>
