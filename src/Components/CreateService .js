@@ -15,9 +15,10 @@ const CreateService = () => {
   const [formData, setFormData] = useState({
     type: "",
     description: "",
-    photo: "",
+    photo: null, // Changed to store file object
     phoneNumber: user?.phone_number || ""
   });
+  const [imagePreview, setImagePreview] = useState(null); // For image preview
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [editMode, setEditMode] = useState(false);
@@ -41,21 +42,35 @@ const CreateService = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
         const userServices = response.data.filter(service => service.fournisseur?._id === user.id);
-        setServices(userServices); 
-              } catch (err) {
+        setServices(userServices);
+      } catch (err) {
         setError(err.response?.data?.message || "Erreur de chargement des services");
       }
     };
-  
-    
+
     if (user?.role === "fournisseur") {
       fetchAllServices();
     }
   }, [user]);
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+      if (!allowedTypes.includes(file.type)) {
+        setError("Seuls les fichiers JPEG, PNG et JPG sont autorisés");
+        return;
+      }
+      setFormData({ ...formData, photo: file });
+      setImagePreview(URL.createObjectURL(file)); // Create image preview
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError("");
+
     try {
       const token = localStorage.getItem("accessToken");
       const url = editMode 
@@ -64,8 +79,22 @@ const CreateService = () => {
 
       const method = editMode ? "put" : "post";
 
-      const response = await axios[method](url, formData, {
-        headers: { Authorization: `Bearer ${token}` }
+      const data = new FormData();
+      data.append("type", formData.type);
+      data.append("description", formData.description);
+      data.append("phoneNumber", formData.phoneNumber);
+      if (formData.photo) {
+        data.append("photo", formData.photo);
+      }
+
+      const response = await axios({
+        method,
+        url,
+        data,
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data"
+        }
       });
 
       if (editMode) {
@@ -89,9 +118,10 @@ const CreateService = () => {
     setFormData({
       type: service.type,
       description: service.description,
-      photo: service.photo,
+      photo: null, // Reset file input
       phoneNumber: service.phoneNumber
     });
+    setImagePreview(service.photo ? `http://localhost:5000${service.photo}` : null);
     setShowModal(true);
   };
 
@@ -114,9 +144,10 @@ const CreateService = () => {
     setFormData({
       type: "",
       description: "",
-      photo: "",
+      photo: null,
       phoneNumber: user?.phone_number || ""
     });
+    setImagePreview(null);
   };
 
   const handleCloseModal = () => {
@@ -125,9 +156,10 @@ const CreateService = () => {
     setFormData({
       type: "",
       description: "",
-      photo: "",
+      photo: null,
       phoneNumber: user?.phone_number || ""
     });
+    setImagePreview(null);
   };
 
   if (!user || user.role !== "fournisseur") {
@@ -218,7 +250,7 @@ const CreateService = () => {
                     }}>
                       <Card.Img
                         variant="top"
-                        src={service.photo || '/placeholder.jpg'}
+                        src={service.photo ? `http://localhost:5000${service.photo}` : '/placeholder.jpg'}
                         style={{ height: '200px', objectFit: 'cover' }}
                         className="border-bottom"
                       />
@@ -284,7 +316,7 @@ const CreateService = () => {
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-3">
                 <Form.Label>Type de service</Form.Label>
-                <Form.Select className="text-black"
+                <Form.Select
                   name="type"
                   value={formData.type}
                   onChange={(e) => setFormData({...formData, type: e.target.value})}
@@ -320,18 +352,27 @@ const CreateService = () => {
               </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Label>URL de la photo</Form.Label>
+                <Form.Label>Photo (JPEG, PNG, JPG)</Form.Label>
                 <Form.Control
-                  type="url"
+                  type="file"
                   name="photo"
-                  value={formData.photo}
-                  onChange={(e) => setFormData({...formData, photo: e.target.value})}
+                  accept="image/jpeg,image/png,image/jpg"
+                  onChange={handleFileChange}
                   style={{
                     background: 'rgba(255, 255, 255, 0.1)',
                     borderColor: 'rgba(255, 255, 255, 0.2)',
                     color: 'white'
                   }}
                 />
+                {imagePreview && (
+                  <div className="mt-2">
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'contain' }}
+                    />
+                  </div>
+                )}
               </Form.Group>
 
               <Form.Group className="mb-3">

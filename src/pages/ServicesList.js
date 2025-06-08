@@ -8,7 +8,6 @@ import Navbar from "../Components/navbar";
 import backgroundImage from "../assest/Accueil.jpg";
 import ScrollToTopButton from "../Components/ScrollToTopButton";
 
-
 // Fonction utilitaire pour générer un hash stable à partir d'une chaîne
 const stringToStableHash = (str) => {
   let hash = 0;
@@ -22,6 +21,7 @@ const stringToStableHash = (str) => {
   
   return Math.abs(hash);
 };
+
 const ServicesList = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -33,9 +33,10 @@ const ServicesList = () => {
   const [formData, setFormData] = useState({
     type: '',
     description: '',
-    photo: '',
+    photo: null, // Changed to store file object
     phoneNumber: ''
   });
+  const [imagePreview, setImagePreview] = useState(null); // For image preview
 
   const serviceTypes = [
     "Guides locaux",
@@ -45,58 +46,84 @@ const ServicesList = () => {
     "Loueurs de matériel"
   ];
 
-  
-    useEffect(() => {
-  const fetchServices = async () => {
-    try {
-      const token = localStorage.getItem('accessToken');
-      const response = await axios.get('http://localhost:5000/api/services', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const token = localStorage.getItem('accessToken');
+        const response = await axios.get('http://localhost:5000/api/services', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
 
-      // Ajouter la remise fixe ici
-      const servicesWithDiscount = response.data.map(service => ({
-        ...service,
-        discount: (stringToStableHash(service._id) % 20 + 1 )// Entre 1% et 20%
-      }));
+        // Ajouter la remise fixe ici
+        const servicesWithDiscount = response.data.map(service => ({
+          ...service,
+          discount: (stringToStableHash(service._id) % 20 + 1) // Entre 1% et 20%
+        }));
 
-      setServices(servicesWithDiscount);
-    } catch (err) {
-      if (err.response?.status === 401) {
-        navigate('/login');
+        setServices(servicesWithDiscount);
+      } catch (err) {
+        if (err.response?.status === 401) {
+          navigate('/login');
+        }
+        setError(err.response?.data?.message || 'Erreur de chargement des services');
+      } finally {
+        setLoading(false);
       }
-      setError(err.response?.data?.message || 'Erreur de chargement des services');
-    } finally {
-      setLoading(false);
-    }
-  };
-  fetchServices();
-}, [navigate]);
-
+    };
+    fetchServices();
+  }, [navigate]);
 
   const openEditModal = (service) => {
     setSelectedService(service);
     setFormData({
       type: service.type,
       description: service.description,
-      photo: service.photo,
+      photo: null, // Reset file input
       phoneNumber: service.phoneNumber
     });
+    setImagePreview(service.photo ? `http://localhost:5000${service.photo}` : null); // Set existing image as preview
     setShowModal(true);
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+      if (!allowedTypes.includes(file.type)) {
+        setError("Seuls les fichiers JPEG, PNG et JPG sont autorisés");
+        return;
+      }
+      setFormData({ ...formData, photo: file });
+      setImagePreview(URL.createObjectURL(file)); // Create image preview
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
     try {
       const token = localStorage.getItem('accessToken');
+      const data = new FormData();
+      data.append('type', formData.type);
+      data.append('description', formData.description);
+      data.append('phoneNumber', formData.phoneNumber);
+      if (formData.photo) {
+        data.append('photo', formData.photo);
+      }
+
       const response = await axios.put(
         `http://localhost:5000/api/services/${selectedService._id}`,
-        formData,
-        { headers: { Authorization: `Bearer ${token}` } }
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data'
+          }
+        }
       );
-      
-      setServices(services.map(s => 
-        s._id === selectedService._id ? response.data : s
+
+      setServices(services.map(s =>
+        s._id === selectedService._id ? { ...response.data, discount: s.discount } : s
       ));
       setShowModal(false);
     } catch (err) {
@@ -140,15 +167,16 @@ const ServicesList = () => {
             borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
           }}>
             <div className="d-flex justify-content-between align-items-center">
-            <center>
-              <h2 style={{ 
-                color: '#FFFFFF', 
-                margin: 0,
-                fontWeight: '600',
-                letterSpacing: '0.5px'
-              }}>
-                Liste  des Services
-              </h2> </center>
+              <center>
+                <h2 style={{ 
+                  color: '#FFFFFF', 
+                  margin: 0,
+                  fontWeight: '600',
+                  letterSpacing: '0.5px'
+                }}>
+                  Liste des Services
+                </h2>
+              </center>
             </div>
           </Card.Header>
 
@@ -177,11 +205,11 @@ const ServicesList = () => {
                         border: '1px solid rgba(255, 255, 255, 0.1)',
                         color: 'white',
                         transition: 'transform 0.3s ease'
-                      }} >
+                      }}>
                         <div className="position-relative">
                           <Card.Img
                             variant="top"
-                            src={service.photo || '/placeholder.jpg'}
+                            src={service.photo ? `http://localhost:5000${service.photo}` : '/placeholder.jpg'}
                             style={{ 
                               height: '200px', 
                               objectFit: 'cover',
@@ -190,21 +218,21 @@ const ServicesList = () => {
                             }}
                             onError={(e) => e.target.src = '/placeholder.jpg'}
                           />
-<Badge 
-  bg={service.discount > 15 ? 'danger' : service.discount > 10 ? 'warning' : 'success'}
-  style={{ 
-    position: 'absolute',
-    top: '10px',
-    right: '10px',
-    fontSize: '0.9rem',
-    padding: '5px 10px',
-    borderRadius: '20px',
-    boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
-    transition: 'all 0.3s ease'
-  }}
->
-  -{service.discount}%
-</Badge>
+                          <Badge 
+                            bg={service.discount > 15 ? 'danger' : service.discount > 10 ? 'warning' : 'success'}
+                            style={{ 
+                              position: 'absolute',
+                              top: '10px',
+                              right: '10px',
+                              fontSize: '0.9rem',
+                              padding: '5px 10px',
+                              borderRadius: '20px',
+                              boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+                              transition: 'all 0.3s ease'
+                            }}
+                          >
+                            -{service.discount}%
+                          </Badge>
                         </div>
                         <Card.Body>
                           <div className="d-flex justify-content-between align-items-start">
@@ -261,11 +289,119 @@ const ServicesList = () => {
           </Card.Body>
         </Card>
 
-        <ScrollToTopButton />
+        {/* Edit Service Modal */}
+        <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+          <Modal.Header closeButton style={{
+            background: 'rgba(0, 0, 0, 0.7)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            color: 'white'
+          }}>
+            <Modal.Title>Modifier le service</Modal.Title>
+          </Modal.Header>
+          <Modal.Body style={{
+            background: 'rgba(0, 0, 0, 0.7)',
+            color: 'white'
+          }}>
+            <Form onSubmit={handleSubmit}>
+              <Form.Group className="mb-3">
+                <Form.Label>Type de service</Form.Label>
+                <Form.Select
+                  name="type"
+                  value={formData.type}
+                  onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                  required
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                    color: 'white'
+                  }}
+                >
+                  <option value="">Sélectionner un type</option>
+                  {serviceTypes.map(type => (
+                    <option key={type} value={type}>{type}</option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
 
+              <Form.Group className="mb-3">
+                <Form.Label>Description</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  name="description"
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  required
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                    color: 'white'
+                  }}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Photo (JPEG, PNG, JPG)</Form.Label>
+                <Form.Control
+                  type="file"
+                  name="photo"
+                  accept="image/jpeg,image/png,image/jpg"
+                  onChange={handleFileChange}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                    color: 'white'
+                  }}
+                />
+                {imagePreview && (
+                  <div className="mt-2">
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'contain' }}
+                    />
+                  </div>
+                )}
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Numéro de téléphone</Form.Label>
+                <Form.Control
+                  type="tel"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
+                  onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                    color: 'white'
+                  }}
+                />
+              </Form.Group>
+
+              <div className="d-flex justify-content-end gap-2">
+                <Button
+                  variant="secondary"
+                  onClick={() => setShowModal(false)}
+                  style={{ borderRadius: '20px' }}
+                >
+                  Annuler
+                </Button>
+                <Button
+                  variant="primary"
+                  type="submit"
+                  style={{ borderRadius: '20px' }}
+                >
+                  Enregistrer
+                </Button>
+              </div>
+            </Form>
+          </Modal.Body>
+        </Modal>
+
+        <ScrollToTopButton />
       </Container>
     </div>
-    
   );
 };
 
