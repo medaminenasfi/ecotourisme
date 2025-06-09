@@ -59,7 +59,9 @@ const AuthProvider = ({ children }) => {
       logout();
     }
   };
-
+ const updateUser = (updatedData) => {
+    setUser(prev => ({ ...prev, ...updatedData }));
+  };
   useEffect(() => {
     console.log("🔄 Checking localStorage for token...");
     const token = localStorage.getItem("accessToken");
@@ -85,7 +87,8 @@ const AuthProvider = ({ children }) => {
   }, [logout]);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, loading ,        updateUser // Add this
+ }}>
       {!loading && children}
     </AuthContext.Provider>
   );

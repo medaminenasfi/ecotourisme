@@ -23,7 +23,7 @@ import ScrollToTopButton from "../Components/ScrollToTopButton";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Profile = () => {
-  const { user, logout, loading: authLoading } = useContext(AuthContext);
+  const { user, logout, loading: authLoading, updateUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [reservationsLoading, setReservationsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -37,11 +37,33 @@ const Profile = () => {
   const [editPeople, setEditPeople] = useState(1);
   const [updating, setUpdating] = useState(false);
 
+  // États pour la modification du profil
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [profileForm, setProfileForm] = useState({
+    first_name: "",
+    last_name: "",
+    phone_number: "",
+    gender: "male",
+    password: "",
+    confirmPassword: ""
+  });
+  const [profileError, setProfileError] = useState("");
+  const [updatingProfile, setUpdatingProfile] = useState(false);
+
   useEffect(() => {
     if (!authLoading && !user) {
       navigate("/Seconnecter");
     } else if (user) {
       fetchUserReservations();
+      // Initialize profile form with user data
+      setProfileForm({
+        first_name: user.first_name || "",
+        last_name: user.last_name || "",
+        phone_number: user.phone_number || "",
+        gender: user.gender || "male",
+        password: "",
+        confirmPassword: ""
+      });
     }
   }, [user, authLoading, navigate]);
 
@@ -155,6 +177,72 @@ const Profile = () => {
     }
   };
 
+  // Handle profile form changes
+  const handleProfileChange = (e) => {
+    const { name, value } = e.target;
+    setProfileForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Handle profile update submission
+  const handleProfileUpdate = async () => {
+    // Validate password if provided
+    if (profileForm.password && profileForm.password !== profileForm.confirmPassword) {
+      setProfileError("Les mots de passe ne correspondent pas");
+      return;
+    }
+    
+    if (profileForm.password && profileForm.password.length < 6) {
+      setProfileError("Le mot de passe doit contenir au moins 6 caractères");
+      return;
+    }
+    
+    setProfileError("");
+    setUpdatingProfile(true);
+    
+    try {
+      const response = await fetch("http://localhost:5000/users/profile", {
+        method: "PUT",
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          first_name: profileForm.first_name,
+          last_name: profileForm.last_name,
+          phone_number: profileForm.phone_number,
+          gender: profileForm.gender,
+          password: profileForm.password || undefined // Only send if provided
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Échec de la mise à jour du profil");
+      }
+
+      const updatedUser = await response.json();
+      
+      // Update context with new user data
+      updateUser({
+        first_name: updatedUser.first_name,
+        last_name: updatedUser.last_name,
+        phone_number: updatedUser.phone_number,
+        gender: updatedUser.gender
+      });
+      
+      toast.success("Profil mis à jour avec succès");
+      setShowProfileModal(false);
+    } catch (error) {
+      console.error("Erreur de mise à jour du profil:", error);
+      setProfileError(error.message || "Erreur lors de la mise à jour du profil");
+    } finally {
+      setUpdatingProfile(false);
+    }
+  };
+
   const handleLogout = () => {
     logout();
     navigate("/Seconnecter");
@@ -261,14 +349,32 @@ const Profile = () => {
                 background: 'rgba(255, 255, 255, 0.05)',
                 borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
               }}>
-                <h2 style={{ 
-                  color: '#f1faee', 
-                  margin: 0,
-                  fontWeight: '600',
-                  letterSpacing: '0.5px'
-                }}>
-                  Profil Utilisateur
-                </h2>
+                <div className="d-flex justify-content-between align-items-center">
+                  <h2 style={{ 
+                    color: '#f1faee', 
+                    margin: 0,
+                    fontWeight: '600',
+                    letterSpacing: '0.5px'
+                  }}>
+                    Profil Utilisateur
+                  </h2>
+                  <Button 
+                    variant="outline-info"
+                    onClick={() => setShowProfileModal(true)}
+                    style={{
+                      borderColor: '#20c997',
+                      color: '#20c997',
+                      borderRadius: '8px',
+                      padding: '6px 15px',
+                      transition: 'all 0.3s ease'
+                    }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <i className="bi bi-pencil-square me-1"></i>
+                    Modifier
+                  </Button>
+                </div>
               </Card.Header>
             </motion.div>
             
@@ -637,6 +743,124 @@ const Profile = () => {
               </div>
             </Form>
           )}
+        </Modal.Body>
+      </Modal>
+      
+      {/* Modal de modification du profil */}
+      <Modal show={showProfileModal} onHide={() => setShowProfileModal(false)} centered size="lg">
+        <Modal.Header closeButton style={{ backgroundColor: '#f8f9fa' }}>
+          <Modal.Title>Modifier votre profil</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Prénom</Form.Label>
+                  <Form.Control 
+                    type="text" 
+                    name="first_name"
+                    value={profileForm.first_name} 
+                    onChange={handleProfileChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Nom</Form.Label>
+                  <Form.Control 
+                    type="text" 
+                    name="last_name"
+                    value={profileForm.last_name} 
+                    onChange={handleProfileChange}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Téléphone</Form.Label>
+                  <Form.Control 
+                    type="text" 
+                    name="phone_number"
+                    value={profileForm.phone_number} 
+                    onChange={handleProfileChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Genre</Form.Label>
+                  <Form.Select 
+                    name="gender"
+                    value={profileForm.gender} 
+                    onChange={handleProfileChange}
+                  >
+                    <option value="male">Homme</option>
+                    <option value="female">Femme</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+            </Row>
+            
+            <h5 className="mt-4 mb-3">Changer de mot de passe (optionnel)</h5>
+            
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Nouveau mot de passe</Form.Label>
+                  <Form.Control 
+                    type="password" 
+                    name="password"
+                    value={profileForm.password} 
+                    onChange={handleProfileChange}
+                    placeholder="Laisser vide pour ne pas changer"
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Confirmer le mot de passe</Form.Label>
+                  <Form.Control 
+                    type="password" 
+                    name="confirmPassword"
+                    value={profileForm.confirmPassword} 
+                    onChange={handleProfileChange}
+                    placeholder="Confirmer le nouveau mot de passe"
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            
+            {profileError && (
+              <Alert variant="danger" className="mt-3">
+                {profileError}
+              </Alert>
+            )}
+            
+            <div className="d-flex justify-content-end mt-4">
+              <Button 
+                variant="secondary" 
+                onClick={() => setShowProfileModal(false)}
+                disabled={updatingProfile}
+                className="me-2"
+              >
+                Annuler
+              </Button>
+              <Button 
+                variant="primary" 
+                onClick={handleProfileUpdate}
+                disabled={updatingProfile}
+                style={{ minWidth: '120px' }}
+              >
+                {updatingProfile ? (
+                  <Spinner animation="border" size="sm" />
+                ) : "Enregistrer"}
+              </Button>
+            </div>
+          </Form>
         </Modal.Body>
       </Modal>
       
