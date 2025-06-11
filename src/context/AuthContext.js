@@ -9,8 +9,13 @@ const AuthProvider = ({ children }) => {
   const logout = useCallback(() => {
     setUser(null);
     localStorage.removeItem("accessToken");
-    window.location.reload(); // 🔥 Force a refresh to clear state
+    localStorage.removeItem("userData"); // Remove user data on logout
   }, []);
+
+  // NEW: Function to save user data to localStorage
+  const saveUserData = (userData) => {
+    localStorage.setItem("userData", JSON.stringify(userData));
+  };
 
   const decodeToken = (token) => {
     try {
@@ -44,52 +49,78 @@ const AuthProvider = ({ children }) => {
     const decodedUser = decodeToken(token);
 
     if (decodedUser?.UserInfo && !isTokenExpired(decodedUser)) {
-      setUser({
+      const fullUserData = {
         id: decodedUser.UserInfo.id,
         email: decodedUser.UserInfo.email,
-        first_name: decodedUser.UserInfo.first_name,
-        last_name: decodedUser.UserInfo.last_name,
-        phone_number: decodedUser.UserInfo.phone_number,
-        gender: decodedUser.UserInfo.gender,
         role: decodedUser.UserInfo.role,
         ...userData,
-      });
-      console.log("✅ User logged in:", decodedUser.UserInfo);
+      };
+      
+      setUser(fullUserData);
+      saveUserData(fullUserData); // Save to localStorage
     } else {
       logout();
     }
   };
- const updateUser = (updatedData) => {
-    setUser(prev => ({ ...prev, ...updatedData }));
-  };
-  useEffect(() => {
-    console.log("🔄 Checking localStorage for token...");
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      const decodedUser = decodeToken(token);
-      console.log("🧑‍💻 Decoded User from Token:", decodedUser);
 
+  // UPDATED: Better update function
+  const updateUser = (updatedData) => {
+    const newUserData = { ...user, ...updatedData };
+    setUser(newUserData);
+    saveUserData(newUserData); // Persist updated data
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    const savedUserData = localStorage.getItem("userData");
+    
+    if (token && savedUserData) {
+      const decodedUser = decodeToken(token);
+      
       if (decodedUser?.UserInfo && !isTokenExpired(decodedUser)) {
-        setUser({
-          id: decodedUser.UserInfo.id,
-          email: decodedUser.UserInfo.email,
-          first_name: decodedUser.UserInfo.first_name,
-          last_name: decodedUser.UserInfo.last_name,
-          phone_number: decodedUser.UserInfo.phone_number,
-          gender: decodedUser.UserInfo.gender,
-          role: decodedUser.UserInfo.role,
-        });
+        try {
+          const parsedUserData = JSON.parse(savedUserData);
+          
+          // Verify token ID matches saved user ID
+          if (decodedUser.UserInfo.id === parsedUserData.id) {
+            setUser(parsedUserData);
+          } else {
+            logout();
+          }
+        } catch (e) {
+          console.error("Error parsing user data", e);
+          logout();
+        }
       } else {
         logout();
       }
+    } else if (token) {
+      // Token exists but no saved user data - fetch from API
+      fetch("http://localhost:5000/users/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          if (res.ok) return res.json();
+          throw new Error("Failed to fetch user");
+        })
+        .then((userData) => {
+          setUser(userData);
+          saveUserData(userData);
+        })
+        .catch((error) => {
+          console.error("User fetch error:", error);
+          logout();
+        });
     }
+    
     setLoading(false);
   }, [logout]);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading ,        updateUser // Add this
- }}>
-      {!loading && children}
+    <AuthContext.Provider value={{ user, login, logout, loading, updateUser }}>
+      {children}
     </AuthContext.Provider>
   );
 };

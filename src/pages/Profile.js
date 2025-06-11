@@ -188,14 +188,14 @@ const Profile = () => {
 
   // Handle profile update submission
   const handleProfileUpdate = async () => {
-    // Validate password if provided
     if (profileForm.password && profileForm.password !== profileForm.confirmPassword) {
       setProfileError("Les mots de passe ne correspondent pas");
+      toast.error("Les mots de passe ne correspondent pas");
       return;
     }
-    
     if (profileForm.password && profileForm.password.length < 6) {
       setProfileError("Le mot de passe doit contenir au moins 6 caractères");
+      toast.error("Le mot de passe doit contenir au moins 6 caractères");
       return;
     }
     
@@ -214,30 +214,37 @@ const Profile = () => {
           last_name: profileForm.last_name,
           phone_number: profileForm.phone_number,
           gender: profileForm.gender,
-          password: profileForm.password || undefined // Only send if provided
+          password: profileForm.password || undefined
         })
       });
-
+      
       if (!response.ok) {
         const errorData = await response.json();
+        toast.error(errorData.message || "Échec de la mise à jour du profil");
         throw new Error(errorData.message || "Échec de la mise à jour du profil");
       }
-
-      const updatedUser = await response.json();
       
-      // Update context with new user data
+      const { user: updatedUser, shouldLogout } = await response.json();
+      
+      // UPDATE CONTEXT WITH FULL USER DATA
       updateUser({
-        first_name: updatedUser.first_name,
-        last_name: updatedUser.last_name,
-        phone_number: updatedUser.phone_number,
-        gender: updatedUser.gender
+        ...user,
+        ...updatedUser
       });
       
       toast.success("Profil mis à jour avec succès");
       setShowProfileModal(false);
+      
+      if (shouldLogout) {
+        toast.info("Votre mot de passe a été modifié. Vous allez être déconnecté.");
+        setTimeout(() => {
+          logout();
+          navigate("/Seconnecter");
+        }, 2000);
+      }
     } catch (error) {
-      console.error("Erreur de mise à jour du profil:", error);
       setProfileError(error.message || "Erreur lors de la mise à jour du profil");
+      toast.error(error.message || "Erreur lors de la mise à jour du profil");
     } finally {
       setUpdatingProfile(false);
     }
@@ -358,22 +365,6 @@ const Profile = () => {
                   }}>
                     Profil Utilisateur
                   </h2>
-                  <Button 
-                    variant="outline-info"
-                    onClick={() => setShowProfileModal(true)}
-                    style={{
-                      borderColor: '#20c997',
-                      color: '#20c997',
-                      borderRadius: '8px',
-                      padding: '6px 15px',
-                      transition: 'all 0.3s ease'
-                    }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <i className="bi bi-pencil-square me-1"></i>
-                    Modifier
-                  </Button>
                 </div>
               </Card.Header>
             </motion.div>
@@ -485,6 +476,22 @@ const Profile = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
               >
+                <Button 
+                  variant="outline-info"
+                  onClick={() => setShowProfileModal(true)}
+                  style={{
+                    borderColor: '#20c997',
+                    color: '#20c997',
+                    borderRadius: '8px',
+                    padding: '8px 20px',
+                    transition: 'all 0.3s ease'
+                  }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <i className="bi bi-pencil-square me-1"></i>
+                  Modifier
+                </Button>
                 <Button 
                   variant="outline-danger" 
                   onClick={handleLogout}
@@ -790,7 +797,7 @@ const Profile = () => {
                   />
                 </Form.Group>
               </Col>
-              <Col md={6}>
+             <Col md={6}>
                 <Form.Group className="mb-3">
                   <Form.Label>Genre</Form.Label>
                   <Form.Select 
@@ -803,7 +810,7 @@ const Profile = () => {
                   </Form.Select>
                 </Form.Group>
               </Col>
-            </Row>
+            </Row> 
             
             <h5 className="mt-4 mb-3">Changer de mot de passe (optionnel)</h5>
             
