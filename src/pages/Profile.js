@@ -30,14 +30,12 @@ const Profile = () => {
   const [reservations, setReservations] = useState([]);
   const [deletingId, setDeletingId] = useState(null);
   
-  // États pour la modification des réservations
   const [editingReservation, setEditingReservation] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editDate, setEditDate] = useState("");
   const [editPeople, setEditPeople] = useState(1);
   const [updating, setUpdating] = useState(false);
 
-  // États pour la modification du profil
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [profileForm, setProfileForm] = useState({
     first_name: "",
@@ -55,7 +53,6 @@ const Profile = () => {
       navigate("/Seconnecter");
     } else if (user) {
       fetchUserReservations();
-      // Initialize profile form with user data
       setProfileForm({
         first_name: user.first_name || "",
         last_name: user.last_name || "",
@@ -162,7 +159,6 @@ const Profile = () => {
 
       const updatedReservation = await response.json();
       
-      // Mise à jour de l'état local
       setReservations(prev => prev.map(r => 
         r._id === updatedReservation._id ? updatedReservation : r
       ));
@@ -177,7 +173,6 @@ const Profile = () => {
     }
   };
 
-  // Handle profile form changes
   const handleProfileChange = (e) => {
     const { name, value } = e.target;
     setProfileForm(prev => ({
@@ -186,7 +181,6 @@ const Profile = () => {
     }));
   };
 
-  // Handle profile update submission
   const handleProfileUpdate = async () => {
     if (profileForm.password && profileForm.password !== profileForm.confirmPassword) {
       setProfileError("Les mots de passe ne correspondent pas");
@@ -226,7 +220,6 @@ const Profile = () => {
       
       const { user: updatedUser, shouldLogout } = await response.json();
       
-      // UPDATE CONTEXT WITH FULL USER DATA
       updateUser({
         ...user,
         ...updatedUser

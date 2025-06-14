@@ -1,14 +1,14 @@
-import React, { useState, useContext } from 'react'; // Ajoutez useContext ici
+import React, { useState, useContext } from 'react'; 
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography, IconButton, Alert, Fade, Zoom, Link, MenuItem } from '@mui/material';
 import { Visibility, VisibilityOff, Person, Lock, Phone, Email, Male, Female, Work } from '@mui/icons-material';
 import Navbar from "../Components/navbar";
 import backgroundImage from "../assest/Accueil.jpg";
-import { AuthContext } from "../context/AuthContext"; // Ajoutez cette ligne
+import { AuthContext } from "../context/AuthContext"; 
 
 const Inscrire = () => {
-  const { login } = useContext(AuthContext); // Ajoutez cette ligne
+  const { login } = useContext(AuthContext); 
 
   const [formData, setFormData] = useState({
     first_name: '',
@@ -33,12 +33,11 @@ const Inscrire = () => {
     try {
       const response = await axios.post('http://localhost:5000/auth/register', formData);
       if (response.data.accessToken) {
-        // Appeler login avec le token et les données utilisateur
         login(response.data.accessToken, response.data.user);
         
         setSuccess(true);  
         setTimeout(() => {
-          navigate('/'); // Rediriger vers la page d'accueil
+          navigate('/'); 
         }, 2000);
       }
     } catch (error) {

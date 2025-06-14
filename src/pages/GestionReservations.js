@@ -47,7 +47,6 @@ const GestionReservations = () => {
     status: "pending",
   });
 
-  // Recalculer les filtres quand les réservations ou le filtre changent
   useEffect(() => {
     filterByDate(selectedDateFilter);
   }, [reservations, selectedDateFilter]);

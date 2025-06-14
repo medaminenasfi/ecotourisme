@@ -571,7 +571,6 @@ const regions = [
   },
 ];
 
-// Add custom icons for start and end points
 const startIcon = L.divIcon({
   className: 'custom-marker start-marker',
   html: `<svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="8" fill="#2ecc71" stroke="#fff" stroke-width="2"/></svg>`,
@@ -635,7 +634,6 @@ function Routing({ waypoints }) {
 
         routingControlRef.current = control.addTo(map);
         
-        // Force the panel to be visible
         const panel = document.querySelector('.leaflet-routing-container');
         if (panel) {
           panel.style.display = 'block';
@@ -678,18 +676,14 @@ const Circuit = () => {
     setSelectedRegion(region);
     setRegionCircuits(circuitsByRegion[region.id] || []);
     
-    // Generate waypoints for all circuits in the region
     if (circuitsByRegion[region.id]) {
       const newWaypoints = [];
       
-      // Add start point (region center)
       newWaypoints.push(region.coords);
       
-      // Add circuit points with proper spacing
       circuitsByRegion[region.id].forEach((circuit, index) => {
-        // Calculate angle for even distribution
         const angle = (index * 2 * Math.PI) / circuitsByRegion[region.id].length;
-        const radius = 0.05; // Distance from center in degrees
+        const radius = 0.05; 
         
         const newPoint = [
           region.coords[0] + radius * Math.cos(angle),
@@ -699,7 +693,6 @@ const Circuit = () => {
         newWaypoints.push(newPoint);
       });
       
-      // Add end point (back to center)
       newWaypoints.push(region.coords);
       
       setWaypoints(newWaypoints);

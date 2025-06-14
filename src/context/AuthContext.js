@@ -9,10 +9,9 @@ const AuthProvider = ({ children }) => {
   const logout = useCallback(() => {
     setUser(null);
     localStorage.removeItem("accessToken");
-    localStorage.removeItem("userData"); // Remove user data on logout
+    localStorage.removeItem("userData"); 
   }, []);
 
-  // NEW: Function to save user data to localStorage
   const saveUserData = (userData) => {
     localStorage.setItem("userData", JSON.stringify(userData));
   };
@@ -57,17 +56,16 @@ const AuthProvider = ({ children }) => {
       };
       
       setUser(fullUserData);
-      saveUserData(fullUserData); // Save to localStorage
+      saveUserData(fullUserData); 
     } else {
       logout();
     }
   };
 
-  // UPDATED: Better update function
   const updateUser = (updatedData) => {
     const newUserData = { ...user, ...updatedData };
     setUser(newUserData);
-    saveUserData(newUserData); // Persist updated data
+    saveUserData(newUserData); 
   };
 
   useEffect(() => {
@@ -81,7 +79,6 @@ const AuthProvider = ({ children }) => {
         try {
           const parsedUserData = JSON.parse(savedUserData);
           
-          // Verify token ID matches saved user ID
           if (decodedUser.UserInfo.id === parsedUserData.id) {
             setUser(parsedUserData);
           } else {
@@ -95,7 +92,6 @@ const AuthProvider = ({ children }) => {
         logout();
       }
     } else if (token) {
-      // Token exists but no saved user data - fetch from API
       fetch("http://localhost:5000/users/me", {
         headers: {
           Authorization: `Bearer ${token}`,

@@ -12,7 +12,7 @@ const StatisticsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [totalRevenue, setTotalRevenue] = useState(0);
-  const [activeTab, setActiveTab] = useState("popular"); // Nouvel état pour les onglets
+  const [activeTab, setActiveTab] = useState("popular"); 
 
   const validateToken = () => {
     const token = localStorage.getItem("accessToken");
@@ -45,11 +45,10 @@ const StatisticsPage = () => {
           }),
         ]);
 
-        // Correction: Transformer les données pour le graphique
         const popularData = popularRes.data.map(item => ({
-          name: item.circuitName, // Utiliser 'name' pour l'axe X
+          name: item.circuitName, 
           reservations: item.reservationCount,
-          revenue: item.reservationCount * 50 // Exemple de calcul de revenu
+          revenue: item.reservationCount * 50 
         }));
         
         setPopularCircuits(popularData);

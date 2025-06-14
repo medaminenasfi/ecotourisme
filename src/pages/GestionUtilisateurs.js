@@ -4,7 +4,7 @@ import axios from "axios";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { Button, Table, Alert, Spinner, Modal, Form } from "react-bootstrap";
 import jwtDecode from "jwt-decode";
-import backgroundImage from "../assest/Accueil.jpg"; // Fix import path
+import backgroundImage from "../assest/Accueil.jpg"; 
 import Navbar from "../Components/navbar";
 import ScrollToTopButton from "../Components/ScrollToTopButton";
 
@@ -16,7 +16,7 @@ const GestionUtilisateurs = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
-  const [selectedRole, setSelectedRole] = useState('all'); // Ajout du state pour le filtre
+  const [selectedRole, setSelectedRole] = useState('all'); 
 
   const [formData, setFormData] = useState({
     first_name: "",
@@ -252,7 +252,7 @@ const RoleFilters = () => (
                         <td>
                         <span className={`badge rounded-pill ${
   user.role === 'Admin' ? 'bg-danger' :
-  user.role === 'Fournisseur' ? 'bg-warning' : // Exemple ajusté
+  user.role === 'Fournisseur' ? 'bg-warning' : 
   'bg-primary'
 }`}>
                             {user.role}

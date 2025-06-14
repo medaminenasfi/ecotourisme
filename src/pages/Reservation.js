@@ -33,17 +33,16 @@ const Accueil = () => {
   const [error, setError] = useState("");
   const [isReserving, setIsReserving] = useState(false);
   
-  // États pour l'historique des réservations
   const [reservations, setReservations] = useState([]);
   const [reservationsLoading, setReservationsLoading] = useState(false);
   const [reservationError, setReservationError] = useState("");
   const [deletingId, setDeletingId] = useState(null);
-  const [allCircuits, setAllCircuits] = useState([]); // Pour stocker tous les circuits
+  const [allCircuits, setAllCircuits] = useState([]); 
 
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchUserReservations();
-    fetchAllCircuits(); // Charger tous les circuits
+    fetchAllCircuits(); 
   }, []);
 
   const validateToken = (token) => {
@@ -65,7 +64,6 @@ const Accueil = () => {
     }
   };
   
-  // Charger tous les circuits disponibles
   const fetchAllCircuits = async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -127,7 +125,6 @@ const Accueil = () => {
     }
   }, [selectedCircuit, participants, circuits]);
 
-  // Charger les réservations de l'utilisateur
   const fetchUserReservations = async () => {
     try {
       setReservationsLoading(true);
@@ -146,7 +143,6 @@ const Accueil = () => {
         }
       );
 
-      // Trier les réservations par date (les plus récentes en premier)
       const sortedReservations = response.data.sort((a, b) => {
         return new Date(b.date) - new Date(a.date);
       });
@@ -160,7 +156,6 @@ const Accueil = () => {
     }
   };
 
-  // Supprimer une réservation
   const handleDeleteReservation = async (reservationId) => {
     if (!window.confirm("Êtes-vous sûr de vouloir annuler cette réservation ?")) return;
     
@@ -188,19 +183,15 @@ const Accueil = () => {
     }
   };
 
-  // Obtenir le nom du circuit pour une réservation
   const getCircuitName = (reservation) => {
-    // Circuit temporaire
     if (reservation.circuitDetails) {
       return reservation.circuitDetails.name;
     }
     
-    // Circuit standard avec détails complets
     if (reservation.circuit && typeof reservation.circuit === 'object') {
       return reservation.circuit.name;
     }
     
-    // Circuit standard avec seulement l'ID
     if (typeof reservation.circuit === 'string') {
       const circuit = allCircuits.find(c => c._id === reservation.circuit);
       return circuit ? circuit.name : "Circuit non trouvé";
@@ -268,7 +259,6 @@ const Accueil = () => {
         Date: ${dayjs(reservationData.date).format("DD/MM/YYYY")}\n
         Total: ${reservationData.totalPrice} TND`);
       
-      // Rediriger vers la page d'accueil après la réservation
       navigate("/");
 
     } catch (err) {
@@ -300,7 +290,6 @@ const Accueil = () => {
     }
   };
 
-  // Formater la date pour l'affichage
   const formatDate = (dateString) => {
     return dayjs(dateString).format("DD/MM/YYYY");
   };

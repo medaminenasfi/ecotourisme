@@ -8,7 +8,6 @@ import Navbar from "../Components/navbar";
 import backgroundImage from "../assest/Accueil.jpg";
 import ScrollToTopButton from "../Components/ScrollToTopButton";
 
-// Fonction utilitaire pour générer un hash stable à partir d'une chaîne
 const stringToStableHash = (str) => {
   let hash = 0;
   if (str.length === 0) return hash;
@@ -16,7 +15,7 @@ const stringToStableHash = (str) => {
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
     hash = (hash << 5) - hash + char;
-    hash |= 0; // Convertit en entier 32 bits
+    hash |= 0; 
   }
   
   return Math.abs(hash);
@@ -33,10 +32,10 @@ const ServicesList = () => {
   const [formData, setFormData] = useState({
     type: '',
     description: '',
-    photo: null, // Changed to store file object
+    photo: null, 
     phoneNumber: ''
   });
-  const [imagePreview, setImagePreview] = useState(null); // For image preview
+  const [imagePreview, setImagePreview] = useState(null); 
 
   const serviceTypes = [
     "Guides locaux",
@@ -54,10 +53,9 @@ const ServicesList = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        // Ajouter la remise fixe ici
         const servicesWithDiscount = response.data.map(service => ({
           ...service,
-          discount: (stringToStableHash(service._id) % 20 + 1) // Entre 1% et 20%
+          discount: (stringToStableHash(service._id) % 20 + 1) 
         }));
 
         setServices(servicesWithDiscount);
@@ -78,7 +76,7 @@ const ServicesList = () => {
     setFormData({
       type: service.type,
       description: service.description,
-      photo: null, // Reset file input
+      photo: null, 
       phoneNumber: service.phoneNumber
     });
     setImagePreview(service.photo ? `http://localhost:5000${service.photo}` : null); // Set existing image as preview
@@ -94,7 +92,7 @@ const ServicesList = () => {
         return;
       }
       setFormData({ ...formData, photo: file });
-      setImagePreview(URL.createObjectURL(file)); // Create image preview
+      setImagePreview(URL.createObjectURL(file)); 
     }
   };
 

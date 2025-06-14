@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { WiCloud } from 'react-icons/wi';
-import WeatherMap from "../Components/weather"; // Make sure this matches your map component
+import WeatherMap from "../Components/weather"; 
 
 const WeatherModal = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

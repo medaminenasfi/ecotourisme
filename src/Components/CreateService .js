@@ -15,10 +15,10 @@ const CreateService = () => {
   const [formData, setFormData] = useState({
     type: "",
     description: "",
-    photo: null, // Changed to store file object
+    photo: null, 
     phoneNumber: user?.phone_number || ""
   });
-  const [imagePreview, setImagePreview] = useState(null); // For image preview
+  const [imagePreview, setImagePreview] = useState(null); 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [editMode, setEditMode] = useState(false);
@@ -62,7 +62,7 @@ const CreateService = () => {
         return;
       }
       setFormData({ ...formData, photo: file });
-      setImagePreview(URL.createObjectURL(file)); // Create image preview
+      setImagePreview(URL.createObjectURL(file)); 
     }
   };
 

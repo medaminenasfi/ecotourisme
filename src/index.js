@@ -14,7 +14,7 @@ import Inscrire from "./pages/inscrire";
 import Forgot from "./pages/forgot";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./pages/ProtectedRoute";
-import EditUser from "./pages/EditUser";  // Import EditUser
+import EditUser from "./pages/EditUser"; 
 import GestionUtilisateurs from "./pages/GestionUtilisateurs";
 import GestionFournisseurs from "./pages/GestionFournisseurs";
 import GestionReservations from "./pages/GestionReservations";
@@ -84,7 +84,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/edit/:id", // Add this route for editing users
+    path: "/admin/edit/:id", 
     element: (
       <ProtectedRoute>
         <EditUser />
@@ -156,7 +156,7 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        index: true, // Redirection par défaut
+        index: true, 
         element: <Navigate to="avis" replace />
       },
       {

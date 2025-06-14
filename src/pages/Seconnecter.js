@@ -83,7 +83,7 @@ const Seconnecter = () => {
         </button>
       </div>
     </div>
- {/* ✅ Error Message Block */}
+ {/*  Error Message Block */}
  {error && (
     <div className="alert alert-danger text-center py-2" role="alert">
       {error}

@@ -15,7 +15,6 @@ import ScrollToTopButton from "../Components/ScrollToTopButton";
 import { motion } from "framer-motion";
 
 const Accueil = () => {
-  // Add scroll restoration
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);

@@ -44,7 +44,6 @@ const AdminDashboard = () => {
                 { to: "circuits", icon: <FaMapMarkedAlt />, title: "Circuits", subtitle: "Gestion des parcours" },
                 { to: "reservations", icon: <FaClipboardList />, title: "Réservations", subtitle: "Suivi des bookings" },
                 { to: "fournisseurs", icon: <FaBox />, title: "Fournisseurs", subtitle: "Partenaires services" },
-                // Ajoutez ce nouvel élément pour les statistiques
                 { to: "StatisticsPage", icon: <FaChartLine />, title: "Statistiques", subtitle: "Analyses et rapports" }
               ].map((item, index) => (
                 <div key={index} className="col-12 col-md-6 col-xl-3">

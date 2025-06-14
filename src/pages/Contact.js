@@ -23,7 +23,6 @@ const Contact = () => {
   const [error, setError] = useState('');
 
 
-// Add scroll restoration
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);

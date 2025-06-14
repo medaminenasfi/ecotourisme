@@ -1,5 +1,10 @@
 import React, { useContext } from "react";
-import {BrowserRouter as Route,Routes,Navigate,Router,} from "react-router-dom";
+import {
+  BrowserRouter as Route,
+  Routes,
+  Navigate,
+  Router,
+} from "react-router-dom";
 import { AuthContext, AuthProvider } from "./context/AuthContext";
 import Accueil from "./pages/Accueil";
 import Artisan from "./pages/Artisan";
@@ -17,15 +22,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 import EditUser from "./pages/EditUser";
 import CreateService from "./pages/CreateService";
-import ServicesList  from  "./pages/ServicesList"
+import ServicesList from "./pages/ServicesList";
 import GestionUtilisateurs from "./pages/GestionUtilisateurs";
 import GestionFournisseurs from "./pages/GestionFournisseurs";
 import GestionReservations from "./pages/GestionReservations";
 import GestionCircuits from "./pages/GestionCircuits";
 import AvisTable from "./Components/AvisTable.jsx";
-import Gestion  from "./Components/gestion.jsx";
-import ReclamationsTable from "./Components/ReclamationsTable.jsx"
-import StatisticsPage from './pages/StatisticsPage';
+import Gestion from "./Components/gestion.jsx";
+import ReclamationsTable from "./Components/ReclamationsTable.jsx";
+import StatisticsPage from "./pages/StatisticsPage";
 
 function ProtectedRoute({ children }) {
   const { user } = useContext(AuthContext);
@@ -141,7 +146,7 @@ function App() {
                 </AdminRoute>
               }
             />
-        <Route
+            <Route
               path="/admin/StatisticsPage"
               element={
                 <AdminRoute>
@@ -149,47 +154,49 @@ function App() {
                 </AdminRoute>
               }
             />
-            
-<Route
-  path="/ServicesList"
-  element={
-    <ProtectedRoute allowedRoles={['admin', 'fournisseur', 'voyageur']}>
-      <ServicesList />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/create-service"
-  element={
-    <ProtectedRoute>
-      <CreateService />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/gestion"
-  element={
-    <ProtectedRoute>
-      <Gestion />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/AvisTable"
-  element={
-    <ProtectedRoute>
-      <AvisTable />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/ReclamationsTable"
-  element={
-    <ProtectedRoute>
-      <ReclamationsTable />
-    </ProtectedRoute>
-  }
-/>
+
+            <Route
+              path="/ServicesList"
+              element={
+                <ProtectedRoute
+                  allowedRoles={["admin", "fournisseur", "voyageur"]}
+                >
+                  <ServicesList />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/create-service"
+              element={
+                <ProtectedRoute>
+                  <CreateService />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/gestion"
+              element={
+                <ProtectedRoute>
+                  <Gestion />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/AvisTable"
+              element={
+                <ProtectedRoute>
+                  <AvisTable />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ReclamationsTable"
+              element={
+                <ProtectedRoute>
+                  <ReclamationsTable />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </div>
         <Footer />
