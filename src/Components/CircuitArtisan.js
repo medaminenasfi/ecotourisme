@@ -450,7 +450,6 @@ const Circuit = () => {
           font-size: 0.9rem;
         }
 
-        /* Custom scrollbar for search results */
         .search-results::-webkit-scrollbar {
           width: 8px;
         }
@@ -469,7 +468,6 @@ const Circuit = () => {
           background: rgba(255, 255, 255, 0.3);
         }
 
-        /* Responsive adjustments */
         @media (max-width: 768px) {
           .search-container {
             width: 95%;
