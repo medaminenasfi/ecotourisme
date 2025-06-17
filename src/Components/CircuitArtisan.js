@@ -258,7 +258,7 @@ const Circuit = () => {
                     setSearchTerm(region.name);
                     setShowResults(false);
                   }}
-                  whileHover={{ scale: 1.02, backgroundColor: "rgba(255, 255, 255, 0.1)" }}
+                  whileHover={{ scale: 1.02, backgroundColor: "rgba(0, 0, 0, 0.1)" }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
                   <FaMapMarkerAlt className="result-icon" />

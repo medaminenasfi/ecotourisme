@@ -100,12 +100,7 @@ const Seconnecter = () => {
 
     {/* Liens supplémentaires */}
     <div className="d-flex flex-column align-items-center gap-2 mt-4">
-      <a 
-        href="/forgot" 
-        className="text-decoration-none text-success small"
-      >
-        Mot de passe oublié ?
-      </a>
+    
       <span className="text-white small">
         Pas de compte ?{" "}
         <a 

@@ -51,8 +51,8 @@
 .search-bar:focus {
   outline: none;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  background: #fff;
-}
+  background: #000000;
+} 
 
 .search-results {
   position: absolute;
@@ -77,7 +77,7 @@
 }
 
 .search-result-item:hover {
-  background: #f8f9fa;
+  background: #000000;
 }
 
 .result-icon {

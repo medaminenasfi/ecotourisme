@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { FaLeaf, FaUser, FaPlusCircle, FaChartLine, FaHiking, FaCalendarAlt, FaHandsHelping, FaEnvelope, FaCog, FaSignOutAlt } from "react-icons/fa";
@@ -6,25 +6,23 @@ import { MdDashboard } from "react-icons/md";
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
-    setIsAuthenticated(!!user);
-    
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
     
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [user]);
+  }, []);
 
   const handleLogout = () => {
     logout();
     setIsMenuOpen(false);
+    window.location.href = '/';
   };
 
   return (
@@ -37,7 +35,6 @@ const Navbar = () => {
       }}
     >
       <div className="container">
-        {/* Brand Logo with Animation */}
         <Link 
           className="navbar-brand d-flex align-items-center" 
           to="/"
@@ -53,12 +50,9 @@ const Navbar = () => {
           <span className="fw-bold">EcoTourisme</span>
         </Link>
 
-        {/* Toggler Button */}
         <button
           className="navbar-toggler border-0"
           type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#mainNav"
           aria-expanded={isMenuOpen}
           aria-label="Toggle navigation"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -66,10 +60,8 @@ const Navbar = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* Navigation Items */}
         <div className={`collapse navbar-collapse ${isMenuOpen ? 'show' : ''}`} id="mainNav">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            {/* Main Links with Icons */}
             <li className="nav-item mx-1">
               <NavLink 
                 to="/" 
@@ -81,6 +73,7 @@ const Navbar = () => {
                 <FaUser className="me-1" /> Accueil
               </NavLink>
             </li>
+            
             <li className="nav-item mx-1">
               <NavLink 
                 to="/Randonée" 
@@ -92,7 +85,7 @@ const Navbar = () => {
               </NavLink>
             </li>
 
-            {!(isAuthenticated && user.role === 'admin') && (
+            {(!user || user?.role !== 'admin') && (
               <li className="nav-item mx-1">
                 <NavLink 
                   to="/Reservation" 
@@ -115,6 +108,7 @@ const Navbar = () => {
                 <FaHandsHelping className="me-1" /> Artisan
               </NavLink>
             </li>
+            
             <li className="nav-item mx-1">
               <NavLink 
                 to="/Contact" 
@@ -125,6 +119,7 @@ const Navbar = () => {
                 <FaEnvelope className="me-1" /> Contact
               </NavLink>
             </li>
+            
             <li className="nav-item mx-1">
               <NavLink 
                 to="/ServicesList" 
@@ -136,8 +131,7 @@ const Navbar = () => {
               </NavLink>
             </li>
 
-            {/* Conditional Management Link */}
-            {isAuthenticated && (
+            {user && (
               <li className="nav-item mx-1">
                 <NavLink 
                   to="/gestion" 
@@ -150,8 +144,7 @@ const Navbar = () => {
               </li>
             )}
 
-            {/* Role-Specific Links */}
-            {isAuthenticated && user.role === "admin" && (
+            {user?.role === "admin" && (
               <li className="nav-item mx-1">
                 <NavLink 
                   to="/AdminDashboard" 
@@ -164,7 +157,7 @@ const Navbar = () => {
               </li>
             )}
 
-            {isAuthenticated && user.role === "fournisseur" && (
+            {user?.role === "fournisseur" && (
               <li className="nav-item mx-1">
                 <NavLink 
                   to="/create-service" 
@@ -178,9 +171,8 @@ const Navbar = () => {
             )}
           </ul>
 
-          {/* Authentication Section */}
           <div className="d-flex align-items-center gap-3">
-            {!isAuthenticated ? (
+            {!user ? (
               <>
                 <Link 
                   to="/Seconnecter" 
@@ -211,7 +203,7 @@ const Navbar = () => {
                     {user.avatar ? (
                       <img 
                         src={user.avatar} 
-                        alt={`${user.first_name}'s profile`}
+                        alt={`Profil de ${user.first_name}`}
                         className="rounded-circle me-2" 
                         style={{ 
                           width: '30px', 
@@ -269,7 +261,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .hover-scale:hover {
           transform: scale(1.05);
         }

@@ -327,9 +327,10 @@ const CreateService = () => {
                     color: 'white'
                   }}
                 >
-                  <option value="">Sélectionner un type</option>
+                  <option value=""  >Sélectionner un type</option>
                   {serviceTypes.map(type => (
-                    <option key={type} value={type}>{type}</option>
+                    <option key={type} value={type}                       style={{ color: 'black' }} // Fix: Forcer la couleur de texte noir pour les options
+  >{type}</option>
                   ))}
                 </Form.Select>
               </Form.Group>
